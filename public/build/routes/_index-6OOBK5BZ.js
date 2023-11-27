@@ -1,0 +1,1 @@
+import{c as t,e as o}from"/build/_shared/chunk-6OZYWZFQ.js";var e=t(o(),1),i=()=>[{title:"Review Keeper"},{name:"description",content:"Welcome to Remix!"}];function n(){return(0,e.jsx)("div",{className:"flex flex-col gap-6",children:(0,e.jsx)("h1",{children:"Welcome to Review Keeper"})})}export{n as default,i as meta};

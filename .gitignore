@@ -1,0 +1,10 @@
+node_modules
+
+/.cache
+/build
+/public/build
+/coverage
+.env
+
+*.db
+*.db-journal

@@ -1,0 +1,95 @@
+{
+  "name": "remix-standard",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix build",
+    "dev": "remix dev --manual",
+    "format": "prettier --write .",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "postinstall": "pnpm prisma.generate",
+    "prisma.deploy": "pnpm prisma generate && pnpm prisma migrate deploy",
+    "prisma.generate": "pnpm prisma generate",
+    "prisma.seed": "pnpm prisma db seed",
+    "prisma.studio": "pnpm prisma studio",
+    "prisma.setup": "prisma generate && prisma db push && prisma db seed",
+    "start": "remix-serve ./build/index.js",
+    "test": "vitest",
+    "test.single": "vitest run",
+    "test.ui": "vitest --ui",
+    "test.coverage": "vitest run --coverage ",
+    "typecheck": "tsc",
+    "validate": "pnpm lint && pnpm typecheck && pnpm test.single",
+    "prepare": "husky install"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  },
+  "eslintIgnore": [
+    "/node_modules",
+    "/build",
+    "/public/build"
+  ],
+  "dependencies": {
+    "@prisma/client": "5.6.0",
+    "@remix-run/css-bundle": "^2.3.1",
+    "@remix-run/node": "^2.3.1",
+    "@remix-run/react": "^2.3.1",
+    "@remix-run/serve": "^2.3.1",
+    "isbot": "^3.6.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "@remix-run/dev": "^2.3.1",
+    "@remix-run/eslint-config": "^2.3.1",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@types/eslint": "^8.44.6",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/ui": "^0.34.6",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jest": "^27.4.3",
+    "eslint-plugin-jest-dom": "^5.1.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-markdown": "^3.0.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-testing-library": "^6.1.0",
+    "happy-dom": "^12.9.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.1.0",
+    "postcss": "^8.4.31",
+    "prettier": "^3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.6",
+    "prisma": "^5.6.0",
+    "tailwindcss": "^3.3.5",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.5.0",
+    "typescript": "^5.3.2",
+    "vite": "^4.5.0",
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^0.34.6"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}
