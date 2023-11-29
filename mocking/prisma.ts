@@ -3,11 +3,14 @@ import type { Post, User } from "@prisma/client";
 
 export type MockedUser = Omit<User, "id">;
 export const mockUser = (): MockedUser => {
-  const name = faker.internet.userName();
-  const email = faker.internet.email({ firstName: name });
+  const username = faker.internet.userName();
+  const email = faker.internet.email({ firstName: username });
+  const hash = faker.internet.password({ length: 16 });
+
   return {
     email,
-    name,
+    username,
+    hash,
   };
 };
 export const mockUsers = (count?: number) => {
