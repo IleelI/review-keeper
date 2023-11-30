@@ -1,28 +1,68 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
 import { Form } from "@remix-run/react";
+import { jwtVerify } from "jose";
 
-import { credentialsSchema, login } from "~/server/auth.server";
+import { JWTCookie, credentialsSchema, login } from "~/server/auth.server";
+import { env } from "~/server/env.server";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const cookieHeader = request.headers.get("Cookie");
+  const cookie = (await JWTCookie.parse(cookieHeader)) || {};
+  if ("token" in cookie) {
+    try {
+      const secret = new TextEncoder().encode(env().JWT_SECRET);
+      await jwtVerify(cookie.token, secret, {
+        issuer: "review-keeper",
+        audience: "review-keeper",
+      });
+      return redirect("/");
+    } catch (error) {
+      console.log("Invalid JWT");
+    }
+  }
+
+  return json({});
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = Object.fromEntries((await request.formData()) ?? []);
-  const parsedData = credentialsSchema.safeParse(formData);
-  if (!parsedData.success) {
-    return json(
-      { origin: "form", error: parsedData.error.flatten() } as const,
-      { status: 400, statusText: "Invalid credentials." },
-    );
-  }
-  const credentials = parsedData.data;
-  const response = await login(credentials);
-
-  if (response.type === "error") {
-    return json({ origin: response.origin, error: response.message } as const, {
-      status: response.origin === "server" ? 500 : 400,
-      statusText: response.message,
+  const validatedCredentials = credentialsSchema.safeParse(
+    Object.fromEntries((await request.formData()) ?? []),
+  );
+  if (!validatedCredentials.success) {
+    return json({
+      origin: "form",
+      error: validatedCredentials.error.flatten().fieldErrors,
     });
   }
-  console.log({ response });
-  return json({});
+  const loginResponse = await login(validatedCredentials.data);
+  if (typeof loginResponse !== "string") {
+    return json(
+      {
+        origin: loginResponse.origin,
+        error: loginResponse.message,
+      } as const,
+      {
+        status: loginResponse.origin === "server" ? 500 : 400,
+        statusText: loginResponse.message,
+      },
+    );
+  }
+  const cookieHeader = request.headers.get("Cookie");
+  const cookie = (await JWTCookie.parse(cookieHeader)) || {};
+
+  return redirect("/", {
+    headers: {
+      "Set-Cookie": await JWTCookie.serialize({
+        token: loginResponse,
+        ...cookie,
+      }),
+    },
+  });
 };
 
 export default function Login() {
@@ -36,7 +76,7 @@ export default function Login() {
           <div className="flex flex-col gap-1">
             <label htmlFor="email">Email</label>
             <input
-              className="rounded-md bg-neutral-100 px-4 py-1.5 dark:bg-neutral-800"
+              className="rounded-md border border-neutral-300 bg-neutral-100 px-4 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
               id="email"
               name="email"
             />
@@ -44,7 +84,7 @@ export default function Login() {
           <div className="flex flex-col gap-1">
             <label htmlFor="password">Password</label>
             <input
-              className="rounded-md bg-neutral-100 px-4 py-1.5 dark:bg-neutral-800"
+              className="rounded-md border border-neutral-300 bg-neutral-100 px-4 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
               id="password"
               name="password"
               type="password"

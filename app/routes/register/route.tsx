@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 
-import { register, credentialsSchema } from "~/server/auth.server";
+import { createAccount, credentialsSchema } from "~/server/auth.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = Object.fromEntries((await request.formData()) ?? []);
@@ -14,7 +14,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const credentials = parsedData.data;
-  const response = await register(credentials);
+  const response = await createAccount(credentials);
   if (response.type === "error") {
     return json({ origin: response.origin, error: response.message } as const, {
       status: response.origin === "server" ? 500 : 400,
@@ -40,7 +40,7 @@ export default function Register() {
           <div className="flex flex-col gap-1">
             <label htmlFor="email">Email</label>
             <input
-              className="rounded-md bg-neutral-100 px-4 py-1.5 dark:bg-neutral-800"
+              className="rounded-md bg-neutral-100 px-4 py-1.5 dark:bg-neutral-900"
               id="email"
               name="email"
             />
@@ -48,7 +48,7 @@ export default function Register() {
           <div className="flex flex-col gap-1">
             <label htmlFor="password">Password</label>
             <input
-              className="rounded-md bg-neutral-100 px-4 py-1.5 dark:bg-neutral-800"
+              className="rounded-md bg-neutral-100 px-4 py-1.5 dark:bg-neutral-900"
               id="password"
               name="password"
               type="password"

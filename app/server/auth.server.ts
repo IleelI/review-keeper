@@ -1,7 +1,10 @@
+import { createCookie } from "@remix-run/node";
 import { compare, hash } from "bcrypt";
+import { SignJWT } from "jose";
 import { z } from "zod";
 
 import { prisma } from "./db.server";
+import { env } from "./env.server";
 import { BackendAction } from "./utils";
 
 export const credentialsSchema = z.object({
@@ -26,7 +29,7 @@ const handleAsyncHashing = (password: string, saltRounds = 10) => {
   );
 };
 
-export const register = async ({
+export const createAccount = async ({
   email,
   password,
 }: Credentials): Promise<BackendAction> => {
@@ -60,7 +63,7 @@ export const register = async ({
   }
 };
 
-export const login = async ({
+export const checkCredentials = async ({
   email,
   password,
 }: Credentials): Promise<BackendAction> => {
@@ -69,10 +72,9 @@ export const login = async ({
     return {
       type: "error",
       origin: "client",
-      message: "Account with given email doesn't exist.",
+      message: "Account with a given email doesn't exist.",
     };
   }
-
   try {
     const validPassword = await compare(password, existingUser.hash);
     if (!validPassword) {
@@ -82,15 +84,51 @@ export const login = async ({
         message: "Invalid password.",
       };
     }
+
     return {
       type: "success",
-      message: "Successfully logged in.",
+      message: "Valid credentials.",
     };
   } catch (error) {
     return {
       type: "error",
       origin: "server",
-      message: "Something went wrong while logging in.",
+      message: "Something went wrong while checking credentials.",
     };
   }
+};
+
+export const JWTCookieName = "jwt-token";
+export const JWTCookie = createCookie(JWTCookieName, {
+  // Two hours
+  maxAge: 60 * 60 * 2,
+  sameSite: "lax",
+  httpOnly: true,
+  secrets: [env().APP_SECRET],
+});
+
+export const createJWT = async () => {
+  const alg = "HS256";
+  const secret = new TextEncoder().encode(env().JWT_SECRET);
+  const token = await new SignJWT({
+    testField: "test",
+  })
+    .setProtectedHeader({ alg, typ: "JWT" })
+    .setIssuedAt()
+    .setSubject("review-keeper")
+    .setAudience("review-keeper")
+    .setIssuer("review-keeper")
+    .setExpirationTime("2h")
+    .sign(secret);
+
+  return token;
+};
+
+export const login = async (credentials: Credentials) => {
+  const credentialsResponse = await checkCredentials(credentials);
+  if (credentialsResponse.type === "error") {
+    return credentialsResponse;
+  }
+  const token = await createJWT();
+  return token;
 };
