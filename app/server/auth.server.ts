@@ -1,134 +1,61 @@
+import { User } from "@prisma/client";
 import { createCookie } from "@remix-run/node";
-import { compare, hash } from "bcrypt";
 import { SignJWT } from "jose";
 import { z } from "zod";
 
-import { prisma } from "./db.server";
+import { createSuccessResponse, createErrorResponse } from "utils/server";
+
 import { env } from "./env.server";
-import { BackendAction } from "./utils";
 
-export const credentialsSchema = z.object({
-  email: z.string().trim().email().min(1, "Login cannot be empty"),
-  password: z
-    .string()
-    .trim()
-    .min(8, "Password cannot be less 8 chracters long"),
-});
-type Credentials = z.infer<typeof credentialsSchema>;
-
-const handleAsyncHashing = (password: string, saltRounds = 10) => {
-  return new Promise<string>((resolve, reject) =>
-    hash(password, saltRounds, async (error, hash) => {
-      if (error) reject(error);
-      try {
-        resolve(hash);
-      } catch {
-        reject(error);
-      }
-    }),
-  );
-};
-
-export const createAccount = async ({
-  email,
-  password,
-}: Credentials): Promise<BackendAction> => {
-  try {
-    const existingUser = await prisma.user.findFirst({ where: { email } });
-    if (existingUser)
-      return {
-        type: "error",
-        origin: "client",
-        message: "Account with given email already exists.",
-      };
-
-    const hash = await handleAsyncHashing(password);
-    await prisma.user.create({
-      data: {
-        email,
-        hash,
-      },
-    });
-
-    return {
-      type: "success",
-      message: "Account created successfully.",
-    };
-  } catch (error) {
-    return {
-      type: "error",
-      origin: "server",
-      message: "Something went wrong while creating account.",
-    };
-  }
-};
-
-export const checkCredentials = async ({
-  email,
-  password,
-}: Credentials): Promise<BackendAction> => {
-  const existingUser = await prisma.user.findFirst({ where: { email } });
-  if (!existingUser) {
-    return {
-      type: "error",
-      origin: "client",
-      message: "Account with a given email doesn't exist.",
-    };
-  }
-  try {
-    const validPassword = await compare(password, existingUser.hash);
-    if (!validPassword) {
-      return {
-        type: "error",
-        origin: "client",
-        message: "Invalid password.",
-      };
-    }
-
-    return {
-      type: "success",
-      message: "Valid credentials.",
-    };
-  } catch (error) {
-    return {
-      type: "error",
-      origin: "server",
-      message: "Something went wrong while checking credentials.",
-    };
-  }
-};
-
-export const JWTCookieName = "jwt-token";
-export const JWTCookie = createCookie(JWTCookieName, {
-  // Two hours
-  maxAge: 60 * 60 * 2,
-  sameSite: "lax",
-  httpOnly: true,
-  secrets: [env().APP_SECRET],
-});
-
-export const createJWT = async () => {
+export const createJWT = async ({ email, id, username }: IdentifiedUser) => {
   const alg = "HS256";
   const secret = new TextEncoder().encode(env().JWT_SECRET);
-  const token = await new SignJWT({
-    testField: "test",
+  return await new SignJWT({
+    email,
+    id,
+    username: username ?? undefined,
   })
     .setProtectedHeader({ alg, typ: "JWT" })
     .setIssuedAt()
-    .setSubject("review-keeper")
-    .setAudience("review-keeper")
+    .setSubject(`user-${id}`)
+    .setAudience(`review-keeper`)
     .setIssuer("review-keeper")
-    .setExpirationTime("2h")
+    .setExpirationTime("1h")
     .sign(secret);
-
-  return token;
 };
 
-export const login = async (credentials: Credentials) => {
-  const credentialsResponse = await checkCredentials(credentials);
-  if (credentialsResponse.type === "error") {
-    return credentialsResponse;
-  }
-  const token = await createJWT();
-  return token;
+export const JWTCookieName = "JWT";
+export const JWTCookie = createCookie(JWTCookieName, {
+  sameSite: "lax",
+  httpOnly: true,
+  secure: true,
+  // 1 Hour
+  maxAge: 60 * 60 * 1,
+  secrets: [env().APP_SECRET],
+});
+
+export type IdentifiedUser = Pick<User, "email" | "username" | "id">;
+
+export const credentialsSchema = z.object({
+  email: z.string().trim().email("This is not a valid email."),
+  password: z
+    .string()
+    .trim()
+    .min(8, "Password must be at least 8 characters long."),
+});
+export type Credentials = z.infer<typeof credentialsSchema>;
+
+/**
+ * Function that validates credentials against credentialsSchema
+ * @param request
+ * @returns validatedData is everything formData is valid or validationErrors it's not.
+ */
+export const validateCredentials = async (request: Request) => {
+  const formData = Object.fromEntries((await request.formData()) ?? []);
+  const validateResult = await credentialsSchema.safeParseAsync(formData);
+  return validateResult.success
+    ? createSuccessResponse(validateResult.data)
+    : createErrorResponse(validateResult.error.flatten().fieldErrors);
 };
+
+// TODO -> Add helper function that will check, validate and renew JWT.

@@ -4,15 +4,27 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { jwtVerify } from "jose";
 
-import { JWTCookie, credentialsSchema, login } from "~/server/auth.server";
+import { isErrorResponse } from "utils/server";
+import InputError from "~/components/input-error/input-error";
+import InputField from "~/components/input-field/input-field";
+import InputLabel from "~/components/input-label/input-label";
+import {
+  JWTCookie,
+  createJWT,
+  validateCredentials,
+} from "~/server/auth.server";
 import { env } from "~/server/env.server";
+
+import { identifyUser } from "./login.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const cookieHeader = request.headers.get("Cookie");
   const cookie = (await JWTCookie.parse(cookieHeader)) || {};
+
+  // TODO -> Add generic handler for this
   if ("token" in cookie) {
     try {
       const secret = new TextEncoder().encode(env().JWT_SECRET);
@@ -30,73 +42,90 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const validatedCredentials = credentialsSchema.safeParse(
-    Object.fromEntries((await request.formData()) ?? []),
-  );
-  if (!validatedCredentials.success) {
+  const validationResponse = await validateCredentials(request);
+  if (isErrorResponse(validationResponse)) {
     return json({
-      origin: "form",
-      error: validatedCredentials.error.flatten().fieldErrors,
+      type: "invalid-form" as const,
+      error: validationResponse.error,
     });
   }
-  const loginResponse = await login(validatedCredentials.data);
-  if (typeof loginResponse !== "string") {
-    return json(
-      {
-        origin: loginResponse.origin,
-        error: loginResponse.message,
-      } as const,
-      {
-        status: loginResponse.origin === "server" ? 500 : 400,
-        statusText: loginResponse.message,
-      },
-    );
-  }
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie = (await JWTCookie.parse(cookieHeader)) || {};
 
+  const credentials = validationResponse.data;
+  const identifyResponse = await identifyUser(credentials);
+  if (isErrorResponse(identifyResponse)) {
+    const { error, origin } = identifyResponse.error;
+    return json({
+      type: "invalid-identity" as const,
+      error: {
+        email: origin === "email" ? error : undefined,
+        password: origin === "password" ? error : undefined,
+        other: origin === "other" ? error : undefined,
+      },
+    });
+  }
+
+  const user = identifyResponse.data;
+  const JWTToken = await createJWT(user);
   return redirect("/", {
     headers: {
       "Set-Cookie": await JWTCookie.serialize({
-        token: loginResponse,
-        ...cookie,
+        token: JWTToken,
       }),
     },
   });
 };
 
+const useLoginPage = () => {
+  const actionData = useActionData<typeof action>();
+  const formFieldsErrors =
+    actionData?.type === "invalid-form" ? actionData.error : null;
+  const identityErrors =
+    actionData?.type === "invalid-identity" ? actionData.error : null;
+
+  const emailError = (formFieldsErrors?.email || identityErrors?.email) ?? null;
+  const passwordError =
+    (formFieldsErrors?.password || identityErrors?.password) ?? null;
+  const otherError = identityErrors?.other ?? null;
+
+  return {
+    emailError,
+    otherError,
+    passwordError,
+  };
+};
+
 export default function Login() {
+  const { emailError, otherError, passwordError } = useLoginPage();
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
         Log in page
       </h1>
-      <Form method="post" className="flex max-w-xs flex-col gap-8">
+
+      <Form className="flex max-w-xs flex-col gap-8" method="post">
         <fieldset className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email">Email</label>
-            <input
-              className="rounded-md border border-neutral-300 bg-neutral-100 px-4 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
-              id="email"
-              name="email"
-            />
+          <div className="flex flex-col gap-1.5">
+            <InputLabel name="email" label="Email" />
+            <InputField name="email" />
+            {emailError ? <InputError error={emailError} /> : null}
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password">Password</label>
-            <input
-              className="rounded-md border border-neutral-300 bg-neutral-100 px-4 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
-              id="password"
-              name="password"
-              type="password"
-            />
+          <div className="flex flex-col gap-1.5">
+            <InputLabel name="password" label="Password" />
+            <InputField name="password" type="password" />
+            {passwordError ? <InputError error={passwordError} /> : null}
           </div>
         </fieldset>
-        <button
-          className="rounded-md bg-neutral-900 px-4 py-1.5 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
-          type="submit"
-        >
-          Log in
-        </button>
+
+        <div className="flex flex-col gap-1.5">
+          <button
+            className="rounded-md bg-neutral-900 p-2 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
+            type="submit"
+          >
+            Log in
+          </button>
+          {otherError ? <InputError error={otherError} /> : null}
+        </div>
       </Form>
     </div>
   );
