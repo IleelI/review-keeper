@@ -5,40 +5,23 @@ import {
   redirect,
 } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import { jwtVerify } from "jose";
 
 import { isErrorResponse } from "utils/server";
 import InputError from "~/components/input-error/input-error";
 import InputField from "~/components/input-field/input-field";
 import InputLabel from "~/components/input-label/input-label";
 import {
-  JWTCookie,
   createJWT,
+  login,
   validateCredentials,
+  getTokenizedUser,
 } from "~/server/auth.server";
-import { env } from "~/server/env.server";
 
 import { registerUser } from "./register.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie = (await JWTCookie.parse(cookieHeader)) || {};
-
-  // TODO -> Add generic handler for this
-  if ("token" in cookie) {
-    try {
-      const secret = new TextEncoder().encode(env().JWT_SECRET);
-      await jwtVerify(cookie.token, secret, {
-        issuer: "review-keeper",
-        audience: "review-keeper",
-      });
-      return redirect("/");
-    } catch (error) {
-      console.log("Invalid JWT");
-    }
-  }
-
-  return json({});
+  const tokenizedUser = await getTokenizedUser(request);
+  return tokenizedUser ? redirect("/") : json({});
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -65,13 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const createdUser = registerUserResponse.data;
   const JWTToken = await createJWT(createdUser);
-  return redirect("/", {
-    headers: {
-      "Set-Cookie": await JWTCookie.serialize({
-        token: JWTToken,
-      }),
-    },
-  });
+  return await login(JWTToken);
 };
 
 const useRegisterPage = () => {

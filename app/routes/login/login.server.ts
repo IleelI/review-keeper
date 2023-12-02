@@ -1,14 +1,14 @@
 import { compare } from "bcrypt";
 
 import { createErrorResponse, createSuccessResponse } from "utils/server";
-import { Credentials, IdentifiedUser } from "~/server/auth.server";
+import { Credentials, TokenizedUser } from "~/server/auth.server";
 import { prisma } from "~/server/db.server";
 
 /**
- * Functio that identifies user and check if credentials are matching.
+ * Functio that verifies user and check if credentials are matching.
  * @returns identifiedUser is everything is ok, errorResponse if something went wrong.
  */
-export const identifyUser = async ({ email, password }: Credentials) => {
+export const verifyUser = async ({ email, password }: Credentials) => {
   try {
     const user = await prisma.user.findFirst({ where: { email } });
     if (!user) {
@@ -27,12 +27,8 @@ export const identifyUser = async ({ email, password }: Credentials) => {
       });
     }
 
-    const identifiedUser: IdentifiedUser = {
-      email,
-      id: user.id,
-      username: user.username,
-    };
-    return createSuccessResponse(identifiedUser);
+    const tokenizedUser: TokenizedUser = { id: user.id };
+    return createSuccessResponse(tokenizedUser);
   } catch {
     return createErrorResponse({
       origin: "other" as const,

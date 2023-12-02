@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 
 import { createErrorResponse, createSuccessResponse } from "utils/server";
-import { Credentials, IdentifiedUser } from "~/server/auth.server";
+import { Credentials, TokenizedUser } from "~/server/auth.server";
 import { prisma } from "~/server/db.server";
 
 const handlePasswordHashing = (password: string, saltRounds = 10) => {
@@ -34,13 +34,8 @@ export const registerUser = async ({ email, password }: Credentials) => {
         hash,
       },
     });
-
-    const identifiedUser: IdentifiedUser = {
-      email: createdUser.email,
-      id: createdUser.id,
-      username: createdUser.username,
-    };
-    return createSuccessResponse(identifiedUser);
+    const tokenizedUser: TokenizedUser = { id: createdUser.id };
+    return createSuccessResponse(tokenizedUser);
   } catch (error) {
     return createErrorResponse({
       origin: "other" as const,

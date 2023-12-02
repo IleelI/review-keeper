@@ -4,44 +4,29 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
-import { jwtVerify } from "jose";
+import { Form, useActionData, useSearchParams } from "@remix-run/react";
 
+import { getSafeRedirectPath } from "utils/auth";
 import { isErrorResponse } from "utils/server";
 import InputError from "~/components/input-error/input-error";
 import InputField from "~/components/input-field/input-field";
 import InputLabel from "~/components/input-label/input-label";
 import {
-  JWTCookie,
   createJWT,
+  login,
   validateCredentials,
+  getTokenizedUser,
 } from "~/server/auth.server";
-import { env } from "~/server/env.server";
 
-import { identifyUser } from "./login.server";
+import { verifyUser } from "./login.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie = (await JWTCookie.parse(cookieHeader)) || {};
-
-  // TODO -> Add generic handler for this
-  if ("token" in cookie) {
-    try {
-      const secret = new TextEncoder().encode(env().JWT_SECRET);
-      await jwtVerify(cookie.token, secret, {
-        issuer: "review-keeper",
-        audience: "review-keeper",
-      });
-      return redirect("/");
-    } catch (error) {
-      console.log("Invalid JWT");
-    }
-  }
-
-  return json({});
+  const tokenizedUser = await getTokenizedUser(request);
+  return tokenizedUser ? redirect("/") : json({});
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const clonedRequest = request.clone();
   const validationResponse = await validateCredentials(request);
   if (isErrorResponse(validationResponse)) {
     return json({
@@ -51,9 +36,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const credentials = validationResponse.data;
-  const identifyResponse = await identifyUser(credentials);
-  if (isErrorResponse(identifyResponse)) {
-    const { error, origin } = identifyResponse.error;
+  const verifyResponse = await verifyUser(credentials);
+  if (isErrorResponse(verifyResponse)) {
+    const { error, origin } = verifyResponse.error;
     return json({
       type: "invalid-identity" as const,
       error: {
@@ -64,19 +49,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
-  const user = identifyResponse.data;
+  const user = verifyResponse.data;
   const JWTToken = await createJWT(user);
-  return redirect("/", {
-    headers: {
-      "Set-Cookie": await JWTCookie.serialize({
-        token: JWTToken,
-      }),
-    },
-  });
+  const formData = await clonedRequest.formData();
+  const redirectPath = getSafeRedirectPath(formData.get("redirectPath"));
+  return await login(JWTToken, redirectPath);
 };
 
 const useLoginPage = () => {
   const actionData = useActionData<typeof action>();
+  const [searchParams] = useSearchParams();
+  const redirectPath = searchParams.get("redirectPath") ?? "/";
+
   const formFieldsErrors =
     actionData?.type === "invalid-form" ? actionData.error : null;
   const identityErrors =
@@ -90,12 +74,14 @@ const useLoginPage = () => {
   return {
     emailError,
     otherError,
+    redirectPath,
     passwordError,
   };
 };
 
 export default function Login() {
-  const { emailError, otherError, passwordError } = useLoginPage();
+  const { emailError, otherError, redirectPath, passwordError } =
+    useLoginPage();
 
   return (
     <div className="flex flex-col gap-4">
@@ -115,6 +101,7 @@ export default function Login() {
             <InputField name="password" type="password" />
             {passwordError ? <InputError error={passwordError} /> : null}
           </div>
+          <input type="hidden" name="redirectPath" value={redirectPath} />
         </fieldset>
 
         <div className="flex flex-col gap-1.5">

@@ -1,25 +1,29 @@
 import { User } from "@prisma/client";
-import { createCookie } from "@remix-run/node";
-import { SignJWT } from "jose";
+import { createCookie, redirect } from "@remix-run/node";
+import { JWTPayload, SignJWT, jwtVerify } from "jose";
 import { z } from "zod";
 
 import { createSuccessResponse, createErrorResponse } from "utils/server";
+import { getUserById } from "~/models/user";
 
 import { env } from "./env.server";
 
-export const createJWT = async ({ email, id, username }: IdentifiedUser) => {
+export type TokenizedUser = Pick<User, "id">;
+export type JWTTokenPayload = JWTPayload & TokenizedUser;
+
+export const ISSUER = "review-keeper";
+export const AUDIENCE = "review-keeper";
+export const createJWT = async ({ id }: TokenizedUser) => {
   const alg = "HS256";
   const secret = new TextEncoder().encode(env().JWT_SECRET);
   return await new SignJWT({
-    email,
     id,
-    username: username ?? undefined,
   })
     .setProtectedHeader({ alg, typ: "JWT" })
     .setIssuedAt()
     .setSubject(`user-${id}`)
-    .setAudience(`review-keeper`)
-    .setIssuer("review-keeper")
+    .setAudience(AUDIENCE)
+    .setIssuer(ISSUER)
     .setExpirationTime("1h")
     .sign(secret);
 };
@@ -33,8 +37,6 @@ export const JWTCookie = createCookie(JWTCookieName, {
   maxAge: 60 * 60 * 1,
   secrets: [env().APP_SECRET],
 });
-
-export type IdentifiedUser = Pick<User, "email" | "username" | "id">;
 
 export const credentialsSchema = z.object({
   email: z.string().trim().email("This is not a valid email."),
@@ -58,4 +60,82 @@ export const validateCredentials = async (request: Request) => {
     : createErrorResponse(validateResult.error.flatten().fieldErrors);
 };
 
-// TODO -> Add helper function that will check, validate and renew JWT.
+export const getTokenFromCookie = async (request: Request) => {
+  const cookieHeader = request.headers.get("Cookie");
+  const cookie = (await JWTCookie.parse(cookieHeader)) || {};
+  if ("token" in cookie && typeof cookie.token === "string") {
+    return cookie.token as string;
+  } else {
+    return null;
+  }
+};
+
+export const verifyToken = async (tokenString: string) => {
+  try {
+    const secret = new TextEncoder().encode(env().JWT_SECRET);
+    return await jwtVerify(tokenString, secret, {
+      issuer: ISSUER,
+      audience: AUDIENCE,
+    });
+  } catch (error) {
+    console.log("Invalid JWT");
+    return null;
+  }
+};
+
+export const getTokenizedUser = async (request: Request) => {
+  const tokenString = await getTokenFromCookie(request);
+  if (!tokenString) return null;
+
+  const token = await verifyToken(tokenString);
+  if (!token) return null;
+
+  const tokenPayload = token.payload as JWTTokenPayload;
+  const user: TokenizedUser = {
+    id: tokenPayload.id,
+  };
+
+  return user;
+};
+
+export const getUser = async (request: Request) => {
+  const tokenizedUser = await getTokenizedUser(request);
+  if (!tokenizedUser) return null;
+
+  const user = await getUserById(tokenizedUser.id);
+  if (user) return user;
+
+  throw await logout();
+};
+
+export const requireUser = async (
+  request: Request,
+  redirectTo: string = new URL(request.url).pathname,
+) => {
+  const jwtUser = await getTokenizedUser(request);
+  if (!jwtUser) {
+    const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+    throw redirect(`/login?${searchParams}`);
+  }
+  return jwtUser;
+};
+
+export const login = async (token: string, redirectPath = "/") => {
+  return redirect(redirectPath, {
+    headers: {
+      "Set-Cookie": await JWTCookie.serialize({
+        token,
+      }),
+    },
+  });
+};
+
+export const logout = async () => {
+  return redirect("/", {
+    headers: {
+      "Set-Cookie": await JWTCookie.serialize("", {
+        maxAge: 0,
+      }),
+    },
+  });
+};
