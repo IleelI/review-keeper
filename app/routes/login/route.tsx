@@ -12,10 +12,10 @@ import InputError from "~/components/input-error/input-error";
 import InputField from "~/components/input-field/input-field";
 import InputLabel from "~/components/input-label/input-label";
 import {
-  createJWT,
   login,
   validateCredentials,
   getTokenizedUser,
+  generateAuthTokens,
 } from "~/server/auth.server";
 
 import { verifyUser } from "./login.server";
@@ -50,10 +50,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const user = verifyResponse.data;
-  const JWTToken = await createJWT(user);
-  const formData = await clonedRequest.formData();
-  const redirectPath = getSafeRedirectPath(formData.get("redirectPath"));
-  return await login(JWTToken, redirectPath);
+  const redirectPath = getSafeRedirectPath(
+    (await clonedRequest.formData()).get("redirectPath"),
+  );
+  const { accessToken, refreshToken } = await generateAuthTokens(user);
+  return await login(accessToken, refreshToken, redirectPath);
 };
 
 const useLoginPage = () => {

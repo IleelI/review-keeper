@@ -9,7 +9,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import { getUser } from "./server/auth.server";
+import { handleRootLoader } from "./server/root.server";
 import tailwind from "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -19,10 +19,10 @@ export const links: LinksFunction = () => [
 
 // Load user in root so every other route doesn't have to load it
 // and can consume it via useMatches.
-export const loader = async ({ request }: LoaderFunctionArgs) =>
-  json({
-    user: await getUser(request),
-  });
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const { headers, user } = await handleRootLoader(request);
+  return json({ user }, { headers });
+};
 
 export default function App() {
   return (

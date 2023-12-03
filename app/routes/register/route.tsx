@@ -11,10 +11,10 @@ import InputError from "~/components/input-error/input-error";
 import InputField from "~/components/input-field/input-field";
 import InputLabel from "~/components/input-label/input-label";
 import {
-  createJWT,
   login,
   validateCredentials,
   getTokenizedUser,
+  generateAuthTokens,
 } from "~/server/auth.server";
 
 import { registerUser } from "./register.server";
@@ -46,9 +46,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
-  const createdUser = registerUserResponse.data;
-  const JWTToken = await createJWT(createdUser);
-  return await login(JWTToken);
+  const user = registerUserResponse.data;
+  const { accessToken, refreshToken } = await generateAuthTokens(user);
+  return await login(accessToken, refreshToken);
 };
 
 const useRegisterPage = () => {

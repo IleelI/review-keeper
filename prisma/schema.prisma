@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  hash     String
-  username String?
-  posts    Post[]
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  hash         String
+  username     String?
+  refreshToken String?
+  posts        Post[]
 }
 
 model Post {
