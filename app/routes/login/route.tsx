@@ -1,13 +1,54 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, json } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 
 import InputField from "~/components/input-field/input-field";
 import InputLabel from "~/components/input-label/input-label";
+import {
+  comparePasswords,
+  createAccessToken,
+  createRefreshToken,
+  credentialsSchema,
+  login,
+  lookForUser,
+} from "~/server/auth.server";
+import { prisma } from "~/server/db.server";
 
-import { handleLogin } from "./action.server";
+export const action = async ({ request }: ActionFunctionArgs) => {
+  try {
+    const formData = await request.formData();
+    const parsedData = await credentialsSchema.safeParseAsync(
+      Object.fromEntries(formData),
+    );
+    if (!parsedData.success) {
+      return json({ type: "error", error: parsedData.error });
+    }
+    const credentials = parsedData.data;
 
-export const action = async ({ request }: ActionFunctionArgs) =>
-  await handleLogin(request);
+    const user = await lookForUser(credentials.email);
+    if (!user) {
+      return json({ type: "error", error: "Email not found." });
+    }
+
+    const arePasswordsSame = await comparePasswords(
+      credentials.password,
+      user.hash,
+    );
+    if (!arePasswordsSame) {
+      return json({ type: "error", error: "Incorrect password." });
+    }
+
+    const refreshToken = await createRefreshToken(user);
+    const accessToken = await createAccessToken(user);
+    await prisma.user.update({
+      where: { email: user.email },
+      data: { refreshToken },
+    });
+
+    return await login(refreshToken, accessToken);
+  } catch {
+    return json({ type: "error", error: "Something went wrong." });
+  }
+};
 
 export default function Login() {
   return (

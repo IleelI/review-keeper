@@ -1,13 +1,57 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, json } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 
 import InputField from "~/components/input-field/input-field";
 import InputLabel from "~/components/input-label/input-label";
+import {
+  credentialsSchema,
+  lookForUser,
+  createRefreshToken,
+  createAccessToken,
+  login,
+  createUser,
+} from "~/server/auth.server";
+import { prisma } from "~/server/db.server";
 
-import { handleRegister } from "./action.server";
+export const action = async ({ request }: ActionFunctionArgs) => {
+  try {
+    const formData = await request.formData();
+    const parsedCredentials = credentialsSchema.safeParse(
+      Object.fromEntries(formData),
+    );
+    if (!parsedCredentials.success) {
+      return json({ type: "error", error: parsedCredentials.error });
+    }
+    const credentials = parsedCredentials.data;
 
-export const action = async ({ request }: ActionFunctionArgs) =>
-  await handleRegister(request);
+    const existingUser = await lookForUser(credentials.email);
+    if (existingUser) {
+      return json({
+        type: "error",
+        error: "Account with this email already exists.",
+      });
+    }
+
+    const user = await createUser(credentials);
+    if (!user) {
+      return json({
+        type: "error",
+        error: "Something went wrong while creating account.",
+      });
+    }
+
+    const refreshToken = await createRefreshToken(user);
+    const accessToken = await createAccessToken(user);
+    await prisma.user.update({
+      where: { email: user.email },
+      data: { refreshToken },
+    });
+
+    return await login(refreshToken, accessToken);
+  } catch {
+    return json({ type: "error", error: "Something went wrong." });
+  }
+};
 
 export default function Register() {
   return (
