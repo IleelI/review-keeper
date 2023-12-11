@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import { json, LoaderFunctionArgs, type LinksFunction } from "@remix-run/node";
+import { type LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -9,20 +9,12 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import { handleRootLoader } from "./server/root.server";
 import tailwind from "./tailwind.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwind },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
-
-// Load user in root so every other route doesn't have to load it
-// and can consume it via useMatches.
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { headers, user } = await handleRootLoader(request);
-  return json({ user }, { headers });
-};
 
 export default function App() {
   return (
