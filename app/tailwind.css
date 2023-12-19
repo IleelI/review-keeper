@@ -4,11 +4,13 @@
 
 html,
 body {
-  @apply min-h-screen w-full bg-gray-100 p-4 text-gray-700 dark:bg-gray-900 dark:text-gray-300;
+  @apply bg-neutral-50 text-neutral-700 dark:bg-neutral-950 dark:text-neutral-300;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+body {
+  @apply p-4 min-h-screen w-full
+}
+
+*:focus-visible {
+  @apply outline outline-2 outline-offset-0 outline-primary-700 dark:outline-primary-300;
 }

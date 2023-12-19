@@ -1,11 +1,11 @@
 import { mockUsers, mockPosts } from "mocking/prisma";
-import { prisma } from "~/db.server";
+import { prisma } from "~/server/db.server";
 
 const seed = async () => {
   const users = mockUsers(3);
   // Insert mocked users and assign to the mocked posts.
   await Promise.all(
-    users.map(async ({ email, name }) =>
+    users.map(async ({ email, hash, username }) =>
       prisma.user.upsert({
         where: {
           email,
@@ -13,7 +13,8 @@ const seed = async () => {
         update: {},
         create: {
           email,
-          name,
+          username,
+          hash,
           posts: {
             create: mockPosts(),
           },
