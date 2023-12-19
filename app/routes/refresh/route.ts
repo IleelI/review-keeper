@@ -17,7 +17,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   if (!refreshToken) throw await signOut();
 
+  console.log({ refreshToken });
   const userToken = await getUserToken(refreshToken);
+  console.log({ userToken });
   if (!userToken) throw await signOut();
 
   const accessToken = await createAccessToken(userToken);
