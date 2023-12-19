@@ -19,6 +19,7 @@ export const credentialsSchema = z.object({
     .string()
     .trim()
     .min(8, "Password must be at least 8 chracters long."),
+  redirectTo: z.string().optional(),
 });
 export type Credentials = z.infer<typeof credentialsSchema>;
 
@@ -63,18 +64,26 @@ export const accessTokenCookie = createCookie("accessToken", {
 });
 
 export const lookForUser = async (email: string) => {
-  return await prisma.user.findFirst({
-    where: {
-      email,
-    },
-  });
+  try {
+    return await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+  } catch {
+    return null;
+  }
 };
 
 export const comparePasswords = async (
   password: string,
   hashedPassword: string,
 ) => {
-  return await compare(password, hashedPassword);
+  try {
+    return await compare(password, hashedPassword);
+  } catch {
+    return false;
+  }
 };
 
 export const createUser = async (credentials: Credentials) => {
@@ -111,7 +120,11 @@ export const createAccessToken = async ({ email, id, username }: AppUser) => {
   } as AppUser);
 };
 
-export const login = async (refreshToken: string, accessToken: string) => {
+export const signIn = async (
+  refreshToken: string,
+  accessToken: string,
+  redirectTo = "/",
+) => {
   const headers = new Headers();
   headers.append(
     "Set-Cookie",
@@ -119,12 +132,12 @@ export const login = async (refreshToken: string, accessToken: string) => {
   );
   headers.append("Set-Cookie", await accessTokenCookie.serialize(accessToken));
 
-  return redirect("/", {
+  return redirect(redirectTo, {
     headers,
   });
 };
 
-export const logout = async () => {
+export const signOut = async () => {
   const headers = new Headers();
   headers.append(
     "Set-Cookie",
@@ -171,26 +184,31 @@ export const getUser = async (request: Request) => {
 
 export const getRequiredUser = async (request: Request) => {
   const user = await getUser(request);
-  if (!user) throw await logout();
+  if (!user) throw await signOut();
   return user;
 };
 
 export const returnPathSearchParam = "return-path";
-export const requireUser = async (request: Request) => {
+export const requireUser = async (
+  request: Request,
+  redirectTo: string = new URL(request.url).pathname,
+) => {
   const cookies = request.headers.get("Cookie");
   const [accessToken, refreshToken] = await Promise.all([
     accessTokenCookie.parse(cookies),
     refreshTokenCookie.parse(cookies),
   ]);
+  const searchParams = new URLSearchParams([
+    [returnPathSearchParam, redirectTo],
+  ]);
 
   if (accessToken) {
     const userToken = await getUserToken(accessToken);
-    if (!userToken) throw await logout();
+    if (!userToken) throw redirect(`/sing-in${searchParams}`);
     return userToken;
   } else if (!refreshToken) {
-    throw await logout();
+    throw redirect(`/sing-in${searchParams}`);
   } else {
-    const returnPath = new URL(request.url).pathname;
-    throw redirectDocument(`/refresh?${returnPathSearchParam}=${returnPath}`);
+    throw redirectDocument(`/refresh?${searchParams}`);
   }
 };

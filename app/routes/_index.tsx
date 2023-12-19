@@ -24,7 +24,7 @@ export default function Index() {
         <Link to="/protected">Protected resource</Link>
         <section className="grid grid-cols-2 items-center gap-4">
           {user ? (
-            <Form action="/logout" method="post">
+            <Form action="/sign-out" method="post">
               <button
                 type="submit"
                 className="rounded-md bg-neutral-900 px-4 py-1.5 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
@@ -36,15 +36,15 @@ export default function Index() {
             <>
               <Link
                 className="rounded-md border border-neutral-700 px-4 py-1.5 text-center text-neutral-700 dark:border-neutral-300 dark:text-neutral-300"
-                to="/register"
+                to="/sign-up"
               >
-                Register
+                Sign up
               </Link>
               <Link
                 className="rounded-md bg-neutral-900 px-4 py-1.5 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
-                to="/login"
+                to="/sign-in"
               >
-                Log in
+                Sign in
               </Link>
             </>
           )}
