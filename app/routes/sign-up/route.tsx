@@ -25,6 +25,7 @@ const createActionError = (error: ActionError) => json({ error });
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const formData = await request.formData();
+    const redirectTo = formData.get("redirectTo");
     const parsedForm = credentialsSchema.safeParse(
       Object.fromEntries(formData),
     );
@@ -33,7 +34,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         ...parsedForm.error.flatten().fieldErrors,
       });
     }
-    const { redirectTo, ...credentials } = parsedForm.data;
+    const credentials = parsedForm.data;
 
     const existingUser = await lookForUser(credentials.email);
     if (existingUser) {
@@ -103,7 +104,7 @@ export default function Register() {
           <small>
             Already have an account?{" "}
             <Link
-              className="text-primary-600 dark:text-primary-400 underline underline-offset-4"
+              className="text-primary-600 underline underline-offset-4 dark:text-primary-400"
               to={`/sign-in?${searchParams}`}
             >
               Sign in here.

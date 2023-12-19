@@ -19,7 +19,6 @@ export const credentialsSchema = z.object({
     .string()
     .trim()
     .min(8, "Password must be at least 8 chracters long."),
-  redirectTo: z.string().optional(),
 });
 export type Credentials = z.infer<typeof credentialsSchema>;
 
@@ -43,7 +42,10 @@ export const createJWT = async (
     .sign(secret);
 };
 
+// One week
 export const refreshTokenDuration = 60 * 60 * 24 * 7;
+// One hour
+export const shortRefreshTokenDuration = 60 * 60;
 
 export const refreshTokenCookie = createCookie("refreshToken", {
   sameSite: "lax",
@@ -53,6 +55,7 @@ export const refreshTokenCookie = createCookie("refreshToken", {
   secure: env().NODE_ENV === "production",
 });
 
+// Five minutes
 export const accessTokenDuration = 60 * 5;
 
 export const accessTokenCookie = createCookie("accessToken", {
@@ -104,12 +107,18 @@ export const createUser = async (credentials: Credentials) => {
   }
 };
 
-export const createRefreshToken = async ({ email, id, username }: AppUser) => {
-  return await createJWT(refreshTokenDuration, {
-    email,
-    id,
-    username,
-  } as AppUser);
+export const createRefreshToken = async (
+  { email, id, username }: AppUser,
+  rememberUser = true,
+) => {
+  return await createJWT(
+    rememberUser ? refreshTokenDuration : shortRefreshTokenDuration,
+    {
+      email,
+      id,
+      username,
+    } as AppUser,
+  );
 };
 
 export const createAccessToken = async ({ email, id, username }: AppUser) => {
@@ -156,7 +165,8 @@ export const signOut = async () => {
 export const getUserToken = async (token: string) => {
   try {
     const secret = new TextEncoder().encode(env().JWT_SECRET);
-    const verifiedToken = await jwtVerify(token, secret);
+    const verifiedToken = await jwtVerify(token, secret, { clockTolerance: 0 });
+    if (!verifiedToken) return null;
     const userToken = verifiedToken.payload as AppUser;
     return userToken;
   } catch {

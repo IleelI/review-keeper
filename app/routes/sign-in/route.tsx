@@ -25,13 +25,15 @@ const createActionError = (error: ActionError) => json({ error });
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const formData = await request.formData();
+    const redirectTo = formData.get("redirectTo");
+    const rememberMe = Boolean(formData.get("rememberMe"));
     const parsedData = await credentialsSchema.safeParseAsync(
       Object.fromEntries(formData),
     );
     if (!parsedData.success) {
       return createActionError({ ...parsedData.error.flatten().fieldErrors });
     }
-    const { redirectTo, ...credentials } = parsedData.data;
+    const credentials = parsedData.data;
 
     const user = await lookForUser(credentials.email);
     if (!user) {
@@ -46,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       return createActionError({ password: "Incorrect password." });
     }
 
-    const refreshToken = await createRefreshToken(user);
+    const refreshToken = await createRefreshToken(user, rememberMe);
     const accessToken = await createAccessToken(user);
     await prisma.user.update({
       where: { email: user.email },
@@ -87,6 +89,17 @@ export default function Login() {
             <InputField name="password" type="password" />
             {passwordError ? <InputError error={passwordError} /> : null}
           </div>
+          <div className="flex items-center gap-1.5">
+            <input
+              className="relative h-6 w-6 appearance-none overflow-hidden rounded-md border border-neutral-300 bg-neutral-100 after:absolute after:left-1/2 after:top-1/2 after:h-1/2 after:w-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-sm after:bg-transparent after:transition-colors after:content-[''] checked:after:bg-primary-700 dark:border-neutral-700 dark:bg-neutral-900 checked:dark:after:bg-primary-300"
+              defaultChecked
+              id="rememberMe"
+              name="rememberMe"
+              type="checkbox"
+            />
+            <label htmlFor="rememberMe">Remember me</label>
+          </div>
+
           <input type="hidden" name="redirectTo" value={redirectTo} />
         </fieldset>
 
@@ -100,7 +113,7 @@ export default function Login() {
           <small>
             Don&apos;t have an account?{" "}
             <Link
-              className="text-primary-600 dark:text-primary-400 underline underline-offset-4"
+              className="text-primary-600 underline underline-offset-4 dark:text-primary-400"
               to={`/sign-up?${searchParams}`}
             >
               Sign up here.

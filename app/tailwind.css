@@ -11,8 +11,6 @@ body {
   @apply p-4 min-h-screen w-full
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+*:focus-visible {
+  @apply outline outline-2 outline-offset-0 outline-primary-700 dark:outline-primary-300;
 }
