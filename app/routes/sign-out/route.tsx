@@ -1,9 +1,9 @@
 import { redirect } from "@remix-run/node";
 
-import { logout } from "~/server/auth.server";
+import { signOut } from "~/server/auth.server";
 
 export async function action() {
-  return logout();
+  return await signOut();
 }
 
 export async function loader() {

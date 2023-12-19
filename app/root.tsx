@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import { json, LoaderFunctionArgs, type LinksFunction } from "@remix-run/node";
+import { LoaderFunctionArgs, type LinksFunction, json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -17,12 +17,8 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
-// Load user in root so every other route doesn't have to load it
-// and can consume it via useMatches.
 export const loader = async ({ request }: LoaderFunctionArgs) =>
-  json({
-    user: await getUser(request),
-  });
+  json({ user: await getUser(request) });
 
 export default function App() {
   return (

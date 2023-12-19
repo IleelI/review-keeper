@@ -9,8 +9,9 @@ export const mockUser = (): MockedUser => {
 
   return {
     email,
-    username,
     hash,
+    refreshToken: null,
+    username,
   };
 };
 export const mockUsers = (count?: number) => {

@@ -9,6 +9,7 @@ export default {
       info: colors.blue,
       inherit: colors.inherit,
       neutral: colors.gray,
+      primary: colors.indigo,
       success: colors.emerald,
       transparent: colors.transparent,
       warning: colors.amber,
