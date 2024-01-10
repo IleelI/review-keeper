@@ -167,8 +167,7 @@ export const getUserToken = async (token: string) => {
     const secret = new TextEncoder().encode(env().JWT_SECRET);
     const verifiedToken = await jwtVerify(token, secret, { clockTolerance: 0 });
     if (!verifiedToken) return null;
-    const userToken = verifiedToken.payload as AppUser;
-    return userToken;
+    return verifiedToken.payload as AppUser;
   } catch {
     return null;
   }
