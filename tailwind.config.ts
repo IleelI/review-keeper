@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
+  darkMode: "class",
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
   theme: {
     colors: ({ colors }) => ({
@@ -15,7 +17,11 @@ export default {
       warning: colors.amber,
       white: colors.white,
     }),
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Quicksand", ...defaultTheme.fontFamily.sans],
+      },
+    },
   },
   plugins: [],
 } satisfies Config;

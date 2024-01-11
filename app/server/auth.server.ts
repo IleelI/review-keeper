@@ -197,7 +197,6 @@ export const getRequiredUser = async (request: Request) => {
   return user;
 };
 
-export const returnPathSearchParam = "return-path";
 export const requireUser = async (
   request: Request,
   redirectTo: string = new URL(request.url).pathname,
@@ -207,16 +206,14 @@ export const requireUser = async (
     accessTokenCookie.parse(cookies),
     refreshTokenCookie.parse(cookies),
   ]);
-  const searchParams = new URLSearchParams([
-    [returnPathSearchParam, redirectTo],
-  ]);
+  const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
 
   if (accessToken) {
     const userToken = await getUserToken(accessToken);
-    if (!userToken) throw redirect(`/sing-in${searchParams}`);
+    if (!userToken) throw redirect(`/sign-in?${searchParams}`);
     return userToken;
   } else if (!refreshToken) {
-    throw redirect(`/sing-in${searchParams}`);
+    throw redirect(`/sign-in?${searchParams}`);
   } else {
     throw redirectDocument(`/refresh?${searchParams}`);
   }

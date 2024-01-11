@@ -6,12 +6,11 @@ import {
   getUserToken,
   signOut,
   refreshTokenCookie,
-  returnPathSearchParam,
 } from "~/server/auth.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const searchParams = new URL(request.url).searchParams;
-  const returnPath = searchParams.get(returnPathSearchParam) ?? "/";
+  const redirectTo = searchParams.get("redirectTo") ?? "/";
   const cookies = request.headers.get("Cookie");
   const refreshToken = await refreshTokenCookie.parse(cookies);
 
@@ -25,5 +24,5 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const headers = new Headers();
   headers.set("Set-Cookie", await accessTokenCookie.serialize(accessToken));
 
-  return redirect(returnPath, { headers });
+  return redirect(redirectTo, { headers });
 };

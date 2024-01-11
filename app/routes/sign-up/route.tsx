@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunction,
+  json,
+  redirect,
+} from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 
 import InputError from "~/components/input-error/input-error";
@@ -11,6 +16,7 @@ import {
   createAccessToken,
   signIn,
   createUser,
+  getUser,
 } from "~/server/auth.server";
 import { prisma } from "~/server/db.server";
 import { safeRedirect } from "~/utils/utils";
@@ -63,6 +69,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       other: "Something went wrong while registering.",
     });
   }
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUser(request);
+  if (user) return redirect("/");
+  return null;
 };
 
 export default function Register() {

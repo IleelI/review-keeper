@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunction,
+  json,
+  redirect,
+} from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 
 import InputError from "~/components/input-error/input-error";
@@ -11,6 +16,7 @@ import {
   credentialsSchema,
   signIn,
   lookForUser,
+  getUser,
 } from "~/server/auth.server";
 import { prisma } from "~/server/db.server";
 import { safeRedirect } from "~/utils/utils";
@@ -63,9 +69,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUser(request);
+  if (user) return redirect("/");
+  return null;
+};
+
 export default function Login() {
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/";
+  const redirectTo = searchParams.get("redirectTo");
   const actionData = useActionData<typeof action>();
   const emailError = actionData?.error.email;
   const passwordError = actionData?.error.password;
@@ -100,7 +112,7 @@ export default function Login() {
             <label htmlFor="rememberMe">Remember me</label>
           </div>
 
-          <input type="hidden" name="redirectTo" value={redirectTo} />
+          <input type="hidden" name="redirectTo" value={redirectTo || "/"} />
         </fieldset>
 
         <div className="flex flex-col gap-1.5">

@@ -6,13 +6,12 @@ import useUser from "~/hooks/useUser";
 export const meta: MetaFunction = () => {
   return [
     { title: "Review Keeper" },
-    { name: "description", content: "Welcome to Remix!" },
+    { name: "description", content: "Welcome to Review Keeper!" },
   ];
 };
 
 export default function Index() {
   const user = useUser();
-  console.log(user);
 
   return (
     <div className="flex flex-col gap-6">
@@ -21,7 +20,6 @@ export default function Index() {
         <p className="text-xl font-medium text-neutral-900 dark:text-neutral-50">
           Auth showcase
         </p>
-        <Link to="/protected">Protected resource</Link>
         <section className="grid grid-cols-2 items-center gap-4">
           {user ? (
             <Form action="/sign-out" method="post">

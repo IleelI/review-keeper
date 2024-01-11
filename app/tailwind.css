@@ -8,7 +8,10 @@ body {
 }
 
 body {
-  @apply p-4 min-h-screen w-full
+  @apply px-8 py-6 min-h-screen w-full
+}
+*,*::before,*::after {
+  line-height: 1.5 !important;
 }
 
 *:focus-visible {
