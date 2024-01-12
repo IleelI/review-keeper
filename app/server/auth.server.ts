@@ -5,6 +5,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { z } from "zod";
 
 import { AppUser, getUserById } from "~/models/user";
+import { safeRedirect } from "~/utils/utils";
 
 import { prisma } from "./db.server";
 import { env } from "./env.server";
@@ -177,8 +178,12 @@ export const getUser = async (request: Request) => {
   const cookies = request.headers.get("Cookie");
   const accessToken = await accessTokenCookie.parse(cookies);
   const refreshToken = await refreshTokenCookie.parse(cookies);
+
   if (!accessToken && refreshToken) {
-    throw redirectDocument("/refresh");
+    const { searchParams, pathname } = new URL(request.url);
+    const redirectTo = safeRedirect(searchParams.get("redirectTo") || pathname);
+    const newSearchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+    throw redirectDocument(`/refresh?${newSearchParams}`);
   }
 
   const userToken = await getUserToken(accessToken);

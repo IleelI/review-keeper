@@ -1,3 +1,6 @@
+import { CaretDown } from "@phosphor-icons/react";
+import * as Label from "@radix-ui/react-label";
+import * as Select from "@radix-ui/react-select";
 import { LoaderFunction } from "@remix-run/node";
 import { Form, NavLink } from "@remix-run/react";
 
@@ -45,20 +48,40 @@ export default function NewReview() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="font-medium text-neutral-700" htmlFor="category">
+            <Label.Root
+              className="font-medium text-neutral-700"
+              htmlFor="category"
+            >
               Category
-            </label>
-            <span className="relative after:pointer-events-none after:absolute after:right-3 after:top-1/2 after:-translate-y-1/2 after:content-['↓']">
-              <select
-                className="flex w-full appearance-none items-center rounded-lg border border-neutral-400 bg-transparent py-1.5 pl-2.5 pr-8 text-neutral-700"
-                id="category"
-                name="category"
-              >
-                <option value="uncategorised">Uncategorised</option>
-                <option value="electronics">Electronics</option>
-                <option value="software">Software</option>
-              </select>
-            </span>
+            </Label.Root>
+            <Select.Root>
+              <Select.Trigger className="flex items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400">
+                <Select.Value placeholder="Select category" />
+                <Select.Icon>
+                  <CaretDown />
+                </Select.Icon>
+              </Select.Trigger>
+
+              <Select.Portal>
+                <Select.Content
+                  className="flex max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)] flex-col items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+                  position="popper"
+                  sideOffset={8}
+                >
+                  <Select.ScrollUpButton />
+                  <Select.Viewport>
+                    <Select.Item value="item-1">
+                      <Select.ItemText>Item 1</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item value="item-2">
+                      <Select.ItemText>Item 2</Select.ItemText>
+                    </Select.Item>
+                  </Select.Viewport>
+                  <Select.ScrollDownButton />
+                  <Select.Arrow />
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
           </div>
 
           <fieldset className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -71,6 +94,8 @@ export default function NewReview() {
               </label>
               <input
                 className="flex w-full items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+                id="ratingValue"
+                name="ratingValue"
                 placeholder="ex. 50"
               />
             </div>
@@ -83,6 +108,8 @@ export default function NewReview() {
               </label>
               <input
                 className="flex w-full items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+                id="ratingScale"
+                name="ratingScale"
                 placeholder="ex. 100"
               />
             </div>

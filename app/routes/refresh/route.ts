@@ -9,7 +9,7 @@ import {
 } from "~/server/auth.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const searchParams = new URL(request.url).searchParams;
+  const { searchParams } = new URL(request.url);
   const redirectTo = searchParams.get("redirectTo") ?? "/";
   const cookies = request.headers.get("Cookie");
   const refreshToken = await refreshTokenCookie.parse(cookies);
