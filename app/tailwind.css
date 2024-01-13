@@ -16,7 +16,3 @@ body {
 *::after {
   @apply min-w-0 !leading-normal;
 }
-
-*:focus-visible {
-  @apply outline outline-2 outline-offset-0 outline-primary-700 dark:outline-primary-300;
-}

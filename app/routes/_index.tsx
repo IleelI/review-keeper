@@ -22,14 +22,17 @@ export default function Index() {
         </p>
         <section className="grid grid-cols-2 items-center gap-4">
           {user ? (
-            <Form action="/sign-out" method="post">
-              <button
-                type="submit"
-                className="rounded-md bg-neutral-900 px-4 py-1.5 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
-              >
-                Log out
-              </button>
-            </Form>
+            <div>
+              <Link to="/review/new">New Review</Link>
+              <Form action="/sign-out" method="post">
+                <button
+                  type="submit"
+                  className="rounded-md bg-neutral-900 px-4 py-1.5 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
+                >
+                  Log out
+                </button>
+              </Form>
+            </div>
           ) : (
             <>
               <Link

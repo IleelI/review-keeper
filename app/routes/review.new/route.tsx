@@ -1,4 +1,4 @@
-import { CaretDown } from "@phosphor-icons/react";
+import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import * as Label from "@radix-ui/react-label";
 import * as Select from "@radix-ui/react-select";
 import { LoaderFunction } from "@remix-run/node";
@@ -40,7 +40,7 @@ export default function NewReview() {
               Title <span className="text-error-700">*</span>
             </label>
             <input
-              className="flex items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+              className="flex items-center rounded-lg border border-neutral-300 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
               id="title"
               name="title"
               placeholder="ex. Review Keeper is it worth it?"
@@ -55,7 +55,10 @@ export default function NewReview() {
               Category
             </Label.Root>
             <Select.Root>
-              <Select.Trigger className="flex items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400">
+              <Select.Trigger
+                className="flex items-center justify-between rounded-lg border border-neutral-300 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+                id="category"
+              >
                 <Select.Value placeholder="Select category" />
                 <Select.Icon>
                   <CaretDown />
@@ -64,21 +67,30 @@ export default function NewReview() {
 
               <Select.Portal>
                 <Select.Content
-                  className="flex max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)] flex-col items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+                  className="max-h-[200px] w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border border-neutral-300 bg-neutral-50 text-neutral-700"
                   position="popper"
                   sideOffset={8}
                 >
-                  <Select.ScrollUpButton />
-                  <Select.Viewport>
-                    <Select.Item value="item-1">
+                  <Select.ScrollUpButton className="flex items-center justify-center border-b border-neutral-300 px-2.5 py-1.5">
+                    <CaretUp />
+                  </Select.ScrollUpButton>
+                  <Select.Viewport className="flex flex-col gap-2 rounded-lg">
+                    <Select.Item
+                      className="px-2.5 py-1.5 data-[highlighted]:bg-primary-600 data-[highlighted]:text-neutral-200"
+                      value="item-1"
+                    >
                       <Select.ItemText>Item 1</Select.ItemText>
                     </Select.Item>
-                    <Select.Item value="item-2">
+                    <Select.Item
+                      className="px-2.5 py-1.5 data-[highlighted]:bg-primary-600 data-[highlighted]:text-neutral-200"
+                      value="item-2"
+                    >
                       <Select.ItemText>Item 2</Select.ItemText>
                     </Select.Item>
                   </Select.Viewport>
-                  <Select.ScrollDownButton />
-                  <Select.Arrow />
+                  <Select.ScrollDownButton className="flex items-center justify-center border-t border-neutral-300 px-2.5 py-1.5">
+                    <CaretDown />
+                  </Select.ScrollDownButton>
                 </Select.Content>
               </Select.Portal>
             </Select.Root>
@@ -93,7 +105,7 @@ export default function NewReview() {
                 Rating
               </label>
               <input
-                className="flex w-full items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+                className="flex w-full items-center rounded-lg border border-neutral-300 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
                 id="ratingValue"
                 name="ratingValue"
                 placeholder="ex. 50"
@@ -107,7 +119,7 @@ export default function NewReview() {
                 Rating Scale
               </label>
               <input
-                className="flex w-full items-center rounded-lg border border-neutral-400 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
+                className="flex w-full items-center rounded-lg border border-neutral-300 bg-transparent px-2.5 py-1.5 text-neutral-700 placeholder:text-neutral-400"
                 id="ratingScale"
                 name="ratingScale"
                 placeholder="ex. 100"
@@ -120,7 +132,7 @@ export default function NewReview() {
               Review <span className="text-error-700">*</span>
             </label>
             <textarea
-              className="flex max-h-[480px] min-h-[240px] resize-y items-center rounded-lg border border-neutral-400 bg-transparent p-2.5 text-neutral-700 placeholder:text-neutral-400"
+              className="flex max-h-[480px] min-h-[240px] resize-y items-center rounded-lg border border-neutral-300 bg-transparent p-2.5 text-neutral-700 placeholder:text-neutral-400"
               id="content"
               name="content"
               placeholder="ex. Great experience, would recommend it again!"
