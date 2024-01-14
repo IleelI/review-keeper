@@ -35,7 +35,7 @@ body {
 *,
 *::before,
 *::after {
-  @apply min-w-0 !leading-normal;
+  @apply min-w-0;
 }
 
 *:focus-visible {
