@@ -40,7 +40,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div className="px-8 py-6">
+        <div className="m-auto max-w-screen-xl px-8 py-6">
           <Outlet />
           <ScrollRestoration />
           <Scripts />
