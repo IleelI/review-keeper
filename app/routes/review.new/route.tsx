@@ -2,15 +2,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretDown, CaretUp, Check } from "@phosphor-icons/react";
 import * as Label from "@radix-ui/react-label";
 import * as Select from "@radix-ui/react-select";
-import { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { NavLink, useFetcher } from "@remix-run/react";
+import { ActionFunction, LoaderFunctionArgs, json } from "@remix-run/node";
+import { NavLink, useFetcher, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { requireUser } from "~/server/auth.server";
+import { getReviewCategories } from "~/server/review.server";
 
-const newReviewSchema = z
+const reviewSchema = z
   .object({
     title: z.string().trim().min(1, "Title is required."),
     category: z.string().trim().min(1, "Category is required."),
@@ -50,7 +51,7 @@ const newReviewSchema = z
       });
     }
   });
-type NewReviewSchema = z.infer<typeof newReviewSchema>;
+type ReviewSchema = z.infer<typeof reviewSchema>;
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
@@ -58,36 +59,34 @@ export const action: ActionFunction = async ({ request }) => {
   return null;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireUser(request);
-  return null;
+  const categories = await getReviewCategories();
+  return json({ categories });
 };
 
-const defaultValues: NewReviewSchema = {
+const defaultValues: ReviewSchema = {
   title: "",
   review: "",
   category: "",
 };
 
 export default function NewReview() {
-  // TODO - Get categories from the backend
-  const fetcher = useFetcher({
-    key: "newReview",
-  });
+  const { categories } = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
   const {
     control,
     formState: { disabled, errors },
     handleSubmit,
     register,
     trigger,
-  } = useForm<NewReviewSchema>({
+  } = useForm<ReviewSchema>({
     defaultValues,
-    resolver: zodResolver(newReviewSchema),
+    resolver: zodResolver(reviewSchema),
   });
 
-  const onSubmitSuccess: SubmitHandler<NewReviewSchema> = (_, event) => {
+  const onSubmitSuccess: SubmitHandler<ReviewSchema> = (_, event) =>
     fetcher.submit(event?.target, { method: "post", navigate: false });
-  };
 
   return (
     <main className="flex flex-col gap-6">
@@ -140,14 +139,18 @@ export default function NewReview() {
               <Controller
                 control={control}
                 name="category"
-                render={({ field: { ref, ...field } }) => (
+                render={({
+                  field: { disabled, name, onChange, ref, value },
+                }) => (
                   <>
                     <Label.Root className="font-medium" htmlFor="category">
                       Category
                     </Label.Root>
                     <Select.Root
-                      {...field}
-                      onValueChange={(value) => field.onChange(value)}
+                      disabled={disabled}
+                      name={name}
+                      onValueChange={onChange}
+                      value={value}
                     >
                       <Select.Trigger
                         ref={ref}
@@ -172,84 +175,22 @@ export default function NewReview() {
                           </Select.ScrollUpButton>
 
                           <Select.Viewport className="flex flex-col gap-2 rounded-lg p-2">
-                            <Select.Item
-                              className={clsx([
-                                "flex select-none items-center justify-between gap-2 rounded-md border border-transparent px-2 py-1.5 transition-colors data-[disabled]:opacity-40",
-                                "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
-                                "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
-                              ])}
-                              value="item-1"
-                            >
-                              <Select.ItemText>Item 1</Select.ItemText>
-                              <Select.ItemIndicator className="inline-flex items-center justify-center">
-                                <Check weight="bold" />
-                              </Select.ItemIndicator>
-                            </Select.Item>
-                            <Select.Item
-                              className={clsx([
-                                "flex select-none items-center justify-between gap-2 rounded-md border border-transparent px-2 py-1.5 transition-colors data-[disabled]:opacity-40",
-                                "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
-                                "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
-                              ])}
-                              value="item-2"
-                            >
-                              <Select.ItemText>Item 2</Select.ItemText>
-                              <Select.ItemIndicator className="inline-flex items-center justify-center">
-                                <Check weight="bold" />
-                              </Select.ItemIndicator>
-                            </Select.Item>
-                            <Select.Item
-                              className={clsx([
-                                "flex select-none items-center justify-between gap-2 rounded-md border border-transparent px-2 py-1.5 transition-colors data-[disabled]:opacity-40",
-                                "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
-                                "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
-                              ])}
-                              value="item-3"
-                            >
-                              <Select.ItemText>Item 3</Select.ItemText>
-                              <Select.ItemIndicator className="inline-flex items-center justify-center">
-                                <Check weight="bold" />
-                              </Select.ItemIndicator>
-                            </Select.Item>
-                            <Select.Item
-                              className={clsx([
-                                "flex select-none items-center justify-between gap-2 rounded-md border border-transparent px-2 py-1.5 transition-colors data-[disabled]:opacity-40",
-                                "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
-                                "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
-                              ])}
-                              value="item-4"
-                            >
-                              <Select.ItemText>Item 4</Select.ItemText>
-                              <Select.ItemIndicator className="inline-flex items-center justify-center">
-                                <Check weight="bold" />
-                              </Select.ItemIndicator>
-                            </Select.Item>
-                            <Select.Item
-                              className={clsx([
-                                "flex select-none items-center justify-between gap-2 rounded-md border border-transparent px-2 py-1.5 transition-colors data-[disabled]:opacity-40",
-                                "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
-                                "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
-                              ])}
-                              value="item-5"
-                            >
-                              <Select.ItemText>Item 5</Select.ItemText>
-                              <Select.ItemIndicator className="inline-flex items-center justify-center">
-                                <Check weight="bold" />
-                              </Select.ItemIndicator>
-                            </Select.Item>
-                            <Select.Item
-                              className={clsx([
-                                "flex select-none items-center justify-between gap-2 rounded-md border border-transparent px-2 py-1.5 transition-colors data-[disabled]:opacity-40",
-                                "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
-                                "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
-                              ])}
-                              value="item-6"
-                            >
-                              <Select.ItemText>Item 6</Select.ItemText>
-                              <Select.ItemIndicator className="inline-flex items-center justify-center">
-                                <Check weight="bold" />
-                              </Select.ItemIndicator>
-                            </Select.Item>
+                            {categories.map(({ id, name }) => (
+                              <Select.Item
+                                className={clsx([
+                                  "flex select-none items-center justify-between gap-2 rounded-md border border-transparent bg-transparent px-2 py-1.5 transition-colors duration-300 data-[disabled]:opacity-40",
+                                  "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
+                                  "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
+                                ])}
+                                key={id}
+                                value={name}
+                              >
+                                <Select.ItemText>{name}</Select.ItemText>
+                                <Select.ItemIndicator className="inline-flex items-center justify-center">
+                                  <Check weight="bold" />
+                                </Select.ItemIndicator>
+                              </Select.Item>
+                            ))}
                           </Select.Viewport>
 
                           <Select.ScrollDownButton className="flex items-center justify-center border-t border-neutral-300 p-2.5 dark:border-neutral-800">
