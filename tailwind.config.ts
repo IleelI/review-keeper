@@ -18,7 +18,9 @@ export default {
     }),
     extend: {
       fontFamily: {
-        sans: ["Quicksand", ...defaultTheme.fontFamily.sans],
+        sans: ["Space Grotesk", ...defaultTheme.fontFamily.sans],
+        serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
+        mono: ["Space Mono", ...defaultTheme.fontFamily.mono],
       },
     },
   },

@@ -123,13 +123,13 @@ export default function NewReview() {
                 Title <span className="text-red-700 dark:text-red-300">*</span>
               </Label.Root>
               <input
-                className="flex items-center rounded-lg border border-neutral-300 bg-neutral-50 bg-transparent px-4 py-2 placeholder:text-neutral-500 dark:border-neutral-800 dark:bg-neutral-950 dark:placeholder:text-neutral-600"
+                className="flex items-center rounded-lg border border-neutral-300 bg-neutral-50 px-4 py-2 placeholder:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
                 id="title"
                 placeholder="ex. Is Review Keeper worth it?"
                 {...register("title")}
               />
               {errors.title ? (
-                <small className="text-red-700 dark:text-red-300 text-sm font-medium">
+                <small className="text-sm font-medium text-red-700 dark:text-red-300">
                   {errors.title.message}
                 </small>
               ) : null}
@@ -155,7 +155,7 @@ export default function NewReview() {
                       <Select.Trigger
                         ref={ref}
                         aria-label="Category"
-                        className="flex items-center justify-between rounded-lg border border-neutral-300 bg-neutral-50 bg-transparent px-4 py-2 data-[placeholder]:text-neutral-400 dark:border-neutral-800 dark:bg-neutral-950 dark:data-[placeholder]:text-neutral-600"
+                        className="flex items-center justify-between rounded-lg border border-neutral-300 bg-neutral-50 px-4 py-2 data-[placeholder]:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:data-[placeholder]:text-neutral-400"
                         id="category"
                       >
                         <Select.Value placeholder="Select a category..." />
@@ -166,11 +166,11 @@ export default function NewReview() {
 
                       <Select.Portal>
                         <Select.Content
-                          className="data-[state='open']:animate-in max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border border-neutral-300 bg-white shadow-md dark:border-neutral-800 dark:bg-neutral-900 md:max-h-[300px]"
+                          className="data-[state='open']:animate-in max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border border-neutral-300 bg-neutral-50 shadow-md dark:border-neutral-700 dark:bg-neutral-800 dark:shadow-xl md:max-h-[300px]"
                           position="popper"
-                          sideOffset={8}
+                          sideOffset={16}
                         >
-                          <Select.ScrollUpButton className="flex items-center justify-center border-b border-neutral-300 p-2.5 dark:border-neutral-800">
+                          <Select.ScrollUpButton className="flex items-center justify-center border-b border-neutral-300 p-2.5 dark:border-neutral-600">
                             <CaretUp weight="bold" />
                           </Select.ScrollUpButton>
 
@@ -178,9 +178,9 @@ export default function NewReview() {
                             {categories.map(({ id, name }) => (
                               <Select.Item
                                 className={clsx([
-                                  "flex select-none items-center justify-between gap-2 rounded-md border border-transparent bg-transparent px-2 py-1.5 transition-colors duration-300 data-[disabled]:opacity-40",
+                                  "flex select-none items-center justify-between gap-2 rounded-md border border-transparent bg-transparent px-2 py-1.5 transition-colors duration-150 data-[disabled]:opacity-40",
                                   "data-[state=checked]:bg-primary-600 data-[state=checked]:text-neutral-200 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-800",
-                                  "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-200",
+                                  "data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-800 data-[highlighted]:outline-none dark:data-[highlighted]:bg-neutral-700 dark:data-[highlighted]:text-neutral-200",
                                 ])}
                                 key={id}
                                 value={name}
@@ -193,14 +193,14 @@ export default function NewReview() {
                             ))}
                           </Select.Viewport>
 
-                          <Select.ScrollDownButton className="flex items-center justify-center border-t border-neutral-300 p-2.5 dark:border-neutral-800">
+                          <Select.ScrollDownButton className="flex items-center justify-center border-t border-neutral-300 p-2.5 dark:border-neutral-600">
                             <CaretDown weight="bold" />
                           </Select.ScrollDownButton>
                         </Select.Content>
                       </Select.Portal>
                     </Select.Root>
                     {errors.category ? (
-                      <small className="text-red-700 dark:text-red-300 text-sm font-medium">
+                      <small className="text-sm font-medium text-red-700 dark:text-red-300">
                         {errors.category.message}
                       </small>
                     ) : null}
@@ -215,7 +215,7 @@ export default function NewReview() {
                   Rating
                 </Label.Root>
                 <input
-                  className="flex items-center rounded-lg border border-neutral-300 bg-neutral-50 bg-transparent px-4 py-2 placeholder:text-neutral-500 dark:border-neutral-800 dark:bg-neutral-950 dark:placeholder:text-neutral-600"
+                  className="flex items-center rounded-lg border border-neutral-300 bg-neutral-50 px-4 py-2 placeholder:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
                   id="rating"
                   inputMode="numeric"
                   placeholder="ex. 50"
@@ -225,7 +225,7 @@ export default function NewReview() {
                   })}
                 />
                 {errors.rating ? (
-                  <small className="text-red-700 dark:text-red-300 text-sm font-medium">
+                  <small className="text-sm font-medium text-red-700 dark:text-red-300">
                     {errors.rating.message}
                   </small>
                 ) : null}
@@ -235,7 +235,7 @@ export default function NewReview() {
                   Rating Scale
                 </Label.Root>
                 <input
-                  className="flex items-center rounded-lg border border-neutral-300 bg-neutral-50 bg-transparent px-4 py-2 placeholder:text-neutral-500 dark:border-neutral-800 dark:bg-neutral-950 dark:placeholder:text-neutral-600"
+                  className="flex items-center rounded-lg border border-neutral-300 bg-neutral-50 px-4 py-2 placeholder:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
                   id="ratingScale"
                   inputMode="numeric"
                   placeholder="ex. 100"
@@ -245,7 +245,7 @@ export default function NewReview() {
                   })}
                 />
                 {errors.ratingScale ? (
-                  <small className="text-red-700 dark:text-red-300 text-sm font-medium">
+                  <small className="text-sm font-medium text-red-700 dark:text-red-300">
                     {errors.ratingScale.message}
                   </small>
                 ) : null}
@@ -258,13 +258,13 @@ export default function NewReview() {
               </Label.Root>
 
               <textarea
-                className="flex max-h-[480px] min-h-[240px] resize-y items-center rounded-lg border border-neutral-300 bg-neutral-50 bg-transparent px-4 py-2 leading-loose placeholder:text-neutral-500 dark:border-neutral-800 dark:bg-neutral-950 dark:placeholder:text-neutral-600"
+                className="flex max-h-[480px] min-h-[240px] resize-y items-center rounded-lg border border-neutral-300 bg-neutral-50 px-4 py-2 leading-loose placeholder:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
                 id="review"
                 placeholder="ex. Great experience, would recommend it again!"
                 {...register("review")}
               />
               {errors.review ? (
-                <small className="text-red-700 dark:text-red-300 text-sm font-medium">
+                <small className="text-sm font-medium text-red-700 dark:text-red-300">
                   {errors.review.message}
                 </small>
               ) : null}
@@ -273,21 +273,20 @@ export default function NewReview() {
 
           <legend className="text-sm font-medium text-neutral-500">
             Fields marked with{" "}
-            <span className="text-red-700 dark:text-red-300 text-base">*</span>{" "}
+            <span className="text-base text-red-700 dark:text-red-300">*</span>{" "}
             are required.
           </legend>
         </section>
 
         <nav className="flex gap-4">
           <button
-            className="flex items-center justify-center rounded-lg border border-neutral-700 px-4 py-2 font-bold transition-colors duration-300 enabled:hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-neutral-300 dark:text-neutral-300 dark:enabled:hover:bg-neutral-800"
-            disabled
+            className="flex items-center justify-center rounded-lg border border-neutral-700 px-4 py-2 font-bold outline-offset-4 transition-colors duration-300 enabled:hover:bg-neutral-100 enabled:focus-visible:bg-neutral-100 enabled:active:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-neutral-300 dark:text-neutral-300 dark:enabled:hover:bg-neutral-800 dark:enabled:focus-visible:bg-neutral-800 dark:enabled:active:bg-neutral-700"
             type="button"
           >
             Save as draft
           </button>
           <button
-            className="flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 font-bold text-neutral-200 transition-colors duration-300 enabled:hover:bg-primary-700 enabled:active:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-primary-300 dark:text-neutral-800 dark:enabled:hover:bg-primary-400 dark:enabled:active:bg-primary-500"
+            className="flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 font-bold text-neutral-200 outline-offset-4 transition-colors duration-300 enabled:hover:bg-primary-700 enabled:focus-visible:bg-primary-700 enabled:active:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-primary-400 dark:text-neutral-800 dark:enabled:hover:bg-primary-300 dark:enabled:focus-visible:bg-primary-300 dark:enabled:active:bg-primary-200"
             disabled={disabled}
             type="submit"
           >
