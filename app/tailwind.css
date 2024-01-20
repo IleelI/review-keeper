@@ -42,6 +42,10 @@ body {
   @apply min-h-screen w-full;
 }
 
+.ProseMirror {
+  white-space: pre-wrap;
+}
+
 .tiptap {
   * {
     text-wrap: pretty;

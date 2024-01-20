@@ -6,9 +6,9 @@ import {
 } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 
-import InputError from "~/components/input-error/input-error";
-import InputField from "~/components/input-field/input-field";
-import InputLabel from "~/components/input-label/input-label";
+import InputError from "~/components/ atoms/InputError/InputError";
+import InputField from "~/components/ atoms/InputField/InputField";
+import InputLabel from "~/components/ atoms/InputLabel/InputLabel";
 import {
   comparePasswords,
   createAccessToken,

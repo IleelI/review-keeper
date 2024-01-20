@@ -4,17 +4,22 @@ import * as Label from "@radix-ui/react-label";
 import * as Select from "@radix-ui/react-select";
 import { ActionFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { NavLink, useFetcher, useLoaderData } from "@remix-run/react";
+import CharacterCountExtension from "@tiptap/extension-character-count";
+import { useEditor } from "@tiptap/react";
 import clsx from "clsx";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import RichTextEditor, {
+  extensions,
+} from "~/components/molecules/RichTextEditor";
 import { requireUser } from "~/server/auth.server";
 import { getReviewCategories } from "~/server/review.server";
 
 const reviewSchema = z
   .object({
     title: z.string().trim().min(1, "Title is required."),
-    category: z.string().trim().min(1, "Category is required."),
+    category: z.string().optional(),
     rating: z
       .number({ invalid_type_error: "Rating must be a number." })
       .min(0, "Rating cannot be less than 0.")
@@ -53,7 +58,15 @@ const reviewSchema = z
   });
 type ReviewSchema = z.infer<typeof reviewSchema>;
 
+const delay = async (time: number) =>
+  new Promise((resolve) =>
+    setTimeout(() => {
+      resolve(true);
+    }, time),
+  );
+
 export const action: ActionFunction = async ({ request }) => {
+  await delay(5_000);
   const formData = Object.fromEntries(await request.formData());
   console.log({ formData });
   return null;
@@ -66,24 +79,48 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 const defaultValues: ReviewSchema = {
-  title: "",
-  review: "",
   category: "",
+  review: "",
+  title: "",
 };
+
+const CHARACTERS_LIMIT = 500;
 
 export default function NewReview() {
   const { categories } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const {
+    clearErrors,
     control,
     formState: { disabled, errors },
     handleSubmit,
     register,
     trigger,
+    setError,
+    setValue,
   } = useForm<ReviewSchema>({
     defaultValues,
     resolver: zodResolver(reviewSchema),
   });
+  const editor = useEditor({
+    extensions: [
+      ...extensions,
+      CharacterCountExtension.configure({
+        mode: "textSize",
+        limit: CHARACTERS_LIMIT,
+      }),
+    ],
+    injectCSS: false,
+    onUpdate: ({ editor }) => {
+      setValue("review", editor.isEmpty ? "" : editor.getHTML());
+      if (editor.isEmpty) {
+        setError("review", { message: "Review is required.", type: "min" });
+      } else {
+        clearErrors("review");
+      }
+    },
+  });
+  const characterCount = editor?.storage.characterCount.characters() ?? 0;
 
   const onSubmitSuccess: SubmitHandler<ReviewSchema> = (_, event) =>
     fetcher.submit(event?.target, { method: "post", navigate: false });
@@ -129,7 +166,7 @@ export default function NewReview() {
                 {...register("title")}
               />
               {errors.title ? (
-                <small className="text-sm font-medium text-red-700 dark:text-red-300">
+                <small className="text-sm text-red-700 dark:text-red-300">
                   {errors.title.message}
                 </small>
               ) : null}
@@ -200,7 +237,7 @@ export default function NewReview() {
                       </Select.Portal>
                     </Select.Root>
                     {errors.category ? (
-                      <small className="text-sm font-medium text-red-700 dark:text-red-300">
+                      <small className="text-sm text-red-700 dark:text-red-300">
                         {errors.category.message}
                       </small>
                     ) : null}
@@ -225,7 +262,7 @@ export default function NewReview() {
                   })}
                 />
                 {errors.rating ? (
-                  <small className="text-sm font-medium text-red-700 dark:text-red-300">
+                  <small className="text-sm text-red-700 dark:text-red-300">
                     {errors.rating.message}
                   </small>
                 ) : null}
@@ -245,7 +282,7 @@ export default function NewReview() {
                   })}
                 />
                 {errors.ratingScale ? (
-                  <small className="text-sm font-medium text-red-700 dark:text-red-300">
+                  <small className="text-sm text-red-700 dark:text-red-300">
                     {errors.ratingScale.message}
                   </small>
                 ) : null}
@@ -256,15 +293,13 @@ export default function NewReview() {
               <Label.Root className="font-medium" htmlFor="review">
                 Review <span className="text-red-700 dark:text-red-300">*</span>
               </Label.Root>
-
-              <textarea
-                className="flex max-h-[480px] min-h-[240px] resize-y items-center rounded-lg border border-neutral-300 bg-neutral-50 px-4 py-2 leading-loose placeholder:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
-                id="review"
-                placeholder="ex. Great experience, would recommend it again!"
-                {...register("review")}
-              />
+              <RichTextEditor editor={editor} />
+              <small>
+                {characterCount} / {CHARACTERS_LIMIT}
+              </small>
+              <input {...register("review")} id="review" type="hidden" />
               {errors.review ? (
-                <small className="text-sm font-medium text-red-700 dark:text-red-300">
+                <small className="text-sm text-red-700 dark:text-red-300">
                   {errors.review.message}
                 </small>
               ) : null}
@@ -287,7 +322,7 @@ export default function NewReview() {
           </button>
           <button
             className="flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 font-bold text-neutral-200 outline-offset-4 transition-colors duration-300 enabled:hover:bg-primary-700 enabled:focus-visible:bg-primary-700 enabled:active:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-primary-400 dark:text-neutral-800 dark:enabled:hover:bg-primary-300 dark:enabled:focus-visible:bg-primary-300 dark:enabled:active:bg-primary-200"
-            disabled={disabled}
+            disabled={disabled || fetcher.state === "submitting"}
             type="submit"
           >
             Publish review

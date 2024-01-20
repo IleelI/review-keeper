@@ -1,6 +1,6 @@
 import { AppUser } from "~/models/user";
 
-import { useMatchesData } from "./useMatchesData";
+import { useMatchesData } from "../useMatchesData/useMatchesData";
 
 export function isUser(user: unknown): user is AppUser {
   return (

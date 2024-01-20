@@ -32,19 +32,13 @@ dependencies:
   '@remix-run/serve':
     specifier: ^2.3.1
     version: 2.3.1(typescript@5.3.2)
+  '@tiptap/extension-character-count':
+    specifier: ^2.1.16
+    version: 2.1.16(@tiptap/core@2.1.16)(@tiptap/pm@2.1.16)
   '@tiptap/extension-color':
     specifier: ^2.1.16
     version: 2.1.16(@tiptap/core@2.1.16)(@tiptap/extension-text-style@2.1.16)
-  '@tiptap/extension-document':
-    specifier: ^2.1.16
-    version: 2.1.16(@tiptap/core@2.1.16)
   '@tiptap/extension-list-item':
-    specifier: ^2.1.16
-    version: 2.1.16(@tiptap/core@2.1.16)
-  '@tiptap/extension-paragraph':
-    specifier: ^2.1.16
-    version: 2.1.16(@tiptap/core@2.1.16)
-  '@tiptap/extension-text':
     specifier: ^2.1.16
     version: 2.1.16(@tiptap/core@2.1.16)
   '@tiptap/extension-text-style':
@@ -2243,6 +2237,16 @@ packages:
       '@tiptap/core': ^2.0.0
     dependencies:
       '@tiptap/core': 2.1.16(@tiptap/pm@2.1.16)
+    dev: false
+
+  /@tiptap/extension-character-count@2.1.16(@tiptap/core@2.1.16)(@tiptap/pm@2.1.16):
+    resolution: {integrity: sha512-8ccyiZ3YOz1GXbCPOQ6dOlBBRDDyqyJILSriWN8QXpcReD692lm1zOI6qPhIvKYIluV/8eBx59IYpx/u8IoPKQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.1.16(@tiptap/pm@2.1.16)
+      '@tiptap/pm': 2.1.16
     dev: false
 
   /@tiptap/extension-code-block@2.1.16(@tiptap/core@2.1.16)(@tiptap/pm@2.1.16):
