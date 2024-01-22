@@ -17,16 +17,17 @@ model User {
 }
 
 model Review {
-  id         Int              @id @default(autoincrement())
-  title      String
-  content    String
-  rating     Int?
-  tags       ReviewTag[]
-  reactions  ReviewReaction[]
-  cateogryId Int?
-  category   ReviewCategory?  @relation(fields: [cateogryId], references: [id], onDelete: SetNull)
-  authorId   Int
-  author     User             @relation(fields: [id], references: [id], onDelete: Cascade)
+  id          Int              @id @default(autoincrement())
+  title       String
+  content     String
+  rating      Int?
+  ratingScale Int?
+  tags        ReviewTag[]
+  reactions   ReviewReaction[]
+  categoryId  Int?
+  category    ReviewCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  authorId    Int
+  author      User             @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model ReviewReactionType {

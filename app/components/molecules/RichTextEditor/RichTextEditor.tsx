@@ -29,7 +29,7 @@ const RichTextEditor = ({ editor }: RichTextEditorProps) => {
     <div className="flex flex-col overflow-hidden rounded-lg border border-neutral-300 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800">
       <MenuBar editor={editor} />
       <EditorContent
-        className="grid max-h-[400px] min-h-[200px] overflow-y-auto px-4 py-2 [&_.tiptap]:outline-none"
+        className="grid max-h-[400px] min-h-[200px] overflow-y-auto px-4 [&_.tiptap]:outline-none"
         editor={editor}
       />
     </div>
