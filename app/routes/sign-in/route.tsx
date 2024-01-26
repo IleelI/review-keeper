@@ -6,9 +6,6 @@ import {
 } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 
-import InputError from "~/components/ atoms/InputError/InputError";
-import InputField from "~/components/ atoms/InputField/InputField";
-import InputLabel from "~/components/ atoms/InputLabel/InputLabel";
 import {
   comparePasswords,
   createAccessToken,
@@ -92,14 +89,14 @@ export default function Login() {
       <Form className="flex max-w-xs flex-col gap-8" method="post">
         <fieldset className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <InputLabel name="email" label="Email" />
-            <InputField name="email" />
-            {emailError ? <InputError error={emailError} /> : null}
+            <label htmlFor="email">Email</label>
+            <input id="email" name="email" />
+            {emailError ? <p>{emailError}</p> : null}
           </div>
           <div className="flex flex-col gap-1.5">
-            <InputLabel name="password" label="Password" />
-            <InputField name="password" type="password" />
-            {passwordError ? <InputError error={passwordError} /> : null}
+            <label htmlFor="password">Email</label>
+            <input id="password" name="password" type="password" />
+            {passwordError ? <p>{passwordError}</p> : null}
           </div>
           <div className="flex items-center gap-1.5">
             <input
@@ -131,7 +128,7 @@ export default function Login() {
               Sign up here.
             </Link>
           </small>
-          {otherError ? <InputError error={otherError} /> : null}
+          {otherError ? <p>otherError</p> : null}
         </div>
       </Form>
     </div>
