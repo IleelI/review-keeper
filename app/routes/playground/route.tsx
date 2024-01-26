@@ -62,12 +62,12 @@ const Playground = () => {
             <FormField
               control={form.control}
               name="username"
-              render={({ field, fieldState: { error } }) => (
+              render={({ field }) => (
                 <FormField.Item>
                   <FormField.Label isRequired>Username</FormField.Label>
                   <FormField.Message />
                   <FormField.Control>
-                    <Input isError={!!error} {...field} />
+                    <Input autoComplete="username" {...field} />
                   </FormField.Control>
                   <FormField.Description>
                     Username that will be displayed
@@ -78,22 +78,27 @@ const Playground = () => {
             <FormField
               control={form.control}
               name="password"
-              render={({ field, fieldState: { error } }) => (
+              render={({ field }) => (
                 <FormField.Item>
                   <FormField.Label isRequired>Password</FormField.Label>
                   <FormField.Message />
                   <FormField.Control>
-                    <Input isError={!!error} {...field} />
+                    <Input
+                      autoComplete="current-password"
+                      type="password"
+                      {...field}
+                    />
                   </FormField.Control>
                   <FormField.Description>
                     Generate safe password{" "}
                     <a
-                      className="text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-500"
+                      aria-label="Bitwarden password generator"
+                      className="text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
                       href="https://bitwarden.com/password-generator/"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      here
+                      here.
                     </a>
                   </FormField.Description>
                 </FormField.Item>
@@ -102,7 +107,7 @@ const Playground = () => {
           </fieldset>
 
           <button
-            className="rounded-lg bg-primary-700 px-4 py-1.5 text-lg font-medium text-neutral-100 dark:bg-primary-500"
+            className="rounded-lg bg-primary-700 px-4 py-1.5 text-lg font-medium text-neutral-100 transition-colors duration-300 enabled:hover:bg-primary-600 dark:bg-primary-300 dark:text-neutral-900 dark:enabled:hover:bg-primary-400"
             type="submit"
           >
             Submit

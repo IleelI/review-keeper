@@ -1,5 +1,4 @@
 import { Slot } from "@radix-ui/react-slot";
-import clsx from "clsx";
 import {
   ComponentPropsWithoutRef,
   ElementRef,
@@ -66,7 +65,7 @@ const FormItem = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
     return (
       <FormItemContext.Provider value={{ id }}>
         <div
-          className={clsx(["flex flex-col gap-2", className])}
+          className={`flex flex-col gap-2 ${className}`}
           ref={ref}
           {...props}
         >
@@ -95,7 +94,7 @@ const useFormField = () => {
 };
 
 const FormFieldLabel = forwardRef<ElementRef<typeof Label>, LabelProps>(
-  function FormFieldLabel(props, ref) {
+  (props, ref) => {
     const { formFieldControlId, formFieldLabelId } = useFormField();
 
     return (
@@ -113,7 +112,7 @@ FormFieldLabel.displayName = "FormFieldLabel";
 const FormFieldControl = forwardRef<
   ElementRef<typeof Slot>,
   ComponentPropsWithoutRef<typeof Slot>
->(function FormControl({ ...props }, ref) {
+>(({ ...props }, ref) => {
   const {
     error,
     formFieldControlId,
@@ -137,26 +136,18 @@ const FormFieldControl = forwardRef<
     />
   );
 });
-FormFieldContext.displayName = "FormFieldControl";
+FormFieldControl.displayName = "FormFieldControl";
 
 const FormFieldDescription = forwardRef<
-  HTMLParagraphElement,
-  ComponentPropsWithoutRef<"p">
->(function FormFieldDescription({ children, className, ...props }, ref) {
+  ElementRef<typeof HelperText>,
+  HelperTextProps
+>(({ children, ...props }, ref) => {
   const { formFieldDescriptionId } = useFormField();
 
   return (
-    <p
-      className={clsx([
-        "text-sm text-neutral-500 dark:text-neutral-400",
-        className,
-      ])}
-      id={formFieldDescriptionId}
-      ref={ref}
-      {...props}
-    >
+    <HelperText id={formFieldDescriptionId} ref={ref} {...props}>
       {children}
-    </p>
+    </HelperText>
   );
 });
 FormFieldDescription.displayName = "FormFieldDescription";
@@ -164,7 +155,7 @@ FormFieldDescription.displayName = "FormFieldDescription";
 const FormFieldMessage = forwardRef<
   ElementRef<typeof HelperText>,
   HelperTextProps
->(function FormFieldMessage({ children, ...props }, ref) {
+>(({ children, ...props }, ref) => {
   const { error, formFieldMessageId } = useFormField();
   const helperText = error ? String(error.message) : children;
 

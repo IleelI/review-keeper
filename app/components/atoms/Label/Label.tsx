@@ -1,15 +1,12 @@
 import clsx from "clsx";
-import { ComponentPropsWithoutRef, ReactNode, forwardRef } from "react";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 
 export type LabelProps = {
-  children: ReactNode;
   isRequired?: boolean;
 } & ComponentPropsWithoutRef<"label">;
-const Label = forwardRef<HTMLLabelElement, LabelProps>(function Label(
-  { children, className, isRequired, ...props },
-  ref,
-) {
-  return (
+
+const Label = forwardRef<HTMLLabelElement, LabelProps>(
+  ({ children, className, isRequired, ...props }, ref) => (
     <label
       className={clsx([
         "flex items-baseline gap-1 leading-none text-neutral-700 dark:text-neutral-300",
@@ -22,7 +19,8 @@ const Label = forwardRef<HTMLLabelElement, LabelProps>(function Label(
     >
       {children}
     </label>
-  );
-});
+  ),
+);
+Label.displayName = "Label";
 
 export default Label;
