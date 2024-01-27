@@ -1,13 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ActionFunctionArgs,
   LoaderFunction,
   json,
   redirect,
 } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import { Link, useFetcher, useSearchParams } from "@remix-run/react";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
+import HelperText from "~/components/atoms/HelperText";
+import Input from "~/components/atoms/Input";
+import { FormField } from "~/components/molecules/FormField";
+import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
 import {
-  credentialsSchema,
   lookForUser,
   createRefreshToken,
   createAccessToken,
@@ -18,13 +23,6 @@ import {
 import { prisma } from "~/server/db.server";
 import { safeRedirect } from "~/utils/utils";
 
-interface ActionError {
-  email?: string | string[];
-  password?: string | string[];
-  other?: string;
-}
-const createActionError = (error: ActionError) => json({ error });
-
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const formData = await request.formData();
@@ -33,23 +31,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       Object.fromEntries(formData),
     );
     if (!parsedForm.success) {
-      return createActionError({
-        ...parsedForm.error.flatten().fieldErrors,
+      return json({
+        error: "Invalid email and/or password",
       });
     }
     const credentials = parsedForm.data;
 
     const existingUser = await lookForUser(credentials.email);
     if (existingUser) {
-      return createActionError({
-        email: "Account with this email already exists.",
+      return json({
+        error: "Account with this email already exists.",
       });
     }
 
     const user = await createUser(credentials);
     if (!user) {
-      return createActionError({
-        other: "Something went wrong while creating account.",
+      return json({
+        error: "Something went wrong while creating account.",
       });
     }
 
@@ -62,8 +60,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     return await signIn(refreshToken, accessToken, safeRedirect(redirectTo));
   } catch {
-    return createActionError({
-      other: "Something went wrong while registering.",
+    return json({
+      error: "Something went wrong while signing up.",
     });
   }
 };
@@ -75,53 +73,113 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Register() {
+  const form = useForm<CredentialsSchema>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    reValidateMode: "onBlur",
+    resolver: zodResolver(credentialsSchema),
+  });
   const [searchParams] = useSearchParams();
+  const fetcher = useFetcher<typeof action>();
   const redirectTo = searchParams.get("redirectTo") || "/";
-  const actionData = useActionData<typeof action>();
-  const emailError = actionData?.error.email;
-  const passwordError = actionData?.error.password;
-  const otherError = actionData?.error.other;
+  const backendError = fetcher.data?.error;
+
+  const handleSubmitSuccess: SubmitHandler<CredentialsSchema> = (data) => {
+    fetcher.submit(data, { method: "post" });
+  };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
-        Sign up page
-      </h1>
+    <main className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:justify-center">
+      <header className="flex flex-col gap-1">
+        <Link
+          className="text-sm text-neutral-400 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-neutral-600 dark:hover:text-primary-400"
+          to="/"
+        >
+          Go home
+        </Link>
+        <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
+          Sign up
+        </h1>
+      </header>
 
-      <Form className="flex max-w-xs flex-col gap-8" method="post">
-        <fieldset className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="email">Email</label>
-            <input id="email" name="email" />
-            {emailError ? <p>{emailError} </p> : null}
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="password">Password</label>
-            <input id="password" name="password" />
-            {passwordError ? <p>{passwordError} </p> : null}
-          </div>
-          <input type="hidden" name="redirectTo" value={redirectTo} />
-        </fieldset>
+      <FormProvider {...form}>
+        <form
+          className="flex flex-col gap-8"
+          onSubmit={form.handleSubmit(handleSubmitSuccess)}
+        >
+          <fieldset className="flex flex-col gap-8">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormField.Item>
+                  <FormField.Label isRequired>Email</FormField.Label>
+                  <FormField.Message />
+                  <FormField.Control>
+                    <Input autoComplete="email" type="email" {...field} />
+                  </FormField.Control>
+                </FormField.Item>
+              )}
+            />
 
-        <div className="flex flex-col gap-1.5">
-          <button
-            className="rounded-md bg-neutral-900 p-2 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
-            type="submit"
-          >
-            Sign up
-          </button>
-          <small>
-            Already have an account?{" "}
-            <Link
-              className="text-primary-600 underline underline-offset-4 dark:text-primary-400"
-              to={`/sign-in?${searchParams}`}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormField.Item>
+                  <FormField.Label isRequired>Password</FormField.Label>
+                  <FormField.Message />
+                  <FormField.Control>
+                    <Input
+                      autoComplete="new-password"
+                      type="password"
+                      {...field}
+                    />
+                  </FormField.Control>
+                  <FormField.Description>
+                    Generate safe password{" "}
+                    <a
+                      aria-label="Bitwarden password generator"
+                      className="text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                      href="https://bitwarden.com/password-generator/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      here.
+                    </a>
+                  </FormField.Description>
+                </FormField.Item>
+              )}
+            />
+
+            <input type="hidden" name="redirectTo" value={redirectTo} />
+          </fieldset>
+
+          <nav className="flex flex-col gap-2">
+            <button
+              className="rounded-lg bg-primary-700 px-4 py-1.5 text-lg font-medium text-neutral-100 transition-colors duration-300 enabled:hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-primary-300 dark:text-neutral-900 dark:enabled:hover:bg-primary-400"
+              disabled={!form.formState.isValid}
+              type="submit"
             >
-              Sign in here.
-            </Link>
-          </small>
-          {otherError ? <p>{otherError}</p> : null}
-        </div>
-      </Form>
-    </div>
+              Sign up
+            </button>
+            {backendError ? (
+              <HelperText isError>{backendError}</HelperText>
+            ) : null}
+            <small className="text-xs tracking-wide">
+              {"Already have an account?"}{" "}
+              <Link
+                className="text-sm text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                to={`/sign-in?${searchParams}`}
+              >
+                Sign in here.
+              </Link>
+            </small>
+          </nav>
+        </form>
+      </FormProvider>
+    </main>
   );
 }

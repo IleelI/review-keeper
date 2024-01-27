@@ -59,7 +59,7 @@ const useFormItemContext = () => {
   return context;
 };
 const FormItem = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
-  function FormItem({ children, className, ...props }, ref) {
+  ({ children, className, ...props }, ref) => {
     const id = useId();
 
     return (
@@ -75,6 +75,7 @@ const FormItem = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
     );
   },
 );
+FormItem.displayName = "FormItem";
 
 const useFormField = () => {
   const { name } = useFormFieldContext();
