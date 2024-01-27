@@ -2,26 +2,13 @@ import { faker } from "@faker-js/faker";
 import { createCookie, redirect, redirectDocument } from "@remix-run/node";
 import { compare, hashSync } from "bcrypt";
 import { SignJWT, jwtVerify } from "jose";
-import { z } from "zod";
 
 import { AppUser, getUserById } from "~/models/user";
+import { CredentialsSchema } from "~/schema/auth.schema";
 import { safeRedirect } from "~/utils/utils";
 
 import { prisma } from "./db.server";
 import { env } from "./env.server";
-
-export const credentialsSchema = z.object({
-  email: z
-    .string()
-    .email("Invalid email address.")
-    .trim()
-    .min(1, "Email cannot be empty."),
-  password: z
-    .string()
-    .trim()
-    .min(8, "Password must be at least 8 chracters long."),
-});
-export type Credentials = z.infer<typeof credentialsSchema>;
 
 export const createJWT = async (
   duration: number,
@@ -90,7 +77,7 @@ export const comparePasswords = async (
   }
 };
 
-export const createUser = async (credentials: Credentials) => {
+export const createUser = async (credentials: CredentialsSchema) => {
   try {
     const hashedPassword = hashSync(credentials.password, 10);
     const user = await prisma.user.create({
