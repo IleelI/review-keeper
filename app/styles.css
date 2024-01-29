@@ -4,7 +4,7 @@
 
 @layer utilities {
   .default-outline {
-    @apply outline outline-2 outline-primary-600 dark:outline-primary-300;
+    @apply outline outline-2 outline-neutral-900 dark:outline-neutral-100;
   }
 
   .animate-in {
@@ -26,10 +26,6 @@
   html,
   body {
     @apply bg-neutral-100 text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
-  }
-
-  body {
-    @apply min-h-screen w-full;
   }
 }
 

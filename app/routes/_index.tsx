@@ -18,6 +18,13 @@ export default function Index() {
       <div className="flex flex-col gap-8 rounded-lg bg-white p-8 shadow-md dark:bg-neutral-800">
         <h1 className="text-3xl font-bold">Welcome to Review Keeper!</h1>
 
+        <Link
+          className="font-medium underline underline-offset-2"
+          to="/playground"
+        >
+          Playground
+        </Link>
+
         {user ? (
           <div className="flex flex-col gap-6">
             <Link
