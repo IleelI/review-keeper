@@ -7,6 +7,7 @@ export default {
     colors: ({ colors }) => ({
       black: colors.black,
       blue: colors.blue,
+      current: colors.current,
       green: colors.emerald,
       inherit: colors.inherit,
       neutral: colors.zinc,
