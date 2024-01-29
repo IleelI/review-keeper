@@ -8,19 +8,49 @@ datasource db {
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  email        String  @unique
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
   hash         String
   username     String?
   refreshToken String?
-  posts        Post[]
+  reviews      Review[]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int
+model Review {
+  id          Int              @id @default(autoincrement())
+  title       String
+  content     String
+  rating      Int?
+  ratingScale Int?
+  tags        ReviewTag[]
+  reactions   ReviewReaction[]
+  categoryId  Int?
+  category    ReviewCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  authorId    Int
+  author      User             @relation(fields: [id], references: [id], onDelete: Cascade)
+}
+
+model ReviewReactionType {
+  id     Int              @id @default(autoincrement())
+  name   String           @unique
+  usedIn ReviewReaction[]
+}
+
+model ReviewReaction {
+  id       Int                @id @default(autoincrement())
+  type     ReviewReactionType @relation(fields: [id], references: [id], onDelete: Cascade)
+  reviewId Int
+  review   Review             @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+}
+
+model ReviewCategory {
+  id     Int      @id @default(autoincrement())
+  name   String   @unique
+  usedIn Review[]
+}
+
+model ReviewTag {
+  id     Int      @id @default(autoincrement())
+  name   String   @unique
+  usedIn Review[]
 }

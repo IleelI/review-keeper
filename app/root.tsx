@@ -10,10 +10,20 @@ import {
 } from "@remix-run/react";
 
 import { getUser } from "./server/auth.server";
-import tailwind from "./tailwind.css";
+import styles from "./styles.css";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: tailwind },
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  {
+    rel: "preconnect",
+    href: "https://fonts.gstatic.com",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap",
+  },
+  { rel: "stylesheet", href: styles },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 

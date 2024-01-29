@@ -2,25 +2,13 @@ import { faker } from "@faker-js/faker";
 import { createCookie, redirect, redirectDocument } from "@remix-run/node";
 import { compare, hashSync } from "bcrypt";
 import { SignJWT, jwtVerify } from "jose";
-import { z } from "zod";
 
 import { AppUser, getUserById } from "~/models/user";
+import { CredentialsSchema } from "~/schema/auth.schema";
+import { getSafeRedirect } from "~/utils/routing/routing";
 
 import { prisma } from "./db.server";
 import { env } from "./env.server";
-
-export const credentialsSchema = z.object({
-  email: z
-    .string()
-    .email("Invalid email address.")
-    .trim()
-    .min(1, "Email cannot be empty."),
-  password: z
-    .string()
-    .trim()
-    .min(8, "Password must be at least 8 chracters long."),
-});
-export type Credentials = z.infer<typeof credentialsSchema>;
 
 export const createJWT = async (
   duration: number,
@@ -89,7 +77,7 @@ export const comparePasswords = async (
   }
 };
 
-export const createUser = async (credentials: Credentials) => {
+export const createUser = async (credentials: CredentialsSchema) => {
   try {
     const hashedPassword = hashSync(credentials.password, 10);
     const user = await prisma.user.create({
@@ -167,8 +155,7 @@ export const getUserToken = async (token: string) => {
     const secret = new TextEncoder().encode(env().JWT_SECRET);
     const verifiedToken = await jwtVerify(token, secret, { clockTolerance: 0 });
     if (!verifiedToken) return null;
-    const userToken = verifiedToken.payload as AppUser;
-    return userToken;
+    return verifiedToken.payload as AppUser;
   } catch {
     return null;
   }
@@ -178,8 +165,14 @@ export const getUser = async (request: Request) => {
   const cookies = request.headers.get("Cookie");
   const accessToken = await accessTokenCookie.parse(cookies);
   const refreshToken = await refreshTokenCookie.parse(cookies);
+
   if (!accessToken && refreshToken) {
-    throw redirectDocument("/refresh");
+    const { searchParams, pathname } = new URL(request.url);
+    const redirectTo = getSafeRedirect(
+      searchParams.get("redirectTo") || pathname,
+    );
+    const newSearchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+    throw redirectDocument(`/refresh?${newSearchParams}`);
   }
 
   const userToken = await getUserToken(accessToken);
@@ -198,7 +191,6 @@ export const getRequiredUser = async (request: Request) => {
   return user;
 };
 
-export const returnPathSearchParam = "return-path";
 export const requireUser = async (
   request: Request,
   redirectTo: string = new URL(request.url).pathname,
@@ -208,16 +200,14 @@ export const requireUser = async (
     accessTokenCookie.parse(cookies),
     refreshTokenCookie.parse(cookies),
   ]);
-  const searchParams = new URLSearchParams([
-    [returnPathSearchParam, redirectTo],
-  ]);
+  const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
 
   if (accessToken) {
     const userToken = await getUserToken(accessToken);
-    if (!userToken) throw redirect(`/sing-in${searchParams}`);
+    if (!userToken) throw redirect(`/sign-in?${searchParams}`);
     return userToken;
   } else if (!refreshToken) {
-    throw redirect(`/sing-in${searchParams}`);
+    throw redirect(`/sign-in?${searchParams}`);
   } else {
     throw redirectDocument(`/refresh?${searchParams}`);
   }
