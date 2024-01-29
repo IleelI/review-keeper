@@ -7,10 +7,12 @@ import {
   signOut,
   refreshTokenCookie,
 } from "~/server/auth.server";
+import { getSafeRedirect } from "~/utils/routing/routing";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { searchParams } = new URL(request.url);
-  const redirectTo = searchParams.get("redirectTo") ?? "/";
+  const redirectTo = getSafeRedirect(searchParams.get("redirectTo"));
+
   const cookies = request.headers.get("Cookie");
   const refreshToken = await refreshTokenCookie.parse(cookies);
 
@@ -19,10 +21,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userToken = await getUserToken(refreshToken);
   if (!userToken) throw await signOut();
 
-  const accessToken = await createAccessToken(userToken);
-
   const headers = new Headers();
+  const accessToken = await createAccessToken(userToken);
   headers.set("Set-Cookie", await accessTokenCookie.serialize(accessToken));
-
   return redirect(redirectTo, { headers });
 };

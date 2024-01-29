@@ -1,15 +1,6 @@
-import { AppUser } from "~/models/user";
-
 import { useMatchesData } from "../useMatchesData/useMatchesData";
 
-export function isUser(user: unknown): user is AppUser {
-  return (
-    user != null &&
-    typeof user === "object" &&
-    "email" in user &&
-    typeof user.email === "string"
-  );
-}
+import { isUser } from "./helpers";
 
 export default function useUser() {
   const data = useMatchesData("root");

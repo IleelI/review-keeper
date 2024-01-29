@@ -21,7 +21,7 @@ import {
   getUser,
 } from "~/server/auth.server";
 import { prisma } from "~/server/db.server";
-import { safeRedirect } from "~/utils/utils";
+import { getSafeRedirect } from "~/utils/routing/routing";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
@@ -34,8 +34,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (!parsedData.success) {
       return json({ error: "Invalid email and/or password." });
     }
-    const credentials = parsedData.data;
 
+    const credentials = parsedData.data;
     const user = await lookForUser(credentials.email);
     if (!user) {
       return json({ error: "Email not found." });
@@ -56,7 +56,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       data: { refreshToken },
     });
 
-    return await signIn(refreshToken, accessToken, safeRedirect(redirectTo));
+    return await signIn(refreshToken, accessToken, getSafeRedirect(redirectTo));
   } catch {
     return json({
       error: "Something went wrong while signing in.",
@@ -71,18 +71,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function SignIn() {
+  const fetcher = useFetcher<typeof action>();
   const form = useForm<CredentialsSchema>({
     defaultValues: {
       email: "",
       password: "",
     },
-    reValidateMode: "onBlur",
     resolver: zodResolver(credentialsSchema),
   });
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
-  const fetcher = useFetcher<typeof action>();
   const backendError = fetcher.data?.error;
+  const redirectTo = getSafeRedirect(searchParams.get("redirectTo"));
 
   const handleSubmitSuccess: SubmitHandler<CredentialsSchema> = (data) => {
     fetcher.submit(data, { method: "post" });
@@ -92,7 +91,7 @@ export default function SignIn() {
     <main className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:justify-center">
       <header className="flex flex-col gap-1">
         <Link
-          className="text-sm text-neutral-400 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-neutral-600 dark:hover:text-primary-400"
+          className="text-sm leading-none text-neutral-400 underline underline-offset-2 transition-colors hover:text-primary-600 dark:text-neutral-600 dark:hover:text-primary-400"
           to="/"
         >
           Go home
@@ -157,7 +156,7 @@ export default function SignIn() {
               </div>
             </div>
 
-            <input type="hidden" name="redirectTo" value={redirectTo || "/"} />
+            <input name="redirectTo" type="hidden" value={redirectTo} />
           </fieldset>
 
           <nav className="flex flex-col gap-2">

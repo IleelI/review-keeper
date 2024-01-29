@@ -5,7 +5,7 @@ import { SignJWT, jwtVerify } from "jose";
 
 import { AppUser, getUserById } from "~/models/user";
 import { CredentialsSchema } from "~/schema/auth.schema";
-import { safeRedirect } from "~/utils/utils";
+import { getSafeRedirect } from "~/utils/routing/routing";
 
 import { prisma } from "./db.server";
 import { env } from "./env.server";
@@ -168,7 +168,9 @@ export const getUser = async (request: Request) => {
 
   if (!accessToken && refreshToken) {
     const { searchParams, pathname } = new URL(request.url);
-    const redirectTo = safeRedirect(searchParams.get("redirectTo") || pathname);
+    const redirectTo = getSafeRedirect(
+      searchParams.get("redirectTo") || pathname,
+    );
     const newSearchParams = new URLSearchParams([["redirectTo", redirectTo]]);
     throw redirectDocument(`/refresh?${newSearchParams}`);
   }

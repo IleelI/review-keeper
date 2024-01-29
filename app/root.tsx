@@ -9,8 +9,8 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import styles from "./global.css";
 import { getUser } from "./server/auth.server";
+import styles from "./styles.css";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
