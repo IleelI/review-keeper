@@ -8,7 +8,7 @@ export default {
       black: colors.black,
       blue: colors.blue,
       current: colors.current,
-      green: colors.emerald,
+      green: colors.green,
       inherit: colors.inherit,
       neutral: colors.zinc,
       orange: colors.amber,
@@ -22,6 +22,9 @@ export default {
         sans: ["Space Grotesk", ...defaultTheme.fontFamily.sans],
         serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
         mono: ["Space Mono", ...defaultTheme.fontFamily.mono],
+      },
+      backdropBrightness: {
+        85: ".85",
       },
     },
   },

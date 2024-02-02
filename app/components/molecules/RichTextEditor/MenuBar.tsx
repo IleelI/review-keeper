@@ -19,7 +19,7 @@ import {
   IconContext,
 } from "@phosphor-icons/react";
 import { Editor } from "@tiptap/react";
-import clsx from "clsx";
+import { twJoin } from "tailwind-merge";
 
 import MenuBarButton from "./MenuBarButton";
 
@@ -145,7 +145,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
 
         <section className="flex items-center p-2">
           <input
-            className={clsx([
+            className={twJoin([
               "aspect-square h-9 w-9 items-center overflow-hidden rounded-md bg-transparent p-2 transition-colors duration-300 ease-in-out focus:outline-none enabled:hover:bg-neutral-200 enabled:focus-visible:bg-neutral-200 dark:border-neutral-700 dark:enabled:hover:bg-neutral-700 dark:enabled:focus-visible:bg-neutral-700",
               editor.isActive("textStyle")
                 ? "text-primary-600 dark:text-primary-400"

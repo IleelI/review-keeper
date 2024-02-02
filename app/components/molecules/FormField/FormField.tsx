@@ -14,6 +14,7 @@ import {
   FieldValues,
   useFormContext,
 } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 
 import HelperText, { HelperTextProps } from "~/components/atoms/HelperText";
 import Label, { LabelProps } from "~/components/atoms/Label";
@@ -65,7 +66,7 @@ const FormItem = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
     return (
       <FormItemContext.Provider value={{ id }}>
         <div
-          className={`flex flex-col gap-2 ${className}`}
+          className={twMerge(["flex flex-col gap-2", className])}
           ref={ref}
           {...props}
         >

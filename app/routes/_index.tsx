@@ -1,6 +1,7 @@
 import { type MetaFunction } from "@remix-run/node";
 import { Form, Link } from "@remix-run/react";
 
+import Button from "~/components/atoms/Button";
 import useUser from "~/hooks/useUser/useUser";
 
 export const meta: MetaFunction = () => {
@@ -34,12 +35,7 @@ export default function Index() {
               Create a new review
             </Link>
             <Form action="/sign-out" method="post">
-              <button
-                type="submit"
-                className="w-full rounded-md bg-neutral-900 px-4 py-1.5 text-center text-neutral-300 dark:bg-neutral-50 dark:text-neutral-700"
-              >
-                Log out
-              </button>
+              <Button type="submit">Log out</Button>
             </Form>
           </div>
         ) : (
