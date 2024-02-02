@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { twMerge } from "tailwind-merge";
 
 export type HelperTextProps = {
   isError?: boolean;
@@ -8,7 +8,7 @@ export type HelperTextProps = {
 const HelperText = forwardRef<HTMLParagraphElement, HelperTextProps>(
   ({ className, children, isError, ...props }, ref) => (
     <p
-      className={clsx([
+      className={twMerge([
         "text-sm",
         isError
           ? "font-medium text-red-700 dark:text-red-300"

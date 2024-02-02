@@ -8,6 +8,7 @@ import {
 import { Link, useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
+import Button from "~/components/atoms/Button";
 import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";
 import { FormField } from "~/components/molecules/FormField";
@@ -157,13 +158,9 @@ export default function Register() {
           </fieldset>
 
           <nav className="flex flex-col gap-2">
-            <button
-              className="rounded-lg bg-primary-700 px-4 py-1.5 text-lg font-medium text-neutral-100 transition-colors duration-300 enabled:hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-primary-300 dark:text-neutral-900 dark:enabled:hover:bg-primary-400"
-              disabled={!form.formState.isValid}
-              type="submit"
-            >
+            <Button disabled={!form.formState.isValid} type="submit">
               Sign up
-            </button>
+            </Button>
             {backendError ? (
               <HelperText isError>{backendError}</HelperText>
             ) : null}

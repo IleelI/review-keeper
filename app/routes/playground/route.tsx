@@ -1,6 +1,7 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 
+import Button from "~/components/atoms/Button";
 import Checkbox from "~/components/atoms/Checkbox";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -23,7 +24,7 @@ const Playground = () => {
           </label>
         </div>
 
-        <button type="submit">Submit</button>
+        <Button type="submit">Submit</Button>
       </Form>
     </main>
   );
