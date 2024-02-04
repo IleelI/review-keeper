@@ -1,10 +1,11 @@
 node_modules
-
-/.cache
-/build
-/public/build
-/coverage
+build
+public/build
+coverage
+.cache
+.idea
 .env
 
 *.db
 *.db-journal
+

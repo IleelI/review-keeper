@@ -8,8 +8,8 @@ export const buttonStyles = cva(
     variants: {
       intent: {
         primary: [
-          "bg-neutral-800 text-neutral-100 dark:bg-neutral-100 dark:text-neutral-900",
-          "enabled:hover:bg-neutral-950 enabled:focus-visible:bg-neutral-950 enabled:active:bg-neutral-800 dark:enabled:hover:bg-neutral-300 dark:enabled:focus-visible:bg-neutral-300 dark:enabled:active:bg-neutral-100",
+          "bg-neutral-800 text-neutral-100 dark:bg-neutral-50 dark:text-neutral-900",
+          "enabled:hover:bg-neutral-950 enabled:focus-visible:bg-neutral-950 enabled:active:bg-neutral-800 dark:enabled:hover:bg-neutral-300 dark:enabled:focus-visible:bg-neutral-300 dark:enabled:active:bg-neutral-50",
         ],
         secondary: [
           "bg-transparent border border-neutral-700 text-neutral-700 dark:border-neutral-300 dark:text-neutral-300",
