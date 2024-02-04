@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .default-outline {
-    @apply outline outline-2 outline-offset-4 outline-neutral-900 dark:outline-neutral-100;
-  }
-
-  .animate-in {
-    animation: 200ms ease-in-out forwards in;
-  }
-}
-
 @layer base {
   *,
   *::before,
@@ -102,13 +92,8 @@
   }
 }
 
-@keyframes in {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
+@layer utilities {
+  .default-outline {
+    @apply outline outline-2 outline-offset-4 outline-neutral-900 dark:outline-neutral-100;
   }
 }

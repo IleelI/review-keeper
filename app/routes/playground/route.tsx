@@ -4,8 +4,8 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import Button from "~/components/atoms/Button";
 import Input from "~/components/atoms/Input";
-import Select, { SelectOption } from "~/components/atoms/Select";
 import { FormField } from "~/components/molecules/FormField";
+import Select from "~/components/molecules/Select";
 import { getReviewCategories } from "~/server/review.server";
 
 export const loader = async () => {
@@ -28,12 +28,6 @@ const Playground = () => {
     },
   });
 
-  const categoryOptions: SelectOption[] = categories.map(({ id, name }) => ({
-    disabled: Math.floor(Math.random() * 1000) > 700,
-    name: name,
-    value: String(id),
-  }));
-
   return (
     <main className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:items-center lg:justify-center">
       <h1 className="text-3xl font-bold">Playground</h1>
@@ -41,37 +35,52 @@ const Playground = () => {
       <FormProvider {...form}>
         <Form
           action="/playground"
-          className="flex w-full max-w-xs flex-col gap-4"
+          className="flex w-full max-w-xs flex-col gap-8"
           method="post"
         >
-          <FormField
-            name="category"
-            control={form.control}
-            render={({ field }) => (
-              <FormField.Item>
-                <FormField.Label>Category</FormField.Label>
-                <FormField.Control>
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) => field.onChange(value)}
-                    options={categoryOptions}
-                    customContent={({ name }) => (
-                      <div className="flex items-center gap-2">
-                        <img
-                          alt="random img"
-                          className="aspect-square w-6 rounded-full border border-neutral-800 object-cover dark:border-neutral-200"
-                          src={`https://picsum.photos/seed/random/200/300`}
-                        />
-                        {name}
-                      </div>
-                    )}
-                  />
-                </FormField.Control>
-              </FormField.Item>
-            )}
-          />
+          <div className="flex w-full max-w-xs flex-col gap-4">
+            <FormField
+              name="category"
+              control={form.control}
+              render={({ field }) => (
+                <FormField.Item>
+                  <FormField.Label>Category</FormField.Label>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormField.Control>
+                      <Select.Trigger>
+                        <Select.Value placeholder="Select a category..." />
+                      </Select.Trigger>
+                    </FormField.Control>
+                    <Select.Content>
+                      {categories.length ? (
+                        categories.map(({ name, id }) => (
+                          <Select.Item key={id} value={String(id)}>
+                            {name}
+                          </Select.Item>
+                        ))
+                      ) : (
+                        <Select.EmptyList />
+                      )}
+                    </Select.Content>
+                  </Select>
+                </FormField.Item>
+              )}
+            />
 
-          <Input placeholder="Placeholder" />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormField.Item>
+                  <FormField.Label>Category</FormField.Label>
+                  <FormField.Message />
+                  <FormField.Control>
+                    <Input {...field} />
+                  </FormField.Control>
+                </FormField.Item>
+              )}
+            />
+          </div>
 
           <Button type="submit">Submit</Button>
         </Form>
