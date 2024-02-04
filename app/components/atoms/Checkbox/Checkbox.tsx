@@ -19,7 +19,7 @@ const Checkbox = forwardRef<
     {...props}
   >
     <RadixCheckbox.Indicator className="*:h-full *:w-full">
-      <Check />
+      <Check weight="bold" />
     </RadixCheckbox.Indicator>
   </RadixCheckbox.Root>
 ));
