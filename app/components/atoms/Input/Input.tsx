@@ -11,7 +11,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         "border-neutral-200 bg-neutral-50 text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
         "placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
         "disabled:cursor-not-allowed disabled:opacity-40",
-        "enabled:hover:border-neutral-600 enabled:focus-visible:border-neutral-600 dark:enabled:hover:border-neutral-400 dark:enabled:focus-visible:border-neutral-400",
+        "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
         "aria-[invalid=true]:border-red-700 dark:aria-[invalid=true]:border-red-300",
         className,
       ])}
