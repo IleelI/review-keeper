@@ -94,6 +94,6 @@
 
 @layer utilities {
   .default-outline {
-    @apply outline outline-2 outline-offset-4 outline-neutral-900 dark:outline-neutral-100;
+    @apply outline outline-2 outline-primary-700 dark:outline-primary-400;
   }
 }
