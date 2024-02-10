@@ -1,10 +1,16 @@
 import { prisma } from "./db.server";
 
-export const getReviewCategories = async () => {
-  try {
-    const categories = prisma.reviewCategory.findMany();
-    return categories;
-  } catch {
-    return [];
-  }
-};
+export type GetReviewCategoriesResponse = {
+  id: string;
+  name: string;
+}[];
+
+export const getReviewCategories =
+  async (): Promise<GetReviewCategoriesResponse> => {
+    try {
+      const categories = await prisma.reviewCategory.findMany();
+      return categories.map(({ id, name }) => ({ id: String(id), name }));
+    } catch {
+      return [];
+    }
+  };

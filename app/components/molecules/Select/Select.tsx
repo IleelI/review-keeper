@@ -171,12 +171,17 @@ const SelectSeparator = forwardRef<
 ));
 SelectSeparator.displayName = RadixSelect.Separator.displayName;
 
-const SelectEmptyList = () => (
+interface SelectEmptyListProps {
+  message?: string;
+  title?: string;
+}
+const SelectEmptyList = ({
+  message = "Please, try again later...",
+  title = "No options available",
+}: SelectEmptyListProps) => (
   <div className="flex flex-col items-center justify-center gap-2 p-2">
-    <p className="font-semibold">No options available</p>
-    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-      Please, try again later...
-    </p>
+    <p className="font-semibold">{title}</p>
+    <p className="text-sm text-neutral-600 dark:text-neutral-400">{message}</p>
   </div>
 );
 
