@@ -5,11 +5,15 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { Link, useFetcher, useSearchParams } from "@remix-run/react";
+import { useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
+import Button from "~/components/atoms/Button";
+import Checkbox from "~/components/atoms/Checkbox";
 import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";
+import Label from "~/components/atoms/Label";
+import Link from "~/components/atoms/Link";
 import { FormField } from "~/components/molecules/FormField";
 import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
 import {
@@ -90,10 +94,7 @@ export default function SignIn() {
   return (
     <main className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:justify-center">
       <header className="flex flex-col gap-1">
-        <Link
-          className="text-sm leading-none text-neutral-400 underline underline-offset-2 transition-colors hover:text-primary-600 dark:text-neutral-600 dark:hover:text-primary-400"
-          to="/"
-        >
+        <Link className="text-sm" decoration="underline" to="/" variant="muted">
           Go home
         </Link>
         <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
@@ -121,7 +122,7 @@ export default function SignIn() {
               )}
             />
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
               <FormField
                 control={form.control}
                 name="password"
@@ -140,19 +141,9 @@ export default function SignIn() {
                 )}
               />
 
-              <div className="flex items-center gap-1.5">
-                <input
-                  defaultChecked
-                  id="rememberMe"
-                  name="rememberMe"
-                  type="checkbox"
-                />
-                <label
-                  htmlFor="rememberMe"
-                  className="text-sm text-neutral-600 dark:text-neutral-400"
-                >
-                  Remember me
-                </label>
+              <div className="flex items-center gap-2">
+                <Checkbox defaultChecked id="rememberMe" name="rememberMe" />
+                <Label htmlFor="rememberMe">Remember me</Label>
               </div>
             </div>
 
@@ -160,20 +151,17 @@ export default function SignIn() {
           </fieldset>
 
           <nav className="flex flex-col gap-2">
-            <button
-              className="rounded-lg bg-primary-700 px-4 py-1.5 text-lg font-medium text-neutral-100 transition-colors duration-300 enabled:hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-primary-300 dark:text-neutral-900 dark:enabled:hover:bg-primary-400"
-              disabled={!form.formState.isValid}
-              type="submit"
-            >
+            <Button disabled={!form.formState.isValid} type="submit">
               Sign in
-            </button>
+            </Button>
             {backendError ? (
               <HelperText isError>{backendError}</HelperText>
             ) : null}
             <small className="text-xs tracking-wide">
               {"Don't have an account?"}{" "}
               <Link
-                className="text-sm text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                className="text-sm"
+                decoration="underline"
                 to={`/sign-up?${searchParams}`}
               >
                 Sign up here.

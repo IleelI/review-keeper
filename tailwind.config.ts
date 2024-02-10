@@ -7,7 +7,8 @@ export default {
     colors: ({ colors }) => ({
       black: colors.black,
       blue: colors.blue,
-      green: colors.emerald,
+      current: colors.current,
+      green: colors.green,
       inherit: colors.inherit,
       neutral: colors.zinc,
       orange: colors.amber,
@@ -22,7 +23,10 @@ export default {
         serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
         mono: ["Space Mono", ...defaultTheme.fontFamily.mono],
       },
+      backdropBrightness: {
+        85: ".85",
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;

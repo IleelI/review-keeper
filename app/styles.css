@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .default-outline {
-    @apply outline outline-2 outline-primary-600 dark:outline-primary-300;
-  }
-
-  .animate-in {
-    animation: 200ms ease-in-out forwards in;
-  }
-}
-
 @layer base {
   *,
   *::before,
@@ -26,10 +16,6 @@
   html,
   body {
     @apply bg-neutral-100 text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
-  }
-
-  body {
-    @apply min-h-screen w-full;
   }
 }
 
@@ -106,13 +92,8 @@
   }
 }
 
-@keyframes in {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
+@layer utilities {
+  .default-outline {
+    @apply outline outline-2 outline-primary-700 dark:outline-primary-400;
   }
 }
