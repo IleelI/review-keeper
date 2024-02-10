@@ -59,7 +59,7 @@ const linkStyles = cva("h-full items-center font-medium transition", {
     navigationState: {
       active: "duration-300",
       base: "duration-300",
-      pending: "animate-pulse cursor-wait grayscale duration-[2000ms]",
+      pending: "animate-pulse cursor-wait grayscale duration-1000",
     },
     variant: {
       text: "inline-block w-max p-1 text-primary-700 hover:text-primary-600 focus-visible:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400 dark:focus-visible:text-primary-400",
