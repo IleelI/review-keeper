@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-export type NewReviewSchema = z.infer<typeof newReviewSchema>;
-
 const ratingSchema = z
   .string()
   .optional()
@@ -42,7 +40,8 @@ const ratingScaleSchema = z
     return parsedValue;
   });
 
-export const newReviewSchema = z
+export type ReviewSchema = z.infer<typeof reviewSchema>;
+export const reviewSchema = z
   .object({
     categoryId: z.string().optional(),
     content: z.string().trim().min(1, "Review is required."),
@@ -85,7 +84,7 @@ export const newReviewSchema = z
     ratingScale: ratingScale ? String(ratingScale) : undefined,
   }));
 
-export const defaultValues: NewReviewSchema = {
+export const defaultValues: ReviewSchema = {
   categoryId: "",
   content: "",
   rating: "",

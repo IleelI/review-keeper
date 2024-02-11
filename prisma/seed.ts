@@ -1,4 +1,4 @@
-import { mockUsers } from "mocking/prisma";
+import { mockCategories, mockUsers } from "mocking/prisma";
 import { prisma } from "~/server/db.server";
 
 const seed = async () => {
@@ -6,18 +6,28 @@ const seed = async () => {
   await Promise.all(
     users.map(async ({ email, hash, username }) =>
       prisma.user.upsert({
-        where: {
-          email,
-        },
-        update: {},
         create: {
           email,
           username,
           hash,
         },
+        update: {},
+        where: { email },
       }),
     ),
   );
+
+  const categories = mockCategories();
+  await Promise.all(
+    categories.map(async ({ name }) =>
+      prisma.reviewCategory.upsert({
+        create: { name },
+        update: {},
+        where: { name },
+      }),
+    ),
+  );
+
   console.log(`Database has been seeded. 🌱`);
 };
 

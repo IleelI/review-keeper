@@ -9,7 +9,7 @@ import RichTextEditor, {
 import Select from "~/components/molecules/Select";
 import { ReviewCategory } from "~/server/review.server";
 
-import { NewReviewSchema } from "../helpers";
+import type { ReviewSchema } from "../helpers/helpers";
 
 interface FormFieldsProps {
   categories: ReviewCategory[];
@@ -25,7 +25,7 @@ const FormFields = ({
     control,
     formState: { submitCount },
     trigger,
-  } = useFormContext<NewReviewSchema>();
+  } = useFormContext<ReviewSchema>();
   const characterCount = editor?.storage.characterCount.characters();
   const wasSubmitted = submitCount >= 1;
 

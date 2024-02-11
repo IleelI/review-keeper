@@ -44,3 +44,7 @@ const RichTextEditor = ({ editor, hasError }: RichTextEditorProps) => {
 };
 
 export default RichTextEditor;
+
+export const RichTextEditorSkeleton = () => (
+  <div className="col-span-2 h-[260px] animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-800"></div>
+);

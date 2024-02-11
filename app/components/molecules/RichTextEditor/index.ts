@@ -1,6 +1,2 @@
-import RichTextEditorSkeleton from "./RichTextEditorSkeleton";
-
-export { default } from "./RichTextEditor";
+export { default, RichTextEditorSkeleton } from "./RichTextEditor";
 export { extensions } from "./RichTextEditor";
-
-export { RichTextEditorSkeleton };
