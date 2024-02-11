@@ -17,13 +17,84 @@ import { getRequiredUser } from "~/server/auth.server";
 import { getReviewCategories } from "~/server/review.server";
 
 type NewReviewSchema = z.infer<typeof newReviewSchema>;
-const newReviewSchema = z.object({
-  categoryId: z.string().optional(),
-  content: z.string().trim().min(1, "Review is required."),
-  rating: z.string().optional(),
-  ratingScale: z.string().optional(),
-  title: z.string().trim().min(1, "Title is required."),
-});
+const newReviewSchema = z
+  .object({
+    categoryId: z.string().optional(),
+    content: z.string().trim().min(1, "Review is required."),
+    rating: z
+      .string()
+      .optional()
+      .transform((val, ctx) => {
+        if (!val) return val;
+        const parsedValue = parseFloat(val);
+        if (isNaN(parsedValue)) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Rating must be a number.",
+          });
+        } else if (parsedValue < 0) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Rating must be a positive number.",
+          });
+        }
+        return parsedValue;
+      }),
+    ratingScale: z
+      .string()
+      .optional()
+      .transform((val, ctx) => {
+        if (!val) return val;
+        const parsedValue = parseFloat(val);
+        if (isNaN(parsedValue)) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Rating scale must be a number.",
+          });
+        } else if (parsedValue < 0) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Rating scale must be a positive number.",
+          });
+        }
+        return parsedValue;
+      }),
+    title: z.string().trim().min(1, "Title is required."),
+  })
+  .superRefine(({ rating, ratingScale }, context) => {
+    if (!rating && !ratingScale) {
+      return z.NEVER;
+    }
+    if (rating && ratingScale && rating > ratingScale) {
+      context.addIssue({
+        code: "custom",
+        message: "Rating cannot be greater than rating scale.",
+        path: ["rating"],
+      });
+      context.addIssue({
+        code: "custom",
+        message: "Rating scale cannot be less than rating scale.",
+        path: ["ratingScale"],
+      });
+    } else if (rating && !ratingScale) {
+      context.addIssue({
+        code: "custom",
+        message: "Rating scale must be set.",
+        path: ["ratingScale"],
+      });
+    } else if (!rating && ratingScale) {
+      context.addIssue({
+        code: "custom",
+        message: "Rating must be set.",
+        path: ["rating"],
+      });
+    }
+  })
+  .transform(({ rating, ratingScale, ...rest }) => ({
+    ...rest,
+    rating: rating ? String(rating) : undefined,
+    ratingScale: ratingScale ? String(ratingScale) : undefined,
+  }));
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(request);
@@ -46,7 +117,7 @@ const defaultValues: NewReviewSchema = {
 };
 const NewReview = () => {
   const { categories } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher({ key: "new-review" });
+  const fetcher = useFetcher<typeof action>({ key: "new-review" });
   const form = useForm<NewReviewSchema>({
     defaultValues,
     resolver: zodResolver(newReviewSchema),
@@ -55,12 +126,14 @@ const NewReview = () => {
     content: "",
     extensions,
     onUpdate: ({ editor }) =>
-      form.setValue("content", editor.isEmpty ? "" : editor.getHTML()),
+      form.setValue("content", editor.isEmpty ? "" : editor.getHTML(), {
+        shouldValidate: form.formState.submitCount >= 1,
+      }),
   });
 
   const onSubmit: SubmitHandler<NewReviewSchema> = (data) => {
-    console.log(data);
-    fetcher.submit(data);
+    console.log({ data });
+    fetcher.submit({});
   };
 
   return (
@@ -163,11 +236,11 @@ const NewReview = () => {
             <FormField
               control={form.control}
               name="content"
-              render={({ field }) => (
+              render={({ field, fieldState: { error } }) => (
                 <FormField.Item className="col-span-2">
                   <FormField.Label isRequired>Review</FormField.Label>
                   <FormField.Message />
-                  <RichTextEditor editor={editor} />
+                  <RichTextEditor editor={editor} hasError={!!error} />
                   <FormField.Control>
                     <input type="hidden" {...field} />
                   </FormField.Control>
