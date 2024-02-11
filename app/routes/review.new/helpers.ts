@@ -7,7 +7,7 @@ const ratingSchema = z
   .optional()
   .transform((val, ctx) => {
     if (!val) return val;
-    const parsedValue = parseFloat(val);
+    const parsedValue = Number(val);
     if (isNaN(parsedValue)) {
       ctx.addIssue({
         code: "custom",
@@ -27,7 +27,7 @@ const ratingScaleSchema = z
   .optional()
   .transform((val, ctx) => {
     if (!val) return val;
-    const parsedValue = parseFloat(val);
+    const parsedValue = Number(val);
     if (isNaN(parsedValue)) {
       ctx.addIssue({
         code: "custom",

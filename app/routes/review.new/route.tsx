@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
+import CharacterCountExtension from "@tiptap/extension-character-count";
 import { useEditor } from "@tiptap/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
@@ -13,19 +14,19 @@ import FormFields from "./ components/FormFields";
 import Header from "./ components/Header";
 import { NewReviewSchema, defaultValues, newReviewSchema } from "./helpers";
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await getRequiredUser(request);
+  const categories = await getReviewCategories();
+  return json({ categories });
+};
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(request);
 
   return null;
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await getRequiredUser(request);
-
-  const categories = await getReviewCategories();
-
-  return json({ categories });
-};
+const CHARACTER_LIMIT = 2_000;
 
 const NewReview = () => {
   const { categories } = useLoaderData<typeof loader>();
@@ -35,8 +36,14 @@ const NewReview = () => {
     resolver: zodResolver(newReviewSchema),
   });
   const editor = useEditor({
-    content: defaultValues.content,
-    extensions,
+    content: "",
+    extensions: [
+      ...extensions,
+      CharacterCountExtension.configure({
+        limit: CHARACTER_LIMIT,
+        mode: "textSize",
+      }),
+    ],
     onUpdate: ({ editor }) =>
       form.setValue("content", editor.isEmpty ? "" : editor.getHTML(), {
         shouldValidate: form.formState.submitCount >= 1,
@@ -49,8 +56,8 @@ const NewReview = () => {
   };
 
   const onSubmit: SubmitHandler<NewReviewSchema> = (data) => {
-    console.log({ data });
-    fetcher.submit({});
+    const stringifiedData = JSON.stringify(data);
+    fetcher.submit(stringifiedData);
   };
 
   return (
@@ -58,10 +65,14 @@ const NewReview = () => {
       <Header />
       <FormProvider {...form}>
         <form
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-8"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <FormFields categories={categories} editor={editor} />
+          <FormFields
+            categories={categories}
+            characterLimit={CHARACTER_LIMIT}
+            editor={editor}
+          />
           <FormActions handleFormReset={handleFormReset} />
         </form>
       </FormProvider>

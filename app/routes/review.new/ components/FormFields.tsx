@@ -3,7 +3,9 @@ import { useFormContext } from "react-hook-form";
 
 import Input from "~/components/atoms/Input";
 import { FormField } from "~/components/molecules/FormField";
-import RichTextEditor from "~/components/molecules/RichTextEditor";
+import RichTextEditor, {
+  RichTextEditorSkeleton,
+} from "~/components/molecules/RichTextEditor";
 import Select from "~/components/molecules/Select";
 import { ReviewCategory } from "~/server/review.server";
 
@@ -11,13 +13,24 @@ import { NewReviewSchema } from "../helpers";
 
 interface FormFieldsProps {
   categories: ReviewCategory[];
+  characterLimit: number;
   editor: Editor | null;
 }
-const FormFields = ({ categories, editor }: FormFieldsProps) => {
-  const { control } = useFormContext<NewReviewSchema>();
+const FormFields = ({
+  categories,
+  characterLimit,
+  editor,
+}: FormFieldsProps) => {
+  const {
+    control,
+    formState: { submitCount },
+    trigger,
+  } = useFormContext<NewReviewSchema>();
+  const characterCount = editor?.storage.characterCount.characters();
+  const wasSubmitted = submitCount >= 1;
 
   return (
-    <fieldset className="grid grid-cols-2 gap-4">
+    <fieldset className="grid grid-cols-2 gap-6">
       <FormField
         control={control}
         name="title"
@@ -63,6 +76,10 @@ const FormFields = ({ categories, editor }: FormFieldsProps) => {
                 )}
               </Select.Content>
             </Select>
+            <FormField.Message>
+              You can leave this field empty, in such case this review will be
+              uncategorised.
+            </FormField.Message>
           </FormField.Item>
         )}
       />
@@ -75,7 +92,14 @@ const FormFields = ({ categories, editor }: FormFieldsProps) => {
             <FormField.Label>Rating</FormField.Label>
             <FormField.Message />
             <FormField.Control>
-              <Input inputMode="numeric" {...field} />
+              <Input
+                {...field}
+                inputMode="numeric"
+                onChange={(e) => {
+                  field.onChange(e);
+                  wasSubmitted && trigger(["rating", "ratingScale"]);
+                }}
+              />
             </FormField.Control>
           </FormField.Item>
         )}
@@ -89,7 +113,14 @@ const FormFields = ({ categories, editor }: FormFieldsProps) => {
             <FormField.Label>Rating Scale</FormField.Label>
             <FormField.Message />
             <FormField.Control>
-              <Input inputMode="numeric" {...field} />
+              <Input
+                {...field}
+                inputMode="numeric"
+                onChange={(e) => {
+                  field.onChange(e);
+                  wasSubmitted && trigger(["rating", "ratingScale"]);
+                }}
+              />
             </FormField.Control>
           </FormField.Item>
         )}
@@ -102,10 +133,17 @@ const FormFields = ({ categories, editor }: FormFieldsProps) => {
           <FormField.Item className="col-span-2">
             <FormField.Label isRequired>Review</FormField.Label>
             <FormField.Message />
-            <RichTextEditor editor={editor} hasError={!!error} />
+            {editor ? (
+              <RichTextEditor editor={editor} hasError={!!error} />
+            ) : (
+              <RichTextEditorSkeleton />
+            )}
             <FormField.Control>
               <input type="hidden" {...field} />
             </FormField.Control>
+            <FormField.Description>
+              Character count: {characterCount} / {characterLimit}
+            </FormField.Description>
           </FormField.Item>
         )}
       />
