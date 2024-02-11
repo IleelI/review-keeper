@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { Toaster } from "sonner";
 
 import { getUser } from "./server/auth.server";
 import styles from "./styles.css";
@@ -44,6 +45,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <Toaster richColors theme="system" />
       </body>
     </html>
   );

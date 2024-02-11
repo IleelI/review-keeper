@@ -20,9 +20,20 @@ export default function Index() {
       <div className="flex flex-col gap-8 rounded-lg bg-white p-8 shadow-md dark:bg-neutral-800">
         <h1 className="text-3xl font-bold">Welcome to Review Keeper!</h1>
 
-        <Link decoration="underline" to="/playground">
-          Playground
-        </Link>
+        <nav>
+          <ul className="flex list-disc flex-col gap-2 pl-4">
+            <li>
+              <Link decoration="underline" to="/playground" variant="muted">
+                Playground
+              </Link>
+            </li>
+            <li>
+              <Link decoration="underline" to="/reviews" variant="muted">
+                Reviews
+              </Link>
+            </li>
+          </ul>
+        </nav>
 
         {user ? (
           <div className="grid w-full grid-cols-2 items-center gap-4">

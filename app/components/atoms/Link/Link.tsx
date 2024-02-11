@@ -62,9 +62,9 @@ const linkStyles = cva("h-full items-center font-medium transition", {
       pending: "animate-pulse cursor-wait grayscale duration-1000",
     },
     variant: {
-      text: "inline-block w-max p-1 text-primary-700 hover:text-primary-600 focus-visible:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400 dark:focus-visible:text-primary-400",
+      text: "inline-block w-max text-primary-700 hover:text-primary-600 focus-visible:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400 dark:focus-visible:text-primary-400",
       muted:
-        "inline-block w-max p-1 text-neutral-500 hover:text-primary-600 focus-visible:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 dark:focus-visible:text-primary-400",
+        "inline-block w-max text-neutral-500 hover:text-primary-600 focus-visible:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 dark:focus-visible:text-primary-400",
       filled: [
         "flex gap-2 px-3 py-1.5 justify-center rounded-lg outline-offset-4 bg-primary-700 text-neutral-100 dark:bg-primary-300 dark:text-neutral-900",
         "hover:bg-primary-800 focus-visible:bg-primary-800 active:bg-primary-700 dark:hover:bg-primary-400 dark:focus-visible:bg-primary-400 dark:active:bg-primary-300",
