@@ -3,101 +3,19 @@ import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEditor } from "@tiptap/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
 
-import Button from "~/components/atoms/Button";
-import Input from "~/components/atoms/Input";
-import Link from "~/components/atoms/Link";
-import { FormField } from "~/components/molecules/FormField";
-import RichTextEditor, {
-  extensions,
-} from "~/components/molecules/RichTextEditor";
-import Select from "~/components/molecules/Select";
+import { extensions } from "~/components/molecules/RichTextEditor";
 import { getRequiredUser } from "~/server/auth.server";
 import { getReviewCategories } from "~/server/review.server";
 
-type NewReviewSchema = z.infer<typeof newReviewSchema>;
-const newReviewSchema = z
-  .object({
-    categoryId: z.string().optional(),
-    content: z.string().trim().min(1, "Review is required."),
-    rating: z
-      .string()
-      .optional()
-      .transform((val, ctx) => {
-        if (!val) return val;
-        const parsedValue = parseFloat(val);
-        if (isNaN(parsedValue)) {
-          ctx.addIssue({
-            code: "custom",
-            message: "Rating must be a number.",
-          });
-        } else if (parsedValue < 0) {
-          ctx.addIssue({
-            code: "custom",
-            message: "Rating must be a positive number.",
-          });
-        }
-        return parsedValue;
-      }),
-    ratingScale: z
-      .string()
-      .optional()
-      .transform((val, ctx) => {
-        if (!val) return val;
-        const parsedValue = parseFloat(val);
-        if (isNaN(parsedValue)) {
-          ctx.addIssue({
-            code: "custom",
-            message: "Rating scale must be a number.",
-          });
-        } else if (parsedValue < 0) {
-          ctx.addIssue({
-            code: "custom",
-            message: "Rating scale must be a positive number.",
-          });
-        }
-        return parsedValue;
-      }),
-    title: z.string().trim().min(1, "Title is required."),
-  })
-  .superRefine(({ rating, ratingScale }, context) => {
-    if (!rating && !ratingScale) {
-      return z.NEVER;
-    }
-    if (rating && ratingScale && rating > ratingScale) {
-      context.addIssue({
-        code: "custom",
-        message: "Rating cannot be greater than rating scale.",
-        path: ["rating"],
-      });
-      context.addIssue({
-        code: "custom",
-        message: "Rating scale cannot be less than rating scale.",
-        path: ["ratingScale"],
-      });
-    } else if (rating && !ratingScale) {
-      context.addIssue({
-        code: "custom",
-        message: "Rating scale must be set.",
-        path: ["ratingScale"],
-      });
-    } else if (!rating && ratingScale) {
-      context.addIssue({
-        code: "custom",
-        message: "Rating must be set.",
-        path: ["rating"],
-      });
-    }
-  })
-  .transform(({ rating, ratingScale, ...rest }) => ({
-    ...rest,
-    rating: rating ? String(rating) : undefined,
-    ratingScale: ratingScale ? String(ratingScale) : undefined,
-  }));
+import FormActions from "./ components/FormActions";
+import FormFields from "./ components/FormFields";
+import Header from "./ components/Header";
+import { NewReviewSchema, defaultValues, newReviewSchema } from "./helpers";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(request);
+
   return null;
 };
 
@@ -105,16 +23,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   await getRequiredUser(request);
 
   const categories = await getReviewCategories();
+
   return json({ categories });
 };
 
-const defaultValues: NewReviewSchema = {
-  categoryId: "",
-  content: "",
-  rating: "",
-  ratingScale: "",
-  title: "",
-};
 const NewReview = () => {
   const { categories } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>({ key: "new-review" });
@@ -123,13 +35,18 @@ const NewReview = () => {
     resolver: zodResolver(newReviewSchema),
   });
   const editor = useEditor({
-    content: "",
+    content: defaultValues.content,
     extensions,
     onUpdate: ({ editor }) =>
       form.setValue("content", editor.isEmpty ? "" : editor.getHTML(), {
         shouldValidate: form.formState.submitCount >= 1,
       }),
   });
+
+  const handleFormReset = () => {
+    form.reset();
+    editor?.commands.clearContent();
+  };
 
   const onSubmit: SubmitHandler<NewReviewSchema> = (data) => {
     console.log({ data });
@@ -138,127 +55,14 @@ const NewReview = () => {
 
   return (
     <main className="flex min-h-[100dvh] w-full flex-col gap-8 px-8 py-6 xl:mx-auto xl:max-w-screen-lg">
-      <header className="flex flex-col gap-1">
-        <Link
-          className="flex items-center gap-0.5 text-sm"
-          decoration="underline"
-          to="/"
-          variant="muted"
-        >
-          Go home
-        </Link>
-        <h2 className="text-3xl font-black">New Review</h2>
-      </header>
-
+      <Header />
       <FormProvider {...form}>
         <form
           className="flex flex-col gap-6"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <fieldset className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormField.Item className="col-span-2">
-                  <FormField.Label isRequired>Title</FormField.Label>
-                  <FormField.Message />
-                  <FormField.Control>
-                    <Input {...field} />
-                  </FormField.Control>
-                </FormField.Item>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="categoryId"
-              render={({ field, fieldState: { error } }) => (
-                <FormField.Item className="col-span-2">
-                  <FormField.Label>Category</FormField.Label>
-                  <FormField.Message />
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormField.Control>
-                      <Select.Trigger hasError={!!error} ref={field.ref}>
-                        <Select.Value placeholder="Select a category..." />
-                      </Select.Trigger>
-                    </FormField.Control>
-                    <Select.Content>
-                      {categories.length ? (
-                        categories.map(({ id, name }) => (
-                          <Select.Item key={id} value={String(id)}>
-                            {name}
-                          </Select.Item>
-                        ))
-                      ) : (
-                        <Select.EmptyList
-                          message="Please try again in a while."
-                          title="No categories found."
-                        />
-                      )}
-                    </Select.Content>
-                  </Select>
-                </FormField.Item>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="rating"
-              render={({ field }) => (
-                <FormField.Item className="col-span-1 justify-between">
-                  <FormField.Label>Rating</FormField.Label>
-                  <FormField.Message />
-                  <FormField.Control>
-                    <Input inputMode="numeric" {...field} />
-                  </FormField.Control>
-                </FormField.Item>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="ratingScale"
-              render={({ field }) => (
-                <FormField.Item className="col-span-1 justify-between">
-                  <FormField.Label>Rating Scale</FormField.Label>
-                  <FormField.Message />
-                  <FormField.Control>
-                    <Input inputMode="numeric" {...field} />
-                  </FormField.Control>
-                </FormField.Item>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field, fieldState: { error } }) => (
-                <FormField.Item className="col-span-2">
-                  <FormField.Label isRequired>Review</FormField.Label>
-                  <FormField.Message />
-                  <RichTextEditor editor={editor} hasError={!!error} />
-                  <FormField.Control>
-                    <input type="hidden" {...field} />
-                  </FormField.Control>
-                </FormField.Item>
-              )}
-            />
-          </fieldset>
-
-          <nav className="flex gap-8">
-            <Button
-              intent="secondary"
-              onClick={() => form.reset()}
-              type="reset"
-            >
-              Clear Review
-            </Button>
-            <Button type="submit">Create Review</Button>
-          </nav>
+          <FormFields categories={categories} editor={editor} />
+          <FormActions handleFormReset={handleFormReset} />
         </form>
       </FormProvider>
     </main>
