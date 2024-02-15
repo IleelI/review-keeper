@@ -25,9 +25,9 @@ model Review {
   tags        ReviewTag[]
   reactions   ReviewReaction[]
   categoryId  Int?
-  category    ReviewCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  category    ReviewCategory?  @relation(fields: [categoryId], references: [id])
   authorId    Int
-  author      User             @relation(fields: [id], references: [id], onDelete: Cascade)
+  author      User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 model ReviewReactionType {
@@ -38,7 +38,8 @@ model ReviewReactionType {
 
 model ReviewReaction {
   id       Int                @id @default(autoincrement())
-  type     ReviewReactionType @relation(fields: [id], references: [id], onDelete: Cascade)
+  typeId   Int                
+  type     ReviewReactionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
   reviewId Int
   review   Review             @relation(fields: [reviewId], references: [id], onDelete: Cascade)
 }

@@ -23,7 +23,7 @@ const SelectTrigger = forwardRef<
     className={twMerge([
       "flex items-center justify-between gap-4 rounded-lg border px-3 py-1.5 shadow-sm outline-none transition",
       "border-neutral-200 bg-neutral-50 text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
-      "enabled:hover:border-neutral-600 enabled:focus-visible:border-neutral-600 dark:enabled:hover:border-neutral-400 dark:enabled:focus-visible:border-neutral-400",
+      "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
       "data-[placeholder]:text-neutral-400 dark:data-[placeholder]:text-neutral-500",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
       "aria-[invalid=true]:border-red-700 dark:aria-[invalid=true]:border-red-300",
@@ -171,12 +171,17 @@ const SelectSeparator = forwardRef<
 ));
 SelectSeparator.displayName = RadixSelect.Separator.displayName;
 
-const SelectEmptyList = () => (
+interface SelectEmptyListProps {
+  message?: string;
+  title?: string;
+}
+const SelectEmptyList = ({
+  message = "Please, try again later...",
+  title = "No options available",
+}: SelectEmptyListProps) => (
   <div className="flex flex-col items-center justify-center gap-2 p-2">
-    <p className="font-semibold">No options available</p>
-    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-      Please, try again later...
-    </p>
+    <p className="font-semibold">{title}</p>
+    <p className="text-sm text-neutral-600 dark:text-neutral-400">{message}</p>
   </div>
 );
 
