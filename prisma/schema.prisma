@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(cuid())
   email        String   @unique
   hash         String
   username     String?
@@ -17,41 +17,41 @@ model User {
 }
 
 model Review {
-  id          Int              @id @default(autoincrement())
+  id          String           @id @default(cuid())
   title       String
   content     String
   rating      Int?
   ratingScale Int?
   tags        ReviewTag[]
   reactions   ReviewReaction[]
-  categoryId  Int?
-  category    ReviewCategory?  @relation(fields: [categoryId], references: [id])
-  authorId    Int
+  categoryId  String?
+  category    ReviewCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  authorId    String
   author      User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 model ReviewReactionType {
-  id     Int              @id @default(autoincrement())
+  id     String           @id @default(cuid())
   name   String           @unique
   usedIn ReviewReaction[]
 }
 
 model ReviewReaction {
   id       Int                @id @default(autoincrement())
-  typeId   Int                
+  typeId   String
   type     ReviewReactionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
-  reviewId Int
+  reviewId String
   review   Review             @relation(fields: [reviewId], references: [id], onDelete: Cascade)
 }
 
 model ReviewCategory {
-  id     Int      @id @default(autoincrement())
+  id     String   @id @default(cuid())
   name   String   @unique
   usedIn Review[]
 }
 
 model ReviewTag {
-  id     Int      @id @default(autoincrement())
+  id     String   @id @default(cuid())
   name   String   @unique
   usedIn Review[]
 }

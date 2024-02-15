@@ -13,3 +13,15 @@ export const getReviewCategories = async (): Promise<ReviewCategory[]> => {
     return [];
   }
 };
+
+export const getUserReviews = async (userId: string) => {
+  try {
+    return await prisma.review.findMany({
+      where: {
+        authorId: userId,
+      },
+    });
+  } catch {
+    return [];
+  }
+};

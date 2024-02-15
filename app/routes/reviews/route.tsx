@@ -13,7 +13,10 @@ const ReviewsPage = () => {
   const { reviews } = useLoaderData<typeof loader>();
 
   return (
-    <main className="flex min-h-[100dvh] w-full flex-col gap-8 px-8 py-6 xl:mx-auto xl:max-w-screen-lg">
+    <main
+      className="px- 8 flex min-h-[100dvh] w-full flex-col
+    gap-8 py-6 xl:mx-auto xl:max-w-screen-lg"
+    >
       <header className="flex flex-col gap-2">
         <Link decoration="underline" to="/" variant="muted">
           Go back
@@ -53,7 +56,7 @@ const ReviewsPage = () => {
                           {rating} out of {ratingScale}
                         </span>
                         <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                          ({Math.floor(rating / ratingScale)}%)
+                          ({Math.round((rating / ratingScale) * 100)}%)
                         </span>
                       </span>
                     </div>
