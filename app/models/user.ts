@@ -4,7 +4,7 @@ import { prisma } from "~/server/db.server";
 
 export type AppUser = Pick<User, "email" | "id" | "username">;
 
-export const getUserById = async (userId: number): Promise<AppUser | null> => {
+export const getUserById = async (userId: string): Promise<AppUser | null> => {
   const user = await prisma.user.findFirst({
     where: {
       id: userId,
