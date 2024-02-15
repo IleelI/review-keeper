@@ -2,10 +2,12 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import Link from "~/components/atoms/Link";
-import { getReviews } from "~/server/reviews.server";
+import { getReviewsForGrid } from "~/server/reviews.server";
+
+import ReviewCard from "./components/ReviewCard";
 
 export const loader = async () => {
-  const reviews = await getReviews();
+  const reviews = await getReviewsForGrid();
   return json({ reviews });
 };
 
@@ -26,45 +28,9 @@ const ReviewsPage = () => {
 
       {reviews.length ? (
         <ul className="grid grid-cols-2 gap-4">
-          {reviews.map(
-            ({ author, category, id, rating, ratingScale, title }) => (
-              <li
-                className="group flex flex-col gap-2 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 px-6 py-4 transition duration-300 hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-300"
-                key={id}
-              >
-                <h3 className="text-xl font-medium transition-colors duration-300 group-hover:text-primary-700 dark:group-hover:text-primary-300">
-                  {title}
-                </h3>
-                <section>
-                  {author.username ? (
-                    <div className="flex items-baseline justify-between gap-4">
-                      <span className="font-medium">Author:</span>
-                      <span>{author.username}</span>
-                    </div>
-                  ) : null}
-                  {category ? (
-                    <div className="flex items-baseline justify-between gap-4">
-                      <span className="font-medium">Category:</span>
-                      <span>{category.name}</span>
-                    </div>
-                  ) : null}
-                  {rating && ratingScale ? (
-                    <div className="flex items-baseline justify-between gap-4">
-                      <span className="font-medium">Rating:</span>
-                      <span className="flex items-baseline gap-1">
-                        <span className="font-light text-neutral-700 dark:text-neutral-300">
-                          {rating} out of {ratingScale}
-                        </span>
-                        <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                          ({Math.round((rating / ratingScale) * 100)}%)
-                        </span>
-                      </span>
-                    </div>
-                  ) : null}
-                </section>
-              </li>
-            ),
-          )}
+          {reviews.map((review) => (
+            <ReviewCard key={review.id} {...review} />
+          ))}
         </ul>
       ) : (
         <section>
