@@ -6,7 +6,7 @@ import {
   getUserToken,
   signOut,
   refreshTokenCookie,
-} from "~/server/auth.server";
+} from "~/.server/auth";
 import { getSafeRedirect } from "~/utils/routing/routing";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

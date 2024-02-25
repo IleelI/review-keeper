@@ -8,6 +8,15 @@ import {
 import { useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
+import {
+  comparePasswords,
+  createAccessToken,
+  createRefreshToken,
+  signIn,
+  lookForUser,
+  getUser,
+} from "~/.server/auth";
+import { prisma } from "~/.server/db";
 import Button from "~/components/atoms/Button";
 import Checkbox from "~/components/atoms/Checkbox";
 import HelperText from "~/components/atoms/HelperText";
@@ -16,15 +25,6 @@ import Label from "~/components/atoms/Label";
 import Link from "~/components/atoms/Link";
 import { FormField } from "~/components/molecules/FormField";
 import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
-import {
-  comparePasswords,
-  createAccessToken,
-  createRefreshToken,
-  signIn,
-  lookForUser,
-  getUser,
-} from "~/server/auth.server";
-import { prisma } from "~/server/db.server";
 import { getSafeRedirect } from "~/utils/routing/routing";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -158,7 +158,7 @@ export default function SignIn() {
               <HelperText isError>{backendError}</HelperText>
             ) : null}
             <small className="text-xs tracking-wide">
-              {"Don't have an account?"}{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 className="text-sm"
                 decoration="underline"

@@ -10,7 +10,9 @@ const NewReviewHeader = () => (
     >
       Go home
     </Link>
-    <h2 className="text-3xl font-black">New Review</h2>
+    <h2 className="text-3xl font-black text-primary-700 dark:text-primary-300">
+      New Review
+    </h2>
   </header>
 );
 

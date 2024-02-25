@@ -1,13 +1,15 @@
 import { faker } from "@faker-js/faker";
 import type { Review, ReviewCategory, User } from "@prisma/client";
 
+import { hashPassword } from "~/.server/auth";
+
 type MockWithout<T, K extends keyof T> = Omit<T, K>;
 
 type MockedUser = MockWithout<User, "id">;
 const mockUser = (): MockedUser => {
   const username = faker.internet.userName();
   const email = faker.internet.email({ firstName: username });
-  const hash = faker.internet.password({ length: 16 });
+  const hash = hashPassword(faker.internet.password({ length: 8 }));
 
   return {
     email,

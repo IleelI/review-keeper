@@ -1,14 +1,15 @@
+import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
+
 import { faker } from "@faker-js/faker";
 import { createCookie, redirect, redirectDocument } from "@remix-run/node";
-import { compare, hashSync } from "bcrypt";
 import { SignJWT, jwtVerify } from "jose";
 
 import { AppUser, getUserById } from "~/models/user";
 import { CredentialsSchema } from "~/schema/auth.schema";
 import { getSafeRedirect } from "~/utils/routing/routing";
 
-import { prisma } from "./db.server";
-import { env } from "./env.server";
+import { prisma } from "./db";
+import { env } from "./env";
 
 export const createJWT = async (
   duration: number,
@@ -66,12 +67,35 @@ export const lookForUser = async (email: string) => {
   }
 };
 
+export const KEY_LENGTH = 32;
+export const encryptPassword = (password: string, salt: string) =>
+  scryptSync(password, salt, KEY_LENGTH).toString("hex");
+
+export const SALT_LENGTH = 24;
+export const hashPassword = (password: string) => {
+  const salt = randomBytes(SALT_LENGTH).toString("hex");
+  const encryptedPassword = encryptPassword(password, salt);
+  return `${encryptedPassword}${salt}`;
+};
+
+export const matchPassword = (password: string, hash: string) => {
+  const salt = hash.slice(KEY_LENGTH * 2);
+  const originalPasswordHash = hash.slice(0, 64);
+  const currentPasswordHash = encryptPassword(password, salt);
+
+  const encoder = new TextEncoder();
+  return timingSafeEqual(
+    encoder.encode(originalPasswordHash),
+    encoder.encode(currentPasswordHash),
+  );
+};
+
 export const comparePasswords = async (
   password: string,
   hashedPassword: string,
 ) => {
   try {
-    return await compare(password, hashedPassword);
+    return matchPassword(password, hashedPassword);
   } catch {
     return false;
   }
@@ -79,17 +103,15 @@ export const comparePasswords = async (
 
 export const createUser = async (credentials: CredentialsSchema) => {
   try {
-    const hashedPassword = hashSync(credentials.password, 10);
-    const user = await prisma.user.create({
+    return await prisma.user.create({
       data: {
         email: credentials.email,
-        hash: hashedPassword,
+        hash: hashPassword(credentials.password),
         username: `${faker.word.adjective()}-${faker.animal.type()}${faker.number.int(
           { max: 10_000 },
         )}`,
       },
     });
-    return user;
   } catch {
     return null;
   }
@@ -187,7 +209,12 @@ export const getUser = async (request: Request) => {
 
 export const getRequiredUser = async (request: Request) => {
   const user = await getUser(request);
-  if (!user) throw await signOut();
+  if (!user) {
+    throw new Response("You've to be logged in to access this resource.", {
+      status: 401,
+      statusText: "Not Authorized.",
+    });
+  }
   return user;
 };
 

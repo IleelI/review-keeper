@@ -1,5 +1,5 @@
 import { mockCategories, mockReviews, mockUsers } from "mocking/prisma";
-import { prisma } from "~/server/db.server";
+import { prisma } from "~/.server/db";
 
 const seed = async () => {
   const categories = await Promise.all(

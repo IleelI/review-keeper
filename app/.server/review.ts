@@ -1,4 +1,4 @@
-import { prisma } from "./db.server";
+import { prisma } from "./db";
 
 export interface ReviewCategory {
   id: string;
@@ -25,3 +25,5 @@ export const getUserReviews = async (userId: string) => {
     return [];
   }
 };
+
+export const getCrash = () => console.log("CRASHED LOL");

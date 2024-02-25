@@ -7,10 +7,10 @@ import { useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { getRequiredUser, requireUser } from "~/.server/auth";
+import { prisma } from "~/.server/db";
+import { getReviewCategories } from "~/.server/review";
 import { extensions } from "~/components/molecules/RichTextEditor";
-import { getRequiredUser, requireUser } from "~/server/auth.server";
-import { prisma } from "~/server/db.server";
-import { getReviewCategories } from "~/server/review.server";
 
 import FormActions from "./components/FormActions";
 import FormFields from "./components/FormFields";
@@ -107,6 +107,7 @@ const NewReviewPage = () => {
   return (
     <main className="flex min-h-[100dvh] w-full flex-col gap-8 px-8 py-6 xl:mx-auto xl:max-w-screen-lg">
       <Header />
+
       <FormProvider {...form}>
         <form
           className="flex flex-col gap-8"

@@ -1,5 +1,5 @@
+import type { ReviewForGrid } from "~/.server/reviews";
 import Link from "~/components/atoms/Link";
-import { ReviewForGrid } from "~/server/reviews.server";
 
 import ReviewCardRating from "./ReviewCardRating";
 

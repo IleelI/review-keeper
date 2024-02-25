@@ -19,9 +19,9 @@ export default {
     }),
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", ...defaultTheme.fontFamily.sans],
+        sans: ["Manrope", ...defaultTheme.fontFamily.sans],
         serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
-        mono: ["Space Mono", ...defaultTheme.fontFamily.mono],
+        mono: ["JetBrains Mono", ...defaultTheme.fontFamily.mono],
       },
       backdropBrightness: {
         85: ".85",

@@ -1,4 +1,4 @@
-import { prisma } from "./db.server";
+import { prisma } from "./db";
 
 export type ReviewForGrid = Awaited<
   ReturnType<typeof getReviewsForGrid>
@@ -6,7 +6,7 @@ export type ReviewForGrid = Awaited<
 
 export const getReviewsForGrid = async () => {
   try {
-    const reviews = await prisma.review.findMany({
+    return await prisma.review.findMany({
       select: {
         author: {
           select: {
@@ -22,8 +22,8 @@ export const getReviewsForGrid = async () => {
         title: true,
       },
     });
-    return reviews;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return [];
   }
 };

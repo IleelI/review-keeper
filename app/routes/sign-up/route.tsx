@@ -8,11 +8,6 @@ import {
 import { Link, useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
-import Button from "~/components/atoms/Button";
-import HelperText from "~/components/atoms/HelperText";
-import Input from "~/components/atoms/Input";
-import { FormField } from "~/components/molecules/FormField";
-import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
 import {
   lookForUser,
   createRefreshToken,
@@ -20,8 +15,13 @@ import {
   signIn,
   createUser,
   getUser,
-} from "~/server/auth.server";
-import { prisma } from "~/server/db.server";
+} from "~/.server/auth";
+import { prisma } from "~/.server/db";
+import Button from "~/components/atoms/Button";
+import HelperText from "~/components/atoms/HelperText";
+import Input from "~/components/atoms/Input";
+import { FormField } from "~/components/molecules/FormField";
+import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
 import { getSafeRedirect } from "~/utils/routing/routing";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
