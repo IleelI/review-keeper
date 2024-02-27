@@ -91,7 +91,7 @@ export default function Register() {
   };
 
   return (
-    <main className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:justify-center">
+    <article className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:justify-center">
       <header className="flex flex-col gap-1">
         <Link
           className="text-sm leading-none text-neutral-400 underline underline-offset-2 transition-colors hover:text-primary-600 dark:text-neutral-600 dark:hover:text-primary-400"
@@ -176,6 +176,6 @@ export default function Register() {
           </nav>
         </form>
       </FormProvider>
-    </main>
+    </article>
   );
 }

@@ -1,7 +1,7 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { getReviewsForGrid } from "~/.server/reviews";
+import { getReviewsForGrid } from "~/.server/data/reviews";
 import Link from "~/components/atoms/Link";
 
 import ReviewCard from "./components/ReviewCard";

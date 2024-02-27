@@ -1,10 +1,10 @@
 import { invariant } from "@epic-web/invariant";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 
 import { getRequiredUser } from "~/.server/auth";
-import { getUserReviews } from "~/.server/review";
-
-import { getReview } from "./route.server";
+import { getReview } from "~/.server/data/review";
+import { getUserReviews } from "~/.server/data/user";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.reviewId, "reviewId is required.");
@@ -19,7 +19,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     });
   }
 
-  const review = getReview(reviewId);
+  const review = await getReview(reviewId);
   if (review === null) {
     throw new Response("Review doesn't exist.", {
       status: 404,
@@ -27,10 +27,13 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     });
   }
 
-  return json({ review: null });
+  return json({ review });
 };
 
 const ReviewEditPage = () => {
+  const { review } = useLoaderData<typeof loader>();
+  console.log({ review });
+
   return <div>Review edit page</div>;
 };
 

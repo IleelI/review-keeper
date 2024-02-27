@@ -8,8 +8,8 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { getRequiredUser, requireUser } from "~/.server/auth";
+import { getReviewCategories } from "~/.server/data/review";
 import { prisma } from "~/.server/db";
-import { getReviewCategories } from "~/.server/review";
 import { extensions } from "~/components/molecules/RichTextEditor";
 
 import FormActions from "./components/FormActions";

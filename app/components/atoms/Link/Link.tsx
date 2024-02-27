@@ -65,6 +65,9 @@ const linkStyles = cva("h-auto items-center font-medium transition", {
       text: [
         "inline-block w-max text-primary-700 hover:text-primary-600 focus-visible:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400 dark:focus-visible:text-primary-400",
       ],
+      regular: [
+        "inline-block w-max text-neutral-700 hover:text-primary-700 focus-visible:text-primary-700 dark:text-neutral-300 dark:hover:text-primary-300 dark:focus-visible:text-primary-300",
+      ],
       muted: [
         "inline-block w-max text-neutral-600 hover:text-primary-700 focus-visible:text-primary-700 dark:text-neutral-400 dark:hover:text-primary-300 dark:focus-visible:text-primary-300",
       ],
@@ -89,7 +92,7 @@ const linkStyles = cva("h-auto items-center font-medium transition", {
   defaultVariants: {
     decoration: "none",
     navigationState: "base",
-    variant: "text",
+    variant: "regular",
   },
 });
 

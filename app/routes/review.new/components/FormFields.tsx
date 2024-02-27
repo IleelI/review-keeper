@@ -1,7 +1,7 @@
 import { Editor } from "@tiptap/react";
 import { useFormContext } from "react-hook-form";
 
-import { ReviewCategory } from "~/.server/review";
+import { ReviewCategory } from "~/.server/data/review";
 import Input from "~/components/atoms/Input";
 import { FormField } from "~/components/molecules/FormField";
 import RichTextEditor, {

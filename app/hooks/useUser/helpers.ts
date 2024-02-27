@@ -1,4 +1,4 @@
-import { AppUser } from "~/models/user";
+import { AppUser } from "~/.server/data/user";
 
 export const isUser = (user: unknown): user is AppUser => {
   return (

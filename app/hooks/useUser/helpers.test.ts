@@ -1,4 +1,4 @@
-import { AppUser } from "~/models/user";
+import { AppUser } from "~/.server/data/user";
 
 import { isUser } from "./helpers";
 

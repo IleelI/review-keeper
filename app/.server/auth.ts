@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 import { createCookie, redirect, redirectDocument } from "@remix-run/node";
 import { SignJWT, jwtVerify } from "jose";
 
-import { AppUser, getUserById } from "~/models/user";
+import { AppUser, getUserById } from "./data/user";
 import { CredentialsSchema } from "~/schema/auth.schema";
 import { getSafeRedirect } from "~/utils/routing/routing";
 

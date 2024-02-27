@@ -1,3 +1,4 @@
+import { SignIn, UserPlus } from "@phosphor-icons/react";
 import { type MetaFunction } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 
@@ -16,47 +17,66 @@ export default function Index() {
   const user = useUser();
 
   return (
-    <main className="flex min-h-[100dvh] w-full flex-col px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:items-center lg:justify-center">
-      <div className="flex flex-col gap-8 rounded-lg bg-white p-8 shadow-md dark:bg-neutral-800">
-        <h1 className="text-3xl font-bold">Welcome to Review Keeper!</h1>
+    <>
+      <header className="col-span-full flex items-center justify-between gap-8 rounded-xl border border-neutral-300 bg-neutral-50 px-6 py-2.5 dark:border-neutral-700 dark:bg-neutral-800">
+        <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">
+          Review Keeper
+        </h2>
 
-        <nav>
-          <ul className="flex list-disc flex-col gap-2 pl-4">
-            <li>
-              <Link decoration="underline" to="/playground" variant="muted">
-                Playground
+        <section className="flex items-center gap-6">
+          {user ? (
+            <>
+              <p className="italic">{user.username}</p>
+              <Form action="/sign-out" method="post">
+                <Button intent="text" type="submit">
+                  Sign out
+                </Button>
+              </Form>
+            </>
+          ) : (
+            <>
+              <Link className="flex items-center gap-2" to="/sign-in">
+                <SignIn weight="bold" /> Sign in
               </Link>
-            </li>
-            <li>
-              <Link decoration="underline" to="/reviews" variant="muted">
-                Reviews
+              <Link className="flex items-center gap-2" to="/sign-up">
+                <UserPlus weight="bold" /> Sign up
               </Link>
-            </li>
-          </ul>
-        </nav>
+            </>
+          )}
+        </section>
+      </header>
 
+      <ul className="col-span-full grid auto-rows-min grid-cols-4 flex-col gap-4">
+        <li className="aspect-[5/2] rounded-xl border border-neutral-300 bg-neutral-500 transition hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-300">
+          <Link
+            className="flex h-full !w-full items-center justify-center px-5 py-2 text-xl"
+            to="/reviews"
+            variant="regular"
+          >
+            See Reviews
+          </Link>
+        </li>
         {user ? (
-          <div className="grid w-full grid-cols-2 items-center gap-4">
-            <Form action="/sign-out" method="post">
-              <Button type="submit" intent="secondary">
-                Log out
-              </Button>
-            </Form>
-            <Link to="/review/new" variant="filled">
-              Create a new review
+          <li className="aspect-[5/2] rounded-xl border border-neutral-300 bg-neutral-500 transition hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-300">
+            <Link
+              className="flex h-full !w-full items-center justify-center px-5 py-2 text-xl"
+              to="/review/new"
+              variant="regular"
+            >
+              New Review
             </Link>
-          </div>
-        ) : (
-          <section className="grid w-full grid-cols-2 items-center gap-4">
-            <Link to="/sign-up" variant="outlined">
-              Sign up
-            </Link>
-            <Link to="/sign-in" variant="filled">
-              Sign in
-            </Link>
-          </section>
-        )}
-      </div>
-    </main>
+          </li>
+        ) : null}
+        <li className="aspect-[5/2] rounded-xl border border-neutral-300 bg-neutral-500 transition hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-300">
+          <Link
+            className="flex h-full !w-full items-center justify-center px-5 py-2 text-xl"
+            to="/playground"
+            variant="regular"
+          >
+            Visit Playground
+          </Link>
+        </li>
+      </ul>
+    </>
   );
 }
