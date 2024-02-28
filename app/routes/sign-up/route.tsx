@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowUDownLeft } from "@phosphor-icons/react";
 import {
   ActionFunctionArgs,
   LoaderFunction,
@@ -18,6 +19,7 @@ import {
 } from "~/.server/auth";
 import { prisma } from "~/.server/db";
 import Button from "~/components/atoms/Button";
+import GlassCard from "~/components/atoms/GlassCard";
 import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";
 import { FormField } from "~/components/molecules/FormField";
@@ -91,91 +93,95 @@ export default function Register() {
   };
 
   return (
-    <article className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:justify-center">
-      <header className="flex flex-col gap-1">
+    <main className="grid min-h-[100dvh] w-full place-content-center px-8 py-6">
+      <GlassCard className="relative flex min-w-[640px] flex-col gap-12 p-24">
         <Link
-          className="text-sm leading-none text-neutral-400 underline underline-offset-2 transition-colors hover:text-primary-600 dark:text-neutral-600 dark:hover:text-primary-400"
+          className="absolute left-4 top-4 cursor-pointer rounded-lg p-2 transition hover:bg-neutral-200 hover:text-primary-700 focus-visible:bg-neutral-200 focus-visible:text-primary-700 dark:hover:bg-neutral-900 dark:hover:text-primary-300 dark:focus-visible:bg-neutral-900 dark:focus-visible:text-primary-300"
           to="/"
         >
-          Go home
+          <ArrowUDownLeft size={20} />
         </Link>
-        <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Sign up
-        </h1>
-      </header>
 
-      <FormProvider {...form}>
-        <form
-          className="flex flex-col gap-8"
-          onSubmit={form.handleSubmit(handleSubmitSuccess)}
-        >
-          <fieldset className="flex flex-col gap-8">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormField.Item>
-                  <FormField.Label isRequired>Email</FormField.Label>
-                  <FormField.Message />
-                  <FormField.Control>
-                    <Input autoComplete="email" type="email" {...field} />
-                  </FormField.Control>
-                </FormField.Item>
-              )}
-            />
+        <header className="flex flex-col gap-1">
+          <p className="text-sm tracking-wide text-neutral-600 dark:text-neutral-400">
+            Welcome to Review Keeper!
+          </p>
+          <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
+            Sign up to create your account
+          </h1>
+        </header>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormField.Item>
-                  <FormField.Label isRequired>Password</FormField.Label>
-                  <FormField.Message />
-                  <FormField.Control>
-                    <Input
-                      autoComplete="new-password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormField.Control>
-                  <FormField.Description>
-                    Generate safe password{" "}
-                    <a
-                      aria-label="Bitwarden password generator"
-                      className="text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
-                      href="https://bitwarden.com/password-generator/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      here.
-                    </a>
-                  </FormField.Description>
-                </FormField.Item>
-              )}
-            />
+        <FormProvider {...form}>
+          <form
+            className="flex flex-col gap-12"
+            onSubmit={form.handleSubmit(handleSubmitSuccess)}
+          >
+            <fieldset className="flex flex-col gap-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormField.Item>
+                    <FormField.Label isRequired>Email</FormField.Label>
+                    <FormField.Message />
+                    <FormField.Control>
+                      <Input autoComplete="email" type="email" {...field} />
+                    </FormField.Control>
+                  </FormField.Item>
+                )}
+              />
 
-            <input name="redirectTo" type="hidden" value={redirectTo} />
-          </fieldset>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormField.Item>
+                    <FormField.Label isRequired>Password</FormField.Label>
+                    <FormField.Message />
+                    <FormField.Control>
+                      <Input
+                        autoComplete="new-password"
+                        type="password"
+                        {...field}
+                      />
+                    </FormField.Control>
+                    <FormField.Description>
+                      Generate safe password{" "}
+                      <a
+                        aria-label="Bitwarden password generator"
+                        className="text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                        href="https://bitwarden.com/password-generator/"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        here.
+                      </a>
+                    </FormField.Description>
+                  </FormField.Item>
+                )}
+              />
 
-          <nav className="flex flex-col gap-2">
-            <Button disabled={!form.formState.isValid} type="submit">
-              Sign up
-            </Button>
-            {backendError ? (
-              <HelperText isError>{backendError}</HelperText>
-            ) : null}
-            <small className="text-xs tracking-wide">
-              {"Already have an account?"}{" "}
-              <Link
-                className="text-sm text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
-                to={`/sign-in?${searchParams}`}
-              >
-                Sign in here.
-              </Link>
-            </small>
-          </nav>
-        </form>
-      </FormProvider>
-    </article>
+              <input name="redirectTo" type="hidden" value={redirectTo} />
+            </fieldset>
+
+            <nav className="flex flex-col gap-2">
+              <Button type="submit">Sign up</Button>
+              {backendError ? (
+                <HelperText isError>{backendError}</HelperText>
+              ) : null}
+              <small className="text-sm leading-loose tracking-wide">
+                {"Already have an account? \t"}
+                <Link
+                  className="font-semibold text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                  to={`/sign-in?${searchParams}`}
+                >
+                  Sign in here.
+                </Link>
+              </small>
+            </nav>
+          </form>
+        </FormProvider>
+      </GlassCard>
+    </main>
   );
 }

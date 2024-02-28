@@ -54,9 +54,7 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary() {
-  const error = useRouteError();
-
+const getErrroInfo = (error: unknown) => {
   if (isRouteErrorResponse(error)) {
     switch (error.status) {
       case 401: {
@@ -111,4 +109,13 @@ export function ErrorBoundary() {
   } else {
     return <GlobalError />;
   }
+};
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  return (
+    <main className="grid min-h-[100dvh] w-full place-content-center px-8 py-6">
+      {getErrroInfo(error)}
+    </main>
+  );
 }

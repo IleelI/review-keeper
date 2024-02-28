@@ -1,5 +1,7 @@
 import { Link } from "@remix-run/react";
 
+import GlassCard from "~/components/atoms/GlassCard";
+
 interface GlobalError {
   additionalMessage?: string;
   description?: string;
@@ -12,7 +14,7 @@ const GlobalError = ({
   possibleReasons,
   statusCode,
 }: GlobalError) => (
-  <article className="mx-auto flex w-max max-w-full flex-col gap-12 md:max-w-2xl">
+  <GlassCard className="flex flex-col gap-8 px-20 py-16">
     <h1 className="text-5xl font-bold text-red-700 dark:text-red-300">
       Error! {statusCode ? `(${statusCode})` : null}
     </h1>
@@ -44,9 +46,15 @@ const GlobalError = ({
     </div>
 
     <nav>
-      <Link to="/">Go to homepage</Link>
+      <Link
+        className="focus-visible::text-primary-600 text-xl font-semibold text-primary-700 underline underline-offset-4 transition hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400 dark:focus-visible:text-primary-400"
+        reloadDocument
+        to="/"
+      >
+        Go to homepage
+      </Link>
     </nav>
-  </article>
+  </GlassCard>
 );
 
 export default GlobalError;
