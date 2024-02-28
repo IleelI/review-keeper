@@ -1,4 +1,4 @@
-import Link from "~/components/atoms/Link";
+import { Link } from "@remix-run/react";
 
 interface GlobalError {
   additionalMessage?: string;
@@ -44,9 +44,7 @@ const GlobalError = ({
     </div>
 
     <nav>
-      <Link className="px-8 py-3 text-xl font-bold" to="/" variant="filled">
-        Go to homepage
-      </Link>
+      <Link to="/">Go to homepage</Link>
     </nav>
   </article>
 );

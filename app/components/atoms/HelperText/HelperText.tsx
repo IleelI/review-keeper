@@ -12,7 +12,7 @@ const HelperText = forwardRef<HTMLParagraphElement, HelperTextProps>(
         "text-sm",
         isError
           ? "font-medium text-red-700 dark:text-red-300"
-          : "text-neutral-500 dark:text-neutral-500",
+          : "text-neutral-600 dark:text-neutral-400",
         className,
       ])}
       ref={ref}

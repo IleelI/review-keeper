@@ -15,7 +15,7 @@
 
   html,
   body {
-    @apply bg-neutral-100 text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
+    @apply bg-neutral-50 text-neutral-700 dark:bg-neutral-950 dark:text-neutral-300;
   }
 }
 
@@ -94,6 +94,6 @@
 
 @layer utilities {
   .default-outline {
-    @apply outline outline-2 outline-primary-700 dark:outline-primary-400;
+    @apply outline outline-2 outline-primary-700 dark:outline-primary-300;
   }
 }

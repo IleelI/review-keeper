@@ -7,8 +7,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, ...props }, ref) => (
     <input
       className={twMerge([
-        "rounded-lg border px-3 py-1.5 shadow-sm outline-none transition",
-        "border-neutral-200 bg-neutral-50 text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
+        "rounded-xl border px-3 py-2 shadow-sm shadow-neutral-200 outline-none transition dark:shadow-none",
+        "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100",
         "placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
         "disabled:cursor-not-allowed disabled:opacity-40",
         "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",

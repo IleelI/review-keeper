@@ -33,15 +33,11 @@ export const buttonStyles = cva(
           "bg-transparent border border-neutral-700 text-neutral-700 dark:border-neutral-300 dark:text-neutral-300",
           "enabled:hover:backdrop-brightness-95 enabled:focus-visible:backdrop-brightness-95 enabled:active:backdrop-brightness-85 dark:enabled:hover:backdrop-brightness-150 dark:enabled:focus-visible:backdrop-brightness-150 dark:enabled:active:backdrop-brightness-200",
         ],
-        success: [
+        successful: [
           "bg-green-700 text-neutral-100 dark:bg-green-400 dark:text-neutral-900",
           "enabled:hover:bg-green-800 enabled:focus-visible:bg-green-800 enabled:active:bg-green-700 dark:enabled:hover:bg-green-500 dark:enabled:focus-visible:bg-green-500 dark:enabled:active:bg-green-400",
         ],
-        warning: [
-          "bg-orange-700 text-neutral-100 dark:bg-orange-400 dark:text-neutral-900",
-          "enabled:hover:bg-orange-800 enabled:focus-visible:bg-orange-800 enabled:active:bg-orange-700 dark:enabled:hover:bg-orange-500 dark:enabled:focus-visible:bg-orange-500 dark:enabled:active:bg-orange-400",
-        ],
-        danger: [
+        destructive: [
           "bg-red-700 text-neutral-100 dark:bg-red-400 dark:text-neutral-900",
           "enabled:hover:bg-red-800 enabled:focus-visible:bg-red-800 enabled:active:bg-red-700 dark:enabled:hover:bg-red-500 dark:enabled:focus-visible:bg-red-500 dark:enabled:active:bg-red-400",
         ],
@@ -51,9 +47,9 @@ export const buttonStyles = cva(
         ],
       },
       size: {
-        sm: ["px-2.5 py-1 font-semibold text-sm"],
-        md: ["px-4 py-1.5"],
-        lg: ["px-5 py-2"],
+        sm: ["px-3 py-1.5 font-semibold text-sm"],
+        md: ["px-4 py-2"],
+        lg: ["px-5 py-3.5"],
         none: [""],
       },
     },

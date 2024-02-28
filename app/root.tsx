@@ -14,7 +14,6 @@ import { Toaster } from "sonner";
 import { getUser } from "./.server/auth";
 import "./styles.css";
 import GlobalError from "./components/organisms/GlobalError";
-import AppTemplate from "./layouts/AppLayout/AppTemplate";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -52,11 +51,7 @@ export function Layout({ children }: PropsWithChildren) {
 }
 
 export default function App() {
-  return (
-    <AppTemplate>
-      <Outlet />
-    </AppTemplate>
-  );
+  return <Outlet />;
 }
 
 export function ErrorBoundary() {
