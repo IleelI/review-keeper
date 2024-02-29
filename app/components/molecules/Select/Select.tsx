@@ -21,7 +21,7 @@ const SelectTrigger = forwardRef<
   <RadixSelect.Trigger
     aria-invalid={hasError}
     className={twMerge([
-      "dark:shadown-none flex items-center justify-between gap-4 rounded-lg border px-3 py-2 shadow-sm shadow-neutral-200 outline-none transition dark:shadow-none",
+      "dark:shadown-none flex items-center justify-between gap-4 rounded-lg border px-3 py-1.5 shadow-sm shadow-neutral-200 outline-none transition dark:shadow-none",
       "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100",
       "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
       "data-[placeholder]:text-neutral-600 dark:data-[placeholder]:text-neutral-400",

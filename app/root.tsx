@@ -41,7 +41,10 @@ export function Layout({ children }: PropsWithChildren) {
         <Links />
       </head>
       <body>
-        {children}
+        <main className="grid min-h-[100dvh] w-full p-6 lg:p-8">
+          {children}
+        </main>
+
         <ScrollRestoration />
         <Scripts />
         <Toaster richColors theme="system" />
@@ -54,7 +57,9 @@ export default function App() {
   return <Outlet />;
 }
 
-const getErrroInfo = (error: unknown) => {
+export function ErrorBoundary() {
+  const error = useRouteError();
+
   if (isRouteErrorResponse(error)) {
     switch (error.status) {
       case 401: {
@@ -109,13 +114,4 @@ const getErrroInfo = (error: unknown) => {
   } else {
     return <GlobalError />;
   }
-};
-export function ErrorBoundary() {
-  const error = useRouteError();
-
-  return (
-    <main className="grid min-h-[100dvh] w-full place-content-center px-8 py-6">
-      {getErrroInfo(error)}
-    </main>
-  );
 }

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowUDownLeft } from "@phosphor-icons/react";
 import {
   ActionFunctionArgs,
   LoaderFunction,
@@ -20,13 +19,15 @@ import {
 import { prisma } from "~/.server/db";
 import Button from "~/components/atoms/Button";
 import Checkbox from "~/components/atoms/Checkbox";
-import GlassCard from "~/components/atoms/GlassCard";
 import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";
 import Label from "~/components/atoms/Label";
 import { FormField } from "~/components/molecules/FormField";
 import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
 import { getSafeRedirect } from "~/utils/routing/routing";
+
+import BackButton from "../auth/components/BackButton";
+import Header from "../auth/components/Header";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
@@ -93,27 +94,19 @@ export default function SignIn() {
   };
 
   return (
-    <main className="grid min-h-[100dvh] w-full place-content-center px-8 py-6">
-      <GlassCard className="relative flex min-w-[640px] flex-col gap-12 p-24">
-        <Link
-          className="absolute left-4 top-4 cursor-pointer rounded-lg p-2 transition hover:bg-neutral-200 hover:text-primary-700 focus-visible:bg-neutral-200 focus-visible:text-primary-700 dark:hover:bg-neutral-900 dark:hover:text-primary-300 dark:focus-visible:bg-neutral-900 dark:focus-visible:text-primary-300"
-          to="/"
-        >
-          <ArrowUDownLeft size={20} />
-        </Link>
+    <article className="grid lg:place-content-center">
+      <div className="relative flex flex-col gap-12 pt-16 lg:w-[480px] lg:p-0">
+        <BackButton />
 
-        <header className="flex flex-col gap-1">
-          <p className="text-sm tracking-wide text-neutral-600 dark:text-neutral-400">
-            Welcome back!
-          </p>
-          <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
-            Sign in to your account
-          </h1>
-        </header>
+        <Header
+          firstMessage="Welcome back."
+          secondMessage="You've been missed!"
+          title="Let's sign you in"
+        />
 
         <FormProvider {...form}>
           <form
-            className="flex flex-col gap-12"
+            className="flex flex-[2] flex-col justify-between gap-12 lg:gap-20"
             onSubmit={form.handleSubmit(handleSubmitSuccess)}
           >
             <fieldset className="flex flex-col gap-6">
@@ -161,24 +154,26 @@ export default function SignIn() {
               <input name="redirectTo" type="hidden" value={redirectTo} />
             </fieldset>
 
-            <nav className="flex flex-col gap-2">
-              <Button type="submit">Sign in</Button>
-              {backendError ? (
-                <HelperText isError>{backendError}</HelperText>
-              ) : null}
-              <small className="text-sm leading-loose tracking-wide">
+            <nav className="flex flex-col gap-4">
+              <small className="text-center text-sm">
                 {"Don't have an account?\t"}
                 <Link
-                  className="font-semibold text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
-                  to={`/sign-up?${searchParams}`}
+                  className="font-semibold text-primary-700 underline transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                  to={`/auth/sign-up?${searchParams}`}
                 >
                   Sign up here.
                 </Link>
               </small>
+              <Button className="text-lg font-medium" type="submit">
+                Sign In
+              </Button>
+              {backendError ? (
+                <HelperText isError>{backendError}</HelperText>
+              ) : null}
             </nav>
           </form>
         </FormProvider>
-      </GlassCard>
-    </main>
+      </div>
+    </article>
   );
 }
