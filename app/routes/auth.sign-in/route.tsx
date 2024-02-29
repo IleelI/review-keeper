@@ -26,6 +26,9 @@ import { FormField } from "~/components/molecules/FormField";
 import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
 import { getSafeRedirect } from "~/utils/routing/routing";
 
+import BackButton from "../auth/components/BackButton";
+import Header from "../auth/components/Header";
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const formData = await request.formData();
@@ -91,80 +94,86 @@ export default function SignIn() {
   };
 
   return (
-    <main className="flex min-h-[100dvh] w-full flex-col gap-10 px-8 py-6 lg:mx-auto lg:max-w-screen-sm lg:justify-center">
-      <header className="flex flex-col gap-1">
-        <Link className="text-sm" to="/">
-          Go home
-        </Link>
-        <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Sign in
-        </h1>
-      </header>
+    <article className="grid lg:place-content-center">
+      <div className="relative flex flex-col gap-12 pt-16 lg:w-[480px] lg:p-0">
+        <BackButton />
 
-      <FormProvider {...form}>
-        <form
-          className="flex flex-col gap-8"
-          onSubmit={form.handleSubmit(handleSubmitSuccess)}
-        >
-          <fieldset className="flex flex-col gap-8">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormField.Item>
-                  <FormField.Label isRequired>Email</FormField.Label>
-                  <FormField.Message />
-                  <FormField.Control>
-                    <Input autoComplete="email" type="email" {...field} />
-                  </FormField.Control>
-                </FormField.Item>
-              )}
-            />
+        <Header
+          firstMessage="Welcome back."
+          secondMessage="You've been missed!"
+          title="Let's sign you in"
+        />
 
-            <div className="flex flex-col gap-5">
+        <FormProvider {...form}>
+          <form
+            className="flex flex-[2] flex-col justify-between gap-12 lg:gap-20"
+            onSubmit={form.handleSubmit(handleSubmitSuccess)}
+          >
+            <fieldset className="flex flex-col gap-6">
               <FormField
                 control={form.control}
-                name="password"
+                name="email"
                 render={({ field }) => (
                   <FormField.Item>
-                    <FormField.Label isRequired>Password</FormField.Label>
+                    <FormField.Label isRequired>Email</FormField.Label>
                     <FormField.Message />
                     <FormField.Control>
-                      <Input
-                        autoComplete="current-password"
-                        type="password"
-                        {...field}
-                      />
+                      <Input autoComplete="email" type="email" {...field} />
                     </FormField.Control>
                   </FormField.Item>
                 )}
               />
 
-              <div className="flex items-center gap-2">
-                <Checkbox defaultChecked id="rememberMe" name="rememberMe" />
-                <Label htmlFor="rememberMe">Remember me</Label>
+              <div className="flex flex-col gap-4">
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormField.Item>
+                      <FormField.Label isRequired>Password</FormField.Label>
+                      <FormField.Message />
+                      <FormField.Control>
+                        <Input
+                          autoComplete="current-password"
+                          type="password"
+                          {...field}
+                        />
+                      </FormField.Control>
+                    </FormField.Item>
+                  )}
+                />
+
+                <div className="flex items-center gap-2">
+                  <Checkbox defaultChecked id="rememberMe" name="rememberMe" />
+                  <Label className="cursor-pointer" htmlFor="rememberMe">
+                    Remember me
+                  </Label>
+                </div>
               </div>
-            </div>
 
-            <input name="redirectTo" type="hidden" value={redirectTo} />
-          </fieldset>
+              <input name="redirectTo" type="hidden" value={redirectTo} />
+            </fieldset>
 
-          <nav className="flex flex-col gap-2">
-            <Button disabled={!form.formState.isValid} type="submit">
-              Sign in
-            </Button>
-            {backendError ? (
-              <HelperText isError>{backendError}</HelperText>
-            ) : null}
-            <small className="text-xs tracking-wide">
-              Don&apos;t have an account?{" "}
-              <Link className="text-sm" to={`/sign-up?${searchParams}`}>
-                Sign up here.
-              </Link>
-            </small>
-          </nav>
-        </form>
-      </FormProvider>
-    </main>
+            <nav className="flex flex-col gap-4">
+              <small className="text-center text-sm">
+                {"Don't have an account?\t"}
+                <Link
+                  className="font-semibold text-primary-700 underline transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                  to={`/auth/sign-up?${searchParams}`}
+                >
+                  Sign up here.
+                </Link>
+              </small>
+              <Button className="text-lg font-medium" type="submit">
+                Sign In
+              </Button>
+              {backendError ? (
+                <HelperText isError>{backendError}</HelperText>
+              ) : null}
+            </nav>
+          </form>
+        </FormProvider>
+      </div>
+    </article>
   );
 }

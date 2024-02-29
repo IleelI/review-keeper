@@ -194,7 +194,7 @@ export const getUser = async (request: Request) => {
       searchParams.get("redirectTo") || pathname,
     );
     const newSearchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-    throw redirectDocument(`/refresh?${newSearchParams}`);
+    throw redirectDocument(`/auth/refresh?${newSearchParams}`);
   }
 
   const userToken = await getUserToken(accessToken);
@@ -231,11 +231,11 @@ export const requireUser = async (
 
   if (accessToken) {
     const userToken = await getUserToken(accessToken);
-    if (!userToken) throw redirect(`/sign-in?${searchParams}`);
+    if (!userToken) throw redirect(`/auth/sign-in?${searchParams}`);
     return userToken;
   } else if (!refreshToken) {
-    throw redirect(`/sign-in?${searchParams}`);
+    throw redirect(`/auth/sign-in?${searchParams}`);
   } else {
-    throw redirectDocument(`/refresh?${searchParams}`);
+    throw redirectDocument(`/auth/refresh?${searchParams}`);
   }
 };

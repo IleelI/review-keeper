@@ -12,5 +12,18 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   const user = useUser();
 
-  return <main>{user ? user.username : "No user"}</main>;
+  return (
+    <article className="grid place-content-center">
+      {user ? (
+        <h1 className="text-4xl font-extralight text-neutral-900 dark:text-neutral-100">
+          Signed in as {""}
+          <span className="font-medium text-primary-700 dark:text-primary-300">
+            {user.username}
+          </span>
+        </h1>
+      ) : (
+        <h1 className="text-4xl font-bold">Not signed in.</h1>
+      )}
+    </article>
+  );
 }

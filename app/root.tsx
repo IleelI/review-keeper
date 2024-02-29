@@ -41,7 +41,10 @@ export function Layout({ children }: PropsWithChildren) {
         <Links />
       </head>
       <body>
-        {children}
+        <main className="grid min-h-[100dvh] w-full p-6 lg:p-8">
+          {children}
+        </main>
+
         <ScrollRestoration />
         <Scripts />
         <Toaster richColors theme="system" />
