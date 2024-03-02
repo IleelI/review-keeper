@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 
-import { prisma } from "../db";
+import { prisma } from "../service/db";
 
 export type AppUser = Pick<User, "email" | "id" | "username">;
 

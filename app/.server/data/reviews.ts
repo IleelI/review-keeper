@@ -1,23 +1,31 @@
-import { PromiseReturnType } from "@prisma/client/extension";
-import { prisma } from "../db";
+import { prisma } from "../service/db";
 
 export const getReviewsForGrid = async () => {
   try {
     return await prisma.review.findMany({
-      include: {
+      select: {
         author: {
           select: {
             id: true,
             username: true,
           },
         },
-        category: true,
-        reactions: true,
-        tags: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
+        id: true,
+        rating: true,
+        ratingScale: true,
+        title: true,
+        updatedAt: true,
       },
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
     return [];
   }
 };
-export type ReviewForGrid = PromiseReturnType<typeof getReviewsForGrid>[number];
