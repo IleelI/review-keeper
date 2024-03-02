@@ -1,5 +1,6 @@
 import { PromiseReturnType } from "@prisma/client/extension";
-import { prisma } from "../db";
+
+import { prisma } from "../service/db";
 
 export interface ReviewCategory {
   id: string;
@@ -26,7 +27,6 @@ export const getReview = async (reviewId: string) => {
           },
         },
         category: true,
-        tags: true,
         reactions: true,
       },
     });

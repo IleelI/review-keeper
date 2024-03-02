@@ -2,9 +2,9 @@ import { invariant } from "@epic-web/invariant";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { getRequiredUser } from "~/.server/auth";
 import { getReview } from "~/.server/data/review";
 import { getUserReviews } from "~/.server/data/user";
+import { getRequiredUser } from "~/.server/service/auth";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.reviewId, "reviewId is required.");

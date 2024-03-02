@@ -4,12 +4,12 @@ import { faker } from "@faker-js/faker";
 import { createCookie, redirect, redirectDocument } from "@remix-run/node";
 import { SignJWT, jwtVerify } from "jose";
 
-import { AppUser, getUserById } from "./data/user";
 import { CredentialsSchema } from "~/schema/auth.schema";
 import { getSafeRedirect } from "~/utils/routing/routing";
 
 import { prisma } from "./db";
-import { env } from "./env";
+import { env } from "../utils/env";
+import { AppUser, getUserById } from "../data/user";
 
 export const createJWT = async (
   duration: number,
@@ -172,7 +172,7 @@ export const signOut = async () => {
   });
 };
 
-export const getUserToken = async (token: string) => {
+export const parseStringifiedToken = async (token: string) => {
   try {
     const secret = new TextEncoder().encode(env().JWT_SECRET);
     const verifiedToken = await jwtVerify(token, secret, { clockTolerance: 0 });
@@ -185,10 +185,21 @@ export const getUserToken = async (token: string) => {
 
 export const getUser = async (request: Request) => {
   const cookies = request.headers.get("Cookie");
-  const accessToken = await accessTokenCookie.parse(cookies);
-  const refreshToken = await refreshTokenCookie.parse(cookies);
 
-  if (!accessToken && refreshToken) {
+  const stringifiedAccessToken = await accessTokenCookie.parse(cookies);
+  const accessToken = await parseStringifiedToken(stringifiedAccessToken);
+
+  const stringifiedRefreshToken = await refreshTokenCookie.parse(cookies);
+  const refreshToken = await parseStringifiedToken(stringifiedRefreshToken);
+
+  if (!refreshToken) return null;
+
+  const userExists = await prisma.user.findFirst({
+    where: { id: refreshToken.id, refreshToken: stringifiedRefreshToken },
+  });
+  if (!userExists) return null;
+
+  if (!accessToken) {
     const { searchParams, pathname } = new URL(request.url);
     const redirectTo = getSafeRedirect(
       searchParams.get("redirectTo") || pathname,
@@ -197,14 +208,7 @@ export const getUser = async (request: Request) => {
     throw redirectDocument(`/auth/refresh?${newSearchParams}`);
   }
 
-  const userToken = await getUserToken(accessToken);
-  if (!userToken) return null;
-
-  try {
-    return await getUserById(userToken.id);
-  } catch {
-    return null;
-  }
+  return await getUserById(accessToken.id);
 };
 
 export const getRequiredUser = async (request: Request) => {
@@ -230,7 +234,7 @@ export const requireUser = async (
   const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
 
   if (accessToken) {
-    const userToken = await getUserToken(accessToken);
+    const userToken = await parseStringifiedToken(accessToken);
     if (!userToken) throw redirect(`/auth/sign-in?${searchParams}`);
     return userToken;
   } else if (!refreshToken) {

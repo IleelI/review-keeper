@@ -11,7 +11,7 @@ import {
 import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
 
-import { getUser } from "./.server/auth";
+import { getUser } from "./.server/service/auth.js";
 import "./styles.css";
 import GlobalError from "./components/organisms/GlobalError";
 
