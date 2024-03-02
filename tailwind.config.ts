@@ -10,7 +10,7 @@ export default {
       current: colors.current,
       green: colors.emerald,
       inherit: colors.inherit,
-      neutral: colors.gray,
+      neutral: colors.zinc,
       orange: colors.amber,
       primary: colors.indigo,
       red: colors.rose,

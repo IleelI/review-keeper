@@ -9,49 +9,52 @@ datasource db {
 
 model User {
   id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt @default(now())
   email        String   @unique
   hash         String
-  username     String?
+  username     String
   refreshToken String?
   reviews      Review[]
 }
 
 model Review {
   id          String           @id @default(cuid())
-  title       String
   content     String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt @default(now())
   rating      Int?
   ratingScale Int?
-  tags        ReviewTag[]
-  reactions   ReviewReaction[]
-  categoryId  String?
-  category    ReviewCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  authorId    String
+  title       String
   author      User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
-}
-
-model ReviewReactionType {
-  id     String           @id @default(cuid())
-  name   String           @unique
-  usedIn ReviewReaction[]
-}
-
-model ReviewReaction {
-  id       Int                @id @default(autoincrement())
-  typeId   String
-  type     ReviewReactionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
-  reviewId String
-  review   Review             @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  authorId    String
+  category    ReviewCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId  String?
+  reactions   ReviewReaction[]
 }
 
 model ReviewCategory {
-  id     String   @id @default(cuid())
-  name   String   @unique
-  usedIn Review[]
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+  name      String   @unique
+  usedIn    Review[]
 }
 
-model ReviewTag {
-  id     String   @id @default(cuid())
-  name   String   @unique
-  usedIn Review[]
+model ReviewReactionType {
+  id        String           @id @default(cuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt @default(now())
+  name      String           @unique
+  usedIn    ReviewReaction[]
+}
+
+model ReviewReaction {
+  id        String             @id @default(cuid())
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt @default(now())
+  type      ReviewReactionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  typeId    String
+  review    Review             @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId  String
 }

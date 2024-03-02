@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
 import type { Review, ReviewCategory, User } from "@prisma/client";
 
-import { hashPassword } from "~/.server/auth";
+import { hashPassword } from "~/.server/service/auth";
 
 type MockWithout<T, K extends keyof T> = Omit<T, K>;
 
-type MockedUser = MockWithout<User, "id">;
+type MockedUser = MockWithout<User, "id" | "createdAt" | "updatedAt">;
 const mockUser = (): MockedUser => {
   const username = faker.internet.userName();
   const email = faker.internet.email({ firstName: username });
@@ -22,7 +22,10 @@ const mockUser = (): MockedUser => {
 export const mockUsers = (userCount = faker.number.int({ min: 3, max: 5 })) =>
   Array(userCount).fill(null).map(mockUser);
 
-type MockedReviewCategory = MockWithout<ReviewCategory, "id">;
+type MockedReviewCategory = MockWithout<
+  ReviewCategory,
+  "id" | "createdAt" | "updatedAt"
+>;
 export const mockCategories = (): MockedReviewCategory[] => [
   { name: "Restaurants" },
   { name: "Hotels" },
@@ -41,7 +44,10 @@ export const mockCategories = (): MockedReviewCategory[] => [
   { name: "Educational Courses" },
 ];
 
-type MockedReview = MockWithout<Review, "id" | "authorId">;
+type MockedReview = MockWithout<
+  Review,
+  "id" | "authorId" | "createdAt" | "updatedAt"
+>;
 export const mockReview = (categories: ReviewCategory[]): MockedReview => {
   const { id: categoryId } =
     categories[Math.floor(Math.random() * (categories.length - 1))];
@@ -54,7 +60,7 @@ export const mockReview = (categories: ReviewCategory[]): MockedReview => {
     .map((paragraph) => `<p>${paragraph}</p>`)
     .join("\n");
 
-  const ratingScale = faker.number.int({ min: 1, max: 100 });
+  const ratingScale = 100;
   const rating = faker.number.int({ min: 0, max: ratingScale });
 
   const title = faker.lorem.sentence({ min: 3, max: 9 });

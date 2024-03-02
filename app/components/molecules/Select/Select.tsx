@@ -22,7 +22,7 @@ const SelectTrigger = forwardRef<
     aria-invalid={hasError}
     className={twMerge([
       "dark:shadown-none flex items-center justify-between gap-4 rounded-lg border px-3 py-1.5 shadow-sm shadow-neutral-200 outline-none transition dark:shadow-none",
-      "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100",
+      "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
       "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
       "data-[placeholder]:text-neutral-600 dark:data-[placeholder]:text-neutral-400",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
@@ -90,7 +90,7 @@ const SelectContent = forwardRef<
       <RadixSelect.Content
         className={twMerge(
           "relative overflow-hidden rounded-xl border shadow shadow-neutral-200 dark:shadow-none",
-          "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100",
+          "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
           "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
@@ -141,7 +141,7 @@ const SelectItem = forwardRef<
     ref={ref}
     className={twMerge(
       "relative flex cursor-pointer items-center rounded-md py-1.5 pl-2 pr-8 outline-none",
-      "data-[disabled]:cursor-not-allowed data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-900 data-[disabled]:opacity-40 dark:data-[highlighted]:bg-neutral-800 dark:data-[highlighted]:text-neutral-100",
+      "data-[disabled]:cursor-not-allowed data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-900 data-[disabled]:opacity-40 dark:data-[highlighted]:bg-neutral-700 dark:data-[highlighted]:text-neutral-100",
       className,
     )}
     {...props}

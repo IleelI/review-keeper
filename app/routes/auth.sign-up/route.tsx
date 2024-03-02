@@ -9,14 +9,14 @@ import { Link, useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import {
-  lookForUser,
-  createRefreshToken,
   createAccessToken,
-  signIn,
+  createRefreshToken,
   createUser,
   getUser,
-} from "~/.server/auth";
-import { prisma } from "~/.server/db";
+  lookForUser,
+  signIn,
+} from "~/.server/service/auth";
+import { prisma } from "~/.server/service/db";
 import Button from "~/components/atoms/Button";
 import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";

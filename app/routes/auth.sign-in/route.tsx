@@ -9,14 +9,14 @@ import { Link, useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import {
-  comparePasswords,
-  createAccessToken,
-  createRefreshToken,
-  signIn,
   lookForUser,
+  comparePasswords,
+  createRefreshToken,
+  createAccessToken,
+  signIn,
   getUser,
-} from "~/.server/auth";
-import { prisma } from "~/.server/db";
+} from "~/.server/service/auth";
+import { prisma } from "~/.server/service/db";
 import Button from "~/components/atoms/Button";
 import Checkbox from "~/components/atoms/Checkbox";
 import HelperText from "~/components/atoms/HelperText";
@@ -95,7 +95,7 @@ export default function SignIn() {
 
   return (
     <article className="grid lg:place-content-center">
-      <div className="relative flex flex-col gap-12 pt-16 lg:w-[480px] lg:p-0">
+      <div className="relative flex flex-col gap-12  pt-16 lg:w-[480px] lg:p-0">
         <BackButton />
 
         <Header
