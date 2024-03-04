@@ -95,7 +95,7 @@ export default function SignIn() {
 
   return (
     <article className="grid lg:place-content-center">
-      <div className="relative flex flex-col gap-12 pt-16 lg:w-[480px] lg:p-0">
+      <div className="relative flex flex-col gap-12  pt-16 lg:w-[480px] lg:p-0">
         <BackButton />
 
         <Header

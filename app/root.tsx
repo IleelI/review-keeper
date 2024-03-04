@@ -41,9 +41,7 @@ export function Layout({ children }: PropsWithChildren) {
         <Links />
       </head>
       <body>
-        <main className="grid min-h-[100dvh] w-full p-6 lg:p-8">
-          {children}
-        </main>
+        <div className="grid min-h-[100dvh] w-full p-6 lg:p-8">{children}</div>
 
         <ScrollRestoration />
         <Scripts />

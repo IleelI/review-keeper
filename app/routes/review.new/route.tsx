@@ -10,11 +10,11 @@ import { toast } from "sonner";
 import { getReviewCategories } from "~/.server/data/review";
 import { getRequiredUser, requireUser } from "~/.server/service/auth";
 import { prisma } from "~/.server/service/db";
+import MainLayout from "~/components/layouts/MainLayout";
 import { extensions } from "~/components/molecules/RichTextEditor";
 
 import FormActions from "./components/FormActions";
 import FormFields from "./components/FormFields";
-import Header from "./components/Header";
 import { ReviewSchema, defaultValues, reviewSchema } from "./helpers/helpers";
 import { reviewServerSchema } from "./helpers/helpers.server";
 
@@ -105,9 +105,7 @@ const NewReviewPage = () => {
   }, [fetcher.data, navigate]);
 
   return (
-    <main className="flex min-h-[100dvh] w-full flex-col gap-8 px-8 py-6 xl:mx-auto xl:max-w-screen-lg">
-      <Header />
-
+    <MainLayout>
       <FormProvider {...form}>
         <form
           className="flex flex-col gap-8"
@@ -121,7 +119,7 @@ const NewReviewPage = () => {
           <FormActions handleFormReset={handleFormReset} />
         </form>
       </FormProvider>
-    </main>
+    </MainLayout>
   );
 };
 
