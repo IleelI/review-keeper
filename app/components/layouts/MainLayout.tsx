@@ -1,8 +1,11 @@
-import { SignOut, UserPlus, SignIn } from "@phosphor-icons/react";
 import { Form, NavLink } from "@remix-run/react";
 import { PropsWithChildren } from "react";
 
 import useUser from "~/hooks/useUser/useUser";
+
+import { SignInIcon } from "../icons/SignInIcon";
+import { SignOutIcon } from "../icons/SignOutIcon";
+import { SignUpIcon } from "../icons/SignUpIcon";
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   const user = useUser();
@@ -45,7 +48,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
                 type="submit"
               >
                 Sign out
-                <SignOut />
+                <SignOutIcon className="h-4 w-4" weight="32" />
               </button>
             </Form>
           </section>
@@ -59,19 +62,18 @@ const MainLayout = ({ children }: PropsWithChildren) => {
               to="/auth/sign-up"
             >
               Sign up
-              <UserPlus weight="bold" />
+              <SignUpIcon className="h-4 w-4" />
             </NavLink>
             <NavLink
               className="flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-3 py-1.5 text-neutral-200 dark:bg-primary-300 dark:text-neutral-800"
               to="/auth/sign-in"
             >
               Sign in
-              <SignIn weight="bold" />
+              <SignInIcon className="h-4 w-4" />
             </NavLink>
           </nav>
         </header>
       )}
-
       {children}
     </main>
   );

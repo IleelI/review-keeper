@@ -1,7 +1,11 @@
-import { CaretDown, CaretUp, CaretUpDown, Check } from "@phosphor-icons/react";
 import * as RadixSelect from "@radix-ui/react-select";
 import { ElementRef, forwardRef } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
+
+import { CheckIcon } from "~/components/icons/CheckIcon";
+import { ChevronDownIcon } from "~/components/icons/ChevronDownIcon";
+import { ChevronExpandIcon } from "~/components/icons/ChevronExpandIcon";
+import { ChevronUpIcon } from "~/components/icons/ChevronUpIcon";
 
 const Select = (props: RadixSelect.SelectProps) => (
   <RadixSelect.Root {...props} />
@@ -21,8 +25,8 @@ const SelectTrigger = forwardRef<
   <RadixSelect.Trigger
     aria-invalid={hasError}
     className={twMerge([
-      "dark:shadown-none flex items-center justify-between gap-4 rounded-lg border px-3 py-1.5 shadow-sm shadow-neutral-200 outline-none transition dark:shadow-none",
-      "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
+      "flex items-center justify-between gap-4 rounded-lg border px-3 py-1.5 outline-none transition",
+      "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
       "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
       "data-[placeholder]:text-neutral-600 dark:data-[placeholder]:text-neutral-400",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
@@ -34,10 +38,7 @@ const SelectTrigger = forwardRef<
   >
     {children}
     <RadixSelect.Icon asChild>
-      <CaretUpDown
-        className="text-neutral-700 dark:text-neutral-300"
-        weight="bold"
-      />
+      <ChevronExpandIcon className={twMerge("h-4 w-4", className)} />
     </RadixSelect.Icon>
   </RadixSelect.Trigger>
 ));
@@ -52,7 +53,7 @@ const SelectScrollUpButton = forwardRef<
     className={twJoin("flex items-center justify-center px-2 py-1", className)}
     {...props}
   >
-    <CaretUp />
+    <ChevronUpIcon className={twMerge("h-4 w-4", className)} />
   </RadixSelect.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = RadixSelect.ScrollUpButton.displayName;
@@ -66,7 +67,7 @@ const SelectScrollDownButton = forwardRef<
     className={twJoin("flex items-center justify-center px-2 py-1", className)}
     {...props}
   >
-    <CaretDown />
+    <ChevronDownIcon className={twMerge("h-4 w-4", className)} />
   </RadixSelect.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = RadixSelect.ScrollDownButton.displayName;
@@ -89,8 +90,8 @@ const SelectContent = forwardRef<
     <RadixSelect.Portal>
       <RadixSelect.Content
         className={twMerge(
-          "relative overflow-hidden rounded-xl border shadow shadow-neutral-200 dark:shadow-none",
-          "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
+          "relative overflow-hidden rounded-lg border shadow shadow-neutral-200 dark:shadow-none",
+          "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
           "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
@@ -148,7 +149,7 @@ const SelectItem = forwardRef<
   >
     <span className="absolute right-2 flex items-center justify-center">
       <RadixSelect.ItemIndicator>
-        <Check weight="bold" />
+        <CheckIcon className={twMerge("h-4 w-4", className)} />
       </RadixSelect.ItemIndicator>
     </span>
     <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
@@ -163,7 +164,7 @@ const SelectSeparator = forwardRef<
   <RadixSelect.Separator
     ref={ref}
     className={twJoin(
-      "-mx-1 my-1 h-px bg-neutral-400 dark:bg-neutral-600",
+      "-mx-1 my-1 h-px bg-neutral-300 dark:bg-neutral-700",
       className,
     )}
     {...props}

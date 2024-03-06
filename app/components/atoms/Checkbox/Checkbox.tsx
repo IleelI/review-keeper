@@ -1,7 +1,8 @@
-import { Check } from "@phosphor-icons/react";
 import * as RadixCheckbox from "@radix-ui/react-checkbox";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
+
+import { CheckIcon } from "~/components/icons/CheckIcon";
 
 const Checkbox = forwardRef<
   ElementRef<typeof RadixCheckbox.Root>,
@@ -19,7 +20,7 @@ const Checkbox = forwardRef<
     {...props}
   >
     <RadixCheckbox.Indicator className="*:h-full *:w-full">
-      <Check weight="bold" />
+      <CheckIcon weight="64" />
     </RadixCheckbox.Indicator>
   </RadixCheckbox.Root>
 ));
