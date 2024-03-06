@@ -46,7 +46,7 @@ export default function Index() {
                       <p>
                         Rating:{" "}
                         <span
-                          className={`${getRatingStyles(Math.round((rating / ratingScale) * 100))} font-medium transition duration-300 group-hover:text-primary-700 dark:group-hover:text-primary-300`}
+                          className={`${getRatingStyles(Math.round((rating / ratingScale) * 100))} font-medium transition duration-300`}
                         >
                           {Math.round((rating / ratingScale) * 100)}%
                         </span>

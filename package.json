@@ -36,7 +36,6 @@
   "dependencies": {
     "@epic-web/invariant": "^1.0.0",
     "@hookform/resolvers": "^3.3.4",
-    "@phosphor-icons/react": "^2.0.15",
     "@prisma/client": "^5.10.2",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-label": "^2.0.2",
