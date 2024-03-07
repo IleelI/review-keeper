@@ -58,7 +58,7 @@
     @apply rounded-md border border-neutral-300 bg-neutral-100 px-2 py-0.5  text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
   }
   .tiptap pre:has(code) {
-    @apply my-2 rounded-md border border-neutral-300 bg-neutral-100 p-4  text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
+    @apply my-2 rounded-md border border-neutral-300 bg-neutral-100 p-2  text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
   }
   .tiptap ol {
     counter-reset: orderedList;
