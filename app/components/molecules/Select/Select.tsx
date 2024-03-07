@@ -108,7 +108,7 @@ const SelectContent = forwardRef<
 
         <RadixSelect.Viewport
           className={twJoin(
-            "p-1",
+            "flex flex-col gap-1.5 p-1",
             position === "popper" &&
               "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
           )}
@@ -142,15 +142,17 @@ const SelectItem = forwardRef<
   <RadixSelect.Item
     ref={ref}
     className={twMerge(
-      "relative flex cursor-pointer items-center rounded-md py-1.5 pl-2 pr-8 outline-none",
-      "data-[disabled]:cursor-not-allowed data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-900 data-[disabled]:opacity-40 dark:data-[highlighted]:bg-neutral-700 dark:data-[highlighted]:text-neutral-100",
+      "relative flex cursor-pointer items-center rounded-md py-1.5 pl-2 pr-8 outline-none transition",
+      "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
+      "data-[highlighted]:data-[state=unchecked]:bg-neutral-100 data-[highlighted]:data-[state=unchecked]:text-neutral-900 dark:data-[highlighted]:data-[state=unchecked]:bg-neutral-700 dark:data-[highlighted]:data-[state=unchecked]:text-neutral-100",
+      "data-[state=checked]:bg-primary-700 data-[state=checked]:text-neutral-100 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-900",
       className,
     )}
     {...props}
   >
     <span className="absolute right-2 flex items-center justify-center">
       <RadixSelect.ItemIndicator>
-        <Check className={twMerge("h-4 w-4", className)} />
+        <Check className={twMerge("h-5 w-5", className)} strokeWidth={2} />
       </RadixSelect.ItemIndicator>
     </span>
     <RadixSelect.ItemText>{children}</RadixSelect.ItemText>

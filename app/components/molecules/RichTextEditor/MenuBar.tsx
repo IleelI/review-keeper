@@ -28,9 +28,9 @@ interface MenuBarProps {
 }
 const MenuBar = ({ editor }: MenuBarProps) => {
   return (
-    <IconoirProvider iconProps={{ className: "w-6 h-6", strokeWidth: 1.5 }}>
-      <div className="flex flex-wrap border-b border-neutral-300 dark:border-neutral-700">
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+    <IconoirProvider iconProps={{ className: "w-5 h-5" }}>
+      <div className="flex flex-wrap gap-6 border-b border-neutral-300 p-2 dark:border-neutral-700">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleBold().run()}
             icon={<Bold />}
@@ -57,7 +57,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           />
         </section>
 
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().setParagraph().run()}
             icon={<Text />}
@@ -107,7 +107,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           />
         </section>
 
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleBulletList().run()}
             icon={<List />}
@@ -130,7 +130,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           />
         </section>
 
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().undo().run()}
             icon={<Undo />}
@@ -143,7 +143,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           />
         </section>
 
-        <section className="flex items-center p-2">
+        <section className="flex items-center gap-2">
           <input
             className={twJoin([
               "aspect-square h-9 w-9 items-center overflow-hidden rounded-md bg-transparent p-2 transition-colors duration-300 ease-in-out focus:outline-none enabled:hover:bg-neutral-200 enabled:focus-visible:bg-neutral-200 dark:border-neutral-700 dark:enabled:hover:bg-neutral-700 dark:enabled:focus-visible:bg-neutral-700",
