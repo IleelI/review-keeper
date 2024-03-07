@@ -15,7 +15,7 @@
 
   html,
   body {
-    @apply bg-neutral-100 text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
+    @apply min-h-screen bg-neutral-50 text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
   }
 }
 
@@ -58,7 +58,7 @@
     @apply rounded-md border border-neutral-300 bg-neutral-100 px-2 py-0.5  text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
   }
   .tiptap pre:has(code) {
-    @apply my-2 rounded-md border border-neutral-300 bg-neutral-100 p-4  text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
+    @apply my-2 rounded-md border border-neutral-300 bg-neutral-100 p-2  text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300;
   }
   .tiptap ol {
     counter-reset: orderedList;
@@ -94,6 +94,6 @@
 
 @layer utilities {
   .default-outline {
-    @apply outline outline-2 outline-primary-700 dark:outline-primary-400;
+    @apply outline outline-2 outline-primary-700 dark:outline-primary-300;
   }
 }

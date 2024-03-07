@@ -1,24 +1,24 @@
-import {
-  TextBolder,
-  TextItalic,
-  TextStrikethrough,
-  Code,
-  Paragraph,
-  TextHOne,
-  TextHTwo,
-  TextHThree,
-  TextHFour,
-  TextHFive,
-  TextHSix,
-  ListBullets,
-  ListNumbers,
-  CodeBlock,
-  Quotes,
-  ArrowUDownLeft,
-  ArrowUUpRight,
-  IconContext,
-} from "@phosphor-icons/react";
 import { Editor } from "@tiptap/react";
+import {
+  Bold,
+  Code,
+  CodeBrackets,
+  IconoirProvider,
+  Italic,
+  List,
+  Number1Square,
+  Number2Square,
+  Number3Square,
+  Number4Square,
+  Number5Square,
+  Number6Square,
+  NumberedListLeft,
+  Quote,
+  Redo,
+  Strikethrough,
+  Text,
+  Undo,
+} from "iconoir-react";
 import { twJoin } from "tailwind-merge";
 
 import MenuBarButton from "./MenuBarButton";
@@ -28,122 +28,122 @@ interface MenuBarProps {
 }
 const MenuBar = ({ editor }: MenuBarProps) => {
   return (
-    <IconContext.Provider value={{ size: 20 }}>
-      <div className="flex flex-wrap border-b border-neutral-300 dark:border-neutral-700">
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+    <IconoirProvider iconProps={{ className: "w-5 h-5" }}>
+      <div className="flex flex-wrap gap-6 border-b border-neutral-300 p-2 dark:border-neutral-700">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleBold().run()}
-            icon={<TextBolder />}
+            icon={<Bold />}
             isActive={editor.isActive("bold")}
             isDisabled={!editor.can().chain().focus().toggleBold().run()}
           />
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleItalic().run()}
-            icon={<TextItalic />}
+            icon={<Italic />}
             isActive={editor.isActive("italic")}
             isDisabled={!editor.can().chain().focus().toggleItalic().run()}
           />
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleStrike().run()}
-            icon={<TextStrikethrough />}
+            icon={<Strikethrough />}
             isActive={editor.isActive("strike")}
             isDisabled={!editor.can().chain().focus().toggleStrike().run()}
           />
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleCode().run()}
-            icon={<Code />}
+            icon={<CodeBrackets />}
             isActive={editor.isActive("code")}
             isDisabled={!editor.can().chain().focus().toggleCode().run()}
           />
         </section>
 
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().setParagraph().run()}
-            icon={<Paragraph />}
+            icon={<Text />}
             isActive={editor.isActive("paragraph")}
           />
           <MenuBarButton
             handleClick={() =>
               editor.chain().focus().toggleHeading({ level: 1 }).run()
             }
-            icon={<TextHOne />}
+            icon={<Number1Square />}
             isActive={editor.isActive("heading", { level: 1 })}
           />
           <MenuBarButton
             handleClick={() =>
               editor.chain().focus().setHeading({ level: 2 }).run()
             }
-            icon={<TextHTwo />}
+            icon={<Number2Square />}
             isActive={editor.isActive("heading", { level: 2 })}
           />
           <MenuBarButton
             handleClick={() =>
               editor.chain().focus().setHeading({ level: 3 }).run()
             }
-            icon={<TextHThree />}
+            icon={<Number3Square />}
             isActive={editor.isActive("heading", { level: 3 })}
           />
           <MenuBarButton
             handleClick={() =>
               editor.chain().focus().setHeading({ level: 4 }).run()
             }
-            icon={<TextHFour />}
+            icon={<Number4Square />}
             isActive={editor.isActive("heading", { level: 4 })}
           />
           <MenuBarButton
             handleClick={() =>
               editor.chain().focus().setHeading({ level: 5 }).run()
             }
-            icon={<TextHFive />}
+            icon={<Number5Square />}
             isActive={editor.isActive("heading", { level: 5 })}
           />
           <MenuBarButton
             handleClick={() =>
               editor.chain().focus().setHeading({ level: 6 }).run()
             }
-            icon={<TextHSix />}
+            icon={<Number6Square />}
             isActive={editor.isActive("heading", { level: 6 })}
           />
         </section>
 
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleBulletList().run()}
-            icon={<ListBullets />}
+            icon={<List />}
             isActive={editor.isActive("bulletList")}
           />
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleOrderedList().run()}
-            icon={<ListNumbers />}
+            icon={<NumberedListLeft />}
             isActive={editor.isActive("orderedList")}
           />
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleCodeBlock().run()}
-            icon={<CodeBlock />}
+            icon={<Code />}
             isActive={editor.isActive("codeBlock")}
           />
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleBlockquote().run()}
-            icon={<Quotes />}
+            icon={<Quote />}
             isActive={editor.isActive("blockquote")}
           />
         </section>
 
-        <section className="flex flex-wrap items-center gap-1 overflow-hidden px-2 py-1">
+        <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().undo().run()}
-            icon={<ArrowUDownLeft />}
+            icon={<Undo />}
             isDisabled={!editor.can().chain().focus().undo().run()}
           />
           <MenuBarButton
             handleClick={() => editor.chain().focus().redo().run()}
-            icon={<ArrowUUpRight />}
+            icon={<Redo />}
             isDisabled={!editor.can().chain().focus().redo().run()}
           />
         </section>
 
-        <section className="flex items-center p-2">
+        <section className="flex items-center gap-2">
           <input
             className={twJoin([
               "aspect-square h-9 w-9 items-center overflow-hidden rounded-md bg-transparent p-2 transition-colors duration-300 ease-in-out focus:outline-none enabled:hover:bg-neutral-200 enabled:focus-visible:bg-neutral-200 dark:border-neutral-700 dark:enabled:hover:bg-neutral-700 dark:enabled:focus-visible:bg-neutral-700",
@@ -163,7 +163,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           />
         </section>
       </div>
-    </IconContext.Provider>
+    </IconoirProvider>
   );
 };
 

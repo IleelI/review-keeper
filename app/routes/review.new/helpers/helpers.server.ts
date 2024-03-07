@@ -9,7 +9,7 @@ export const reviewServerSchema = z
     ratingScale: z.string().optional(),
     categoryId: z.string().optional(),
   })
-  .transform(({ categoryId, rating, ratingScale, ...values }, ctx) => {
+  .transform(({ rating, ratingScale, ...values }, ctx) => {
     let hasErrors = false;
     if (rating !== undefined && isNaN(Number(rating))) {
       ctx.addIssue({ code: "custom", message: "Rating must be a number." });
@@ -22,17 +22,12 @@ export const reviewServerSchema = z
       });
       hasErrors = true;
     }
-    if (categoryId !== undefined && isNaN(Number(categoryId))) {
-      ctx.addIssue({ code: "custom", message: "CategoryId must be a number." });
-      hasErrors = true;
-    }
 
     if (hasErrors) return z.NEVER;
     return {
       ...values,
       rating: rating ? Number(rating) : undefined,
       ratingScale: ratingScale ? Number(ratingScale) : undefined,
-      categoryId: categoryId ? Number(categoryId) : undefined,
     };
   })
   .superRefine(({ rating, ratingScale }, ctx) => {

@@ -1,17 +1,20 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
 import { LoaderFunctionArgs, type LinksFunction, json } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
+  useRouteError,
 } from "@remix-run/react";
+import { IconoirProvider } from "iconoir-react";
+import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
 
-import { getUser } from "./server/auth.server";
-import styles from "./styles.css";
+import { getUser } from "./.server/service/auth.js";
+import "./styles.css";
+import GlobalError from "./components/organisms/GlobalError";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -22,16 +25,14 @@ export const links: LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Manrope:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap",
   },
-  { rel: "stylesheet", href: styles },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) =>
   json({ user: await getUser(request) });
 
-export default function App() {
+export function Layout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <head>
@@ -41,12 +42,83 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <IconoirProvider
+          iconProps={{
+            className: "w-5 h-5",
+            strokeWidth: 1.5,
+          }}
+        >
+          <div className="grid min-h-[100dvh] w-full p-6 lg:p-8">
+            {children}
+          </div>
+        </IconoirProvider>
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
         <Toaster richColors theme="system" />
       </body>
     </html>
   );
+}
+
+export default function App() {
+  return <Outlet />;
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    switch (error.status) {
+      case 401: {
+        return (
+          <GlobalError
+            description="You attempted to access a resource that requires authentication, but you are not logged in or your session has expired."
+            possibleReasons={[
+              "You have not logged in to the application.",
+              "Your session has expired due to inactivity.",
+            ]}
+            statusCode={401}
+          />
+        );
+      }
+      case 403: {
+        return (
+          <GlobalError
+            description="You attempted to access a resource that you do not have permission to view."
+            possibleReasons={[
+              "Your account does not have the necessary permissions to access this resource.",
+              "The requested resource is restricted to certain users or roles.",
+            ]}
+            statusCode={403}
+          />
+        );
+      }
+      case 404: {
+        return (
+          <GlobalError
+            description="The requested resource could not be found on the server."
+            possibleReasons={[
+              "The URL entered is incorrect.",
+              "The resource has been moved or deleted.",
+            ]}
+            statusCode={404}
+          />
+        );
+      }
+      default: {
+        return (
+          <GlobalError description={error.data} statusCode={error.status} />
+        );
+      }
+    }
+  } else if (error instanceof Error) {
+    return (
+      <GlobalError
+        additionalMessage={error.stack}
+        description={error.message}
+      />
+    );
+  } else {
+    return <GlobalError />;
+  }
 }

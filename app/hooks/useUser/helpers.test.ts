@@ -1,4 +1,4 @@
-import { AppUser } from "~/models/user";
+import { AppUser } from "~/.server/data/user";
 
 import { isUser } from "./helpers";
 
@@ -6,7 +6,7 @@ describe("useUser helpers", () => {
   it("return true if user is valid", () => {
     const argument: AppUser = {
       email: "some@email.com",
-      id: 1,
+      id: "user-id",
       username: "SomeUsername123",
     };
 
@@ -24,8 +24,8 @@ describe("useUser helpers", () => {
   });
 
   it("return false if user is missing email", () => {
-    const argument = {
-      id: 1,
+    const argument: Omit<AppUser, "email"> = {
+      id: "user-id",
       username: "Username",
     };
 
