@@ -1,11 +1,12 @@
 import * as RadixSelect from "@radix-ui/react-select";
+import {
+  ArrowSeparateVertical,
+  Check,
+  NavArrowDown,
+  NavArrowUp,
+} from "iconoir-react";
 import { ElementRef, forwardRef } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
-
-import { CheckIcon } from "~/components/icons/CheckIcon";
-import { ChevronDownIcon } from "~/components/icons/ChevronDownIcon";
-import { ChevronExpandIcon } from "~/components/icons/ChevronExpandIcon";
-import { ChevronUpIcon } from "~/components/icons/ChevronUpIcon";
 
 const Select = (props: RadixSelect.SelectProps) => (
   <RadixSelect.Root {...props} />
@@ -38,7 +39,7 @@ const SelectTrigger = forwardRef<
   >
     {children}
     <RadixSelect.Icon asChild>
-      <ChevronExpandIcon className={twMerge("h-4 w-4", className)} />
+      <ArrowSeparateVertical className={twMerge("h-4 w-4", className)} />
     </RadixSelect.Icon>
   </RadixSelect.Trigger>
 ));
@@ -53,7 +54,7 @@ const SelectScrollUpButton = forwardRef<
     className={twJoin("flex items-center justify-center px-2 py-1", className)}
     {...props}
   >
-    <ChevronUpIcon className={twMerge("h-4 w-4", className)} />
+    <NavArrowUp className={twMerge("h-4 w-4", className)} />
   </RadixSelect.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = RadixSelect.ScrollUpButton.displayName;
@@ -67,7 +68,7 @@ const SelectScrollDownButton = forwardRef<
     className={twJoin("flex items-center justify-center px-2 py-1", className)}
     {...props}
   >
-    <ChevronDownIcon className={twMerge("h-4 w-4", className)} />
+    <NavArrowDown className={twMerge("h-4 w-4", className)} />
   </RadixSelect.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = RadixSelect.ScrollDownButton.displayName;
@@ -149,7 +150,7 @@ const SelectItem = forwardRef<
   >
     <span className="absolute right-2 flex items-center justify-center">
       <RadixSelect.ItemIndicator>
-        <CheckIcon className={twMerge("h-4 w-4", className)} />
+        <Check className={twMerge("h-4 w-4", className)} />
       </RadixSelect.ItemIndicator>
     </span>
     <RadixSelect.ItemText>{children}</RadixSelect.ItemText>

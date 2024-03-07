@@ -8,6 +8,7 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
+import { IconoirProvider } from "iconoir-react";
 import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
 
@@ -41,8 +42,16 @@ export function Layout({ children }: PropsWithChildren) {
         <Links />
       </head>
       <body>
-        <div className="grid min-h-[100dvh] w-full p-6 lg:p-8">{children}</div>
-
+        <IconoirProvider
+          iconProps={{
+            className: "w-5 h-5",
+            strokeWidth: 1.5,
+          }}
+        >
+          <div className="grid min-h-[100dvh] w-full p-6 lg:p-8">
+            {children}
+          </div>
+        </IconoirProvider>
         <ScrollRestoration />
         <Scripts />
         <Toaster richColors theme="system" />

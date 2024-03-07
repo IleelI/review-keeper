@@ -1,11 +1,8 @@
 import { Form, NavLink } from "@remix-run/react";
+import { LogIn, LogOut, UserPlus } from "iconoir-react";
 import { PropsWithChildren } from "react";
 
 import useUser from "~/hooks/useUser/useUser";
-
-import { SignInIcon } from "../icons/SignInIcon";
-import { SignOutIcon } from "../icons/SignOutIcon";
-import { SignUpIcon } from "../icons/SignUpIcon";
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   const user = useUser();
@@ -48,7 +45,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
                 type="submit"
               >
                 Sign out
-                <SignOutIcon className="h-4 w-4" weight="32" />
+                <LogOut />
               </button>
             </Form>
           </section>
@@ -58,18 +55,18 @@ const MainLayout = ({ children }: PropsWithChildren) => {
           <h1 className="text-4xl font-bold">Not signed in.</h1>
           <nav className="flex gap-4">
             <NavLink
-              className="flex items-center justify-center gap-2 rounded-lg border border-neutral-700 px-3 py-1.5 text-neutral-700 dark:border-neutral-300 dark:text-neutral-300"
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-neutral-700 dark:border-neutral-300 dark:text-neutral-300"
               to="/auth/sign-up"
             >
               Sign up
-              <SignUpIcon className="h-4 w-4" />
+              <UserPlus />
             </NavLink>
             <NavLink
-              className="flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-3 py-1.5 text-neutral-200 dark:bg-primary-300 dark:text-neutral-800"
+              className="flex items-center justify-center gap-1.5 rounded-lg bg-primary-700 px-3 py-1.5 text-neutral-200 dark:bg-primary-300 dark:text-neutral-800"
               to="/auth/sign-in"
             >
               Sign in
-              <SignInIcon className="h-4 w-4" />
+              <LogIn />
             </NavLink>
           </nav>
         </header>
