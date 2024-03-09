@@ -10,13 +10,17 @@ import { toast } from "sonner";
 import { getReviewCategories } from "~/.server/data/review";
 import { getRequiredUser, requireUser } from "~/.server/service/auth";
 import { prisma } from "~/.server/service/db";
+import Button from "~/components/atoms/Button";
 import MainLayout from "~/components/layouts/MainLayout";
 import { extensions } from "~/components/molecules/RichTextEditor";
 
-import FormActions from "./components/FormActions";
-import FormFields from "./components/FormFields";
-import { ReviewSchema, defaultValues, reviewSchema } from "./helpers/helpers";
-import { reviewServerSchema } from "./helpers/helpers.server";
+import FormFields from "../review/components/FormFields";
+import {
+  type ReviewSchema,
+  defaultReviewValues,
+  reviewSchema,
+} from "../review/helpers/helpers";
+import { reviewServerSchema } from "../review/helpers/helpers.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await getRequiredUser(request);
@@ -59,7 +63,7 @@ const NewReviewPage = () => {
   const fetcher = useFetcher<typeof action>({ key: "new-review" });
   const navigate = useNavigate();
   const form = useForm<ReviewSchema>({
-    defaultValues,
+    defaultValues: defaultReviewValues,
     resolver: zodResolver(reviewSchema),
   });
   const editor = useEditor({
@@ -117,7 +121,19 @@ const NewReviewPage = () => {
             editor={editor}
           />
 
-          <FormActions handleFormReset={handleFormReset} />
+          <nav className="flex flex-col gap-4 sm:flex-row sm:gap-8">
+            <Button
+              intent="secondary"
+              onClick={handleFormReset}
+              size="lg"
+              type="reset"
+            >
+              Reset Fields
+            </Button>
+            <Button size="lg" type="submit">
+              Create Review
+            </Button>
+          </nav>
         </form>
       </FormProvider>
     </MainLayout>

@@ -17,19 +17,28 @@ export const getReviewCategories = async (): Promise<ReviewCategory[]> => {
 
 export const getReview = async (reviewId: string) => {
   try {
-    return prisma.review.findFirst({
+    const review = await prisma.review.findFirst({
       where: { id: reviewId },
       include: {
         author: {
           select: {
-            id: true,
             username: true,
           },
         },
-        category: true,
-        reactions: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
+    if (!review) return null;
+
+    return {
+      ...review,
+      createdAt: review.createdAt.toISOString(),
+      updatedAt: review.createdAt.toISOString(),
+    };
   } catch {
     return null;
   }

@@ -8,8 +8,7 @@ import RichTextEditor, {
   RichTextEditorSkeleton,
 } from "~/components/molecules/RichTextEditor";
 import Select from "~/components/molecules/Select";
-
-import type { ReviewSchema } from "../helpers/helpers";
+import type { ReviewSchema } from "~/routes/review/helpers/helpers";
 
 interface FormFieldsProps {
   categories: ReviewCategory[];

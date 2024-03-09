@@ -84,7 +84,7 @@ export const reviewSchema = z
     ratingScale: ratingScale ? String(ratingScale) : undefined,
   }));
 
-export const defaultValues: ReviewSchema = {
+export const defaultReviewValues: ReviewSchema = {
   categoryId: "",
   content: "",
   rating: "",
