@@ -10,6 +10,11 @@ import RichTextEditor, {
 import Select from "~/components/molecules/Select";
 import type { ReviewSchema } from "~/routes/review/helpers/helpers";
 
+export const uncategorisedOption: ReviewCategory = {
+  id: "uncategorised",
+  name: "Uncategorised",
+};
+
 interface FormFieldsProps {
   categories: ReviewCategory[];
   characterLimit: number;
@@ -47,23 +52,28 @@ const FormFields = ({
       <FormField
         control={control}
         name="categoryId"
-        render={({ field, fieldState: { error } }) => (
+        render={({
+          field: { name, onChange, ref, value, disabled },
+          fieldState: { error },
+        }) => (
           <FormField.Item className="col-span-2">
             <FormField.Label>Category</FormField.Label>
             <FormField.Message />
             <Select
-              onValueChange={field.onChange}
-              value={field.value ? String(field.value) : ""}
+              disabled={disabled}
+              name={name}
+              onValueChange={onChange}
+              value={value ?? uncategorisedOption.id}
             >
               <FormField.Control>
-                <Select.Trigger hasError={!!error} ref={field.ref}>
-                  <Select.Value placeholder="Select a category..." />
+                <Select.Trigger hasError={!!error} ref={ref}>
+                  <Select.Value placeholder="Uncategorised" />
                 </Select.Trigger>
               </FormField.Control>
               <Select.Content>
                 {categories.length ? (
                   categories.map(({ id, name }) => (
-                    <Select.Item key={id} value={String(id)}>
+                    <Select.Item key={id} value={id}>
                       {name}
                     </Select.Item>
                   ))

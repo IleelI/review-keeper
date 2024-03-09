@@ -30,7 +30,7 @@ export const buttonStyles = cva(
           "enabled:hover:bg-primary-800 enabled:focus-visible:bg-primary-800 enabled:active:bg-primary-700 dark:enabled:hover:bg-primary-400 dark:enabled:focus-visible:bg-primary-400 dark:enabled:active:bg-primary-300",
         ],
         secondary: [
-          "bg-transparent border border-neutral-800 text-neutral-800 dark:border-neutral-200 dark:text-neutral-200",
+          "bg-transparent border border-neutral-700 text-neutral-700 dark:border-neutral-300 dark:text-neutral-300",
           "enabled:hover:backdrop-brightness-95 enabled:focus-visible:backdrop-brightness-95 enabled:active:backdrop-brightness-85 dark:enabled:hover:backdrop-brightness-150 dark:enabled:focus-visible:backdrop-brightness-150 dark:enabled:active:backdrop-brightness-200",
         ],
         successful: [
@@ -47,9 +47,9 @@ export const buttonStyles = cva(
         ],
       },
       size: {
-        sm: ["px-4 py-1 text-sm rounded-md"],
-        md: ["px-4 py-1.5 text-base rounded-lg"],
-        lg: ["px-4 py-2 text-lg rounded-lg"],
+        sm: ["px-4 py-1 text-sm rounded"],
+        md: ["px-4 py-1.5 text-base rounded-md"],
+        lg: ["px-4 py-2 text-lg rounded-md"],
         none: [""],
       },
     },

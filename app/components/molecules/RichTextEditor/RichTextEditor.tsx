@@ -30,7 +30,7 @@ const RichTextEditor = ({ editor, hasError }: RichTextEditorProps) => {
   return (
     <div
       className={twMerge(
-        "flex flex-col overflow-hidden rounded-lg border border-neutral-300 bg-neutral-50 transition focus-within:border-primary-700 hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:focus-within:border-primary-300 dark:hover:border-primary-300",
+        "flex flex-col overflow-hidden rounded-md border border-neutral-300 bg-neutral-50 transition focus-within:border-primary-700 hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:focus-within:border-primary-300 dark:hover:border-primary-300",
         hasError && "border-red-700 dark:border-red-300",
       )}
     >

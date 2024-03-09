@@ -26,7 +26,7 @@ const SelectTrigger = forwardRef<
   <RadixSelect.Trigger
     aria-invalid={hasError}
     className={twMerge([
-      "flex items-center justify-between gap-4 rounded-lg border px-3 py-1.5 outline-none transition",
+      "flex items-center justify-between gap-4 rounded-md border px-3 py-1.5 outline-none transition",
       "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
       "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
       "data-[placeholder]:text-neutral-600 dark:data-[placeholder]:text-neutral-400",
@@ -91,7 +91,7 @@ const SelectContent = forwardRef<
     <RadixSelect.Portal>
       <RadixSelect.Content
         className={twMerge(
-          "relative overflow-hidden rounded-lg border shadow shadow-neutral-200 dark:shadow-none",
+          "relative overflow-hidden rounded-md border shadow shadow-neutral-200 dark:shadow-none",
           "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
           "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
           position === "popper" &&
@@ -142,7 +142,7 @@ const SelectItem = forwardRef<
   <RadixSelect.Item
     ref={ref}
     className={twMerge(
-      "relative flex cursor-pointer items-center rounded-md py-1.5 pl-2 pr-8 outline-none transition",
+      "relative flex cursor-pointer items-center rounded py-1.5 pl-2 pr-8 outline-none",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
       "data-[highlighted]:data-[state=unchecked]:bg-neutral-100 data-[highlighted]:data-[state=unchecked]:text-neutral-900 dark:data-[highlighted]:data-[state=unchecked]:bg-neutral-700 dark:data-[highlighted]:data-[state=unchecked]:text-neutral-100",
       "data-[state=checked]:bg-primary-700 data-[state=checked]:text-neutral-100 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-900",
