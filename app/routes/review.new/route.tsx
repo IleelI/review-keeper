@@ -108,7 +108,7 @@ const NewReviewPage = () => {
     <MainLayout>
       <FormProvider {...form}>
         <form
-          className="flex flex-col gap-8"
+          className="flex flex-col gap-12"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormFields
@@ -116,6 +116,7 @@ const NewReviewPage = () => {
             characterLimit={CHARACTER_LIMIT}
             editor={editor}
           />
+
           <FormActions handleFormReset={handleFormReset} />
         </form>
       </FormProvider>

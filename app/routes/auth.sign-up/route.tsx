@@ -167,7 +167,7 @@ export default function Register() {
                   Sign in here.
                 </Link>
               </small>
-              <Button className="text-lg font-medium" type="submit">
+              <Button size="lg" type="submit">
                 Sign Up
               </Button>
               {backendError ? (
