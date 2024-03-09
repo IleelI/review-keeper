@@ -44,3 +44,21 @@ export const getReview = async (reviewId: string) => {
   }
 };
 export type Review = PromiseReturnType<typeof getReview>;
+
+export const getReviewForEdit = async (reviewId: string) => {
+  try {
+    return await prisma.review.findFirst({
+      where: { id: reviewId },
+      select: {
+        categoryId: true,
+        content: true,
+        rating: true,
+        ratingScale: true,
+        title: true,
+      },
+    });
+  } catch {
+    return null;
+  }
+};
+export type ReviewForEdit = PromiseReturnType<typeof getReviewForEdit>;

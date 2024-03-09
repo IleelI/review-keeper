@@ -175,7 +175,7 @@ export const signOut = async () => {
 export const parseStringifiedToken = async (token: string) => {
   try {
     const secret = new TextEncoder().encode(env().JWT_SECRET);
-    const verifiedToken = await jwtVerify(token, secret, { clockTolerance: 0 });
+    const verifiedToken = await jwtVerify(token, secret);
     if (!verifiedToken) return null;
     return verifiedToken.payload as AppUser;
   } catch {
