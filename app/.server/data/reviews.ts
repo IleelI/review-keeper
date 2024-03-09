@@ -1,8 +1,10 @@
+import type { PromiseReturnType } from "@prisma/client/extension";
 import { prisma } from "../service/db";
 
+export type ReviewForGrid = PromiseReturnType<typeof getReviewsForGrid>[number];
 export const getReviewsForGrid = async () => {
   try {
-    return await prisma.review.findMany({
+    const reviews = await prisma.review.findMany({
       select: {
         author: {
           select: {
@@ -24,6 +26,11 @@ export const getReviewsForGrid = async () => {
         updatedAt: true,
       },
     });
+    return reviews.map(({ createdAt, updatedAt, ...review }) => ({
+      ...review,
+      createdAt: createdAt.toISOString(),
+      updatedAt: updatedAt.toISOString(),
+    }));
   } catch (error) {
     console.error(error);
     return [];

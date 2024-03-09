@@ -30,7 +30,7 @@ const FormFields = ({
   const wasSubmitted = submitCount >= 1;
 
   return (
-    <fieldset className="grid grid-cols-2 gap-6">
+    <fieldset className="grid grid-cols-2 gap-x-8 gap-y-6">
       <FormField
         control={control}
         name="title"
@@ -88,7 +88,7 @@ const FormFields = ({
         control={control}
         name="rating"
         render={({ field }) => (
-          <FormField.Item className="col-span-1 justify-between">
+          <FormField.Item className="col-span-2 justify-between sm:col-span-1">
             <FormField.Label>Rating</FormField.Label>
             <FormField.Message />
             <FormField.Control>
@@ -109,7 +109,7 @@ const FormFields = ({
         control={control}
         name="ratingScale"
         render={({ field }) => (
-          <FormField.Item className="col-span-1 justify-between">
+          <FormField.Item className="col-span-2 justify-between sm:col-span-1">
             <FormField.Label>Rating Scale</FormField.Label>
             <FormField.Message />
             <FormField.Control>

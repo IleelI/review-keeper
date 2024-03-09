@@ -164,7 +164,7 @@ export default function SignIn() {
                   Sign up here.
                 </Link>
               </small>
-              <Button className="text-lg font-medium" type="submit">
+              <Button size="lg" type="submit">
                 Sign In
               </Button>
               {backendError ? (
