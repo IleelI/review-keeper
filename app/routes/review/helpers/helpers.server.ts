@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export type ReviewServerSchema = z.infer<typeof reviewServerSchema>;
+
 export const reviewServerSchema = z
   .object({
     title: z.string().trim().min(1, "Title is required."),

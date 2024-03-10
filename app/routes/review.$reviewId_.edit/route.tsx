@@ -1,40 +1,58 @@
-import { invariant } from "@epic-web/invariant";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { FormProvider } from "react-hook-form";
 
-import { getReview } from "~/.server/data/review";
-import { getUserReviews } from "~/.server/data/user";
-import { getRequiredUser } from "~/.server/service/auth";
+import Button from "~/components/atoms/Button";
+import MainLayout from "~/components/layouts/MainLayout";
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  invariant(params.reviewId, "reviewId is required.");
-  const { reviewId } = params;
-  const { id: userId } = await getRequiredUser(request);
+import FormFields from "../review/components/FormFields";
 
-  const userReviews = await getUserReviews(userId);
-  if (!userReviews.flatMap(({ id }) => id).includes(reviewId)) {
-    throw new Response("You're not authorized to access this resource", {
-      status: 403,
-      statusText: "Forbidden.",
-    });
-  }
+import useEditPage, { CHARACTER_LIMIT } from "./hooks/useEditReviewPage";
+import { action } from "./server/action";
+import { loader } from "./server/loader";
 
-  const review = await getReview(reviewId);
-  if (review === null) {
-    throw new Response("Review doesn't exist.", {
-      status: 404,
-      statusText: "Not Found.",
-    });
-  }
+export { loader };
 
-  return json({ review });
-};
+export { action };
 
 const ReviewEditPage = () => {
-  const { review } = useLoaderData<typeof loader>();
-  console.log({ review });
+  const {
+    categories,
+    editor,
+    form,
+    handleFormReset,
+    isFormDisabled,
+    onSubmit,
+  } = useEditPage();
 
-  return <div>Review edit page</div>;
+  return (
+    <MainLayout>
+      <FormProvider {...form}>
+        <form
+          className="relative flex flex-col gap-8"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <FormFields
+            categories={categories}
+            characterLimit={CHARACTER_LIMIT}
+            editor={editor}
+          />
+
+          <nav className="flex flex-col gap-4 sm:flex-row sm:gap-8">
+            <Button
+              disabled={!form.formState.isDirty}
+              intent="text"
+              onClick={handleFormReset}
+              type="reset"
+            >
+              Restore Initial Values
+            </Button>
+            <Button disabled={isFormDisabled} type="submit">
+              Update Review
+            </Button>
+          </nav>
+        </form>
+      </FormProvider>
+    </MainLayout>
+  );
 };
 
 export default ReviewEditPage;

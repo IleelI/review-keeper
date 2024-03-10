@@ -54,7 +54,7 @@ export function Layout({ children }: PropsWithChildren) {
         </IconoirProvider>
         <ScrollRestoration />
         <Scripts />
-        <Toaster richColors theme="system" />
+        <Toaster position="bottom-right" richColors theme="system" />
       </body>
     </html>
   );

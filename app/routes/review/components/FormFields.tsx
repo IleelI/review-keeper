@@ -8,8 +8,7 @@ import RichTextEditor, {
   RichTextEditorSkeleton,
 } from "~/components/molecules/RichTextEditor";
 import Select from "~/components/molecules/Select";
-
-import type { ReviewSchema } from "../helpers/helpers";
+import type { ReviewSchema } from "~/routes/review/helpers/helpers";
 
 interface FormFieldsProps {
   categories: ReviewCategory[];
@@ -23,11 +22,10 @@ const FormFields = ({
 }: FormFieldsProps) => {
   const {
     control,
-    formState: { submitCount },
     trigger,
+    formState: { errors },
   } = useFormContext<ReviewSchema>();
   const characterCount = editor?.storage.characterCount.characters();
-  const wasSubmitted = submitCount >= 1;
 
   return (
     <fieldset className="grid grid-cols-2 gap-x-8 gap-y-6">
@@ -39,7 +37,10 @@ const FormFields = ({
             <FormField.Label isRequired>Title</FormField.Label>
             <FormField.Message />
             <FormField.Control>
-              <Input {...field} />
+              <Input
+                placeholder="ex. Review Keeper is a great app!"
+                {...field}
+              />
             </FormField.Control>
           </FormField.Item>
         )}
@@ -48,23 +49,28 @@ const FormFields = ({
       <FormField
         control={control}
         name="categoryId"
-        render={({ field, fieldState: { error } }) => (
+        render={({
+          field: { name, onChange, ref, value, disabled },
+          fieldState: { error },
+        }) => (
           <FormField.Item className="col-span-2">
             <FormField.Label>Category</FormField.Label>
             <FormField.Message />
             <Select
-              onValueChange={field.onChange}
-              value={field.value ? String(field.value) : ""}
+              disabled={disabled}
+              name={name}
+              onValueChange={onChange}
+              value={value || ""}
             >
               <FormField.Control>
-                <Select.Trigger hasError={!!error} ref={field.ref}>
+                <Select.Trigger hasError={!!error} ref={ref}>
                   <Select.Value placeholder="Select a category..." />
                 </Select.Trigger>
               </FormField.Control>
               <Select.Content>
                 {categories.length ? (
                   categories.map(({ id, name }) => (
-                    <Select.Item key={id} value={String(id)}>
+                    <Select.Item key={id} value={id}>
                       {name}
                     </Select.Item>
                   ))
@@ -77,8 +83,8 @@ const FormFields = ({
               </Select.Content>
             </Select>
             <FormField.Message>
-              You can leave this field empty, in such case this review will be
-              uncategorised.
+              Select &quot;Uncategorised&quot; or leave this field empty if you
+              want the review to be uncategorised.
             </FormField.Message>
           </FormField.Item>
         )}
@@ -97,8 +103,11 @@ const FormFields = ({
                 inputMode="numeric"
                 onChange={(e) => {
                   field.onChange(e);
-                  wasSubmitted && trigger(["rating", "ratingScale"]);
+                  if (errors.ratingScale) {
+                    trigger(["rating", "ratingScale"]);
+                  }
                 }}
+                placeholder="ex. 4"
               />
             </FormField.Control>
           </FormField.Item>
@@ -118,8 +127,11 @@ const FormFields = ({
                 inputMode="numeric"
                 onChange={(e) => {
                   field.onChange(e);
-                  wasSubmitted && trigger(["rating", "ratingScale"]);
+                  if (errors.rating) {
+                    trigger(["rating", "ratingScale"]);
+                  }
                 }}
+                placeholder="ex. 5"
               />
             </FormField.Control>
           </FormField.Item>

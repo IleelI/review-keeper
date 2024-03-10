@@ -7,7 +7,6 @@ interface ReviewRatingProps {
 const ReviewRating = ({ rating, ratingScale }: ReviewRatingProps) => {
   const ratingPercentage = Math.round((rating / ratingScale) * 100);
   const formattedRating = Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2,
     style: "percent",
   }).format(rating / ratingScale);
 
@@ -16,7 +15,7 @@ const ReviewRating = ({ rating, ratingScale }: ReviewRatingProps) => {
       Rating:{" "}
       <span
         className={twJoin([
-          "font-medium transition duration-300",
+          "font-semibold transition duration-300",
           ratingPercentage < 40
             ? "group-hover:text-red-600 dark:group-hover:text-red-400"
             : ratingPercentage < 80

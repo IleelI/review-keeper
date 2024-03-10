@@ -1,22 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ActionFunctionArgs,
-  LoaderFunction,
-  json,
-  redirect,
-} from "@remix-run/node";
 import { Link, useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 
-import {
-  createAccessToken,
-  createRefreshToken,
-  createUser,
-  getUser,
-  lookForUser,
-  signIn,
-} from "~/.server/service/auth";
-import { prisma } from "~/.server/service/db";
 import Button from "~/components/atoms/Button";
 import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";
@@ -27,67 +13,28 @@ import { getSafeRedirect } from "~/utils/routing/routing";
 import BackButton from "../auth/components/BackButton";
 import Header from "../auth/components/Header";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  try {
-    const formData = await request.formData();
-    const redirectTo = formData.get("redirectTo");
-    const parsedForm = credentialsSchema.safeParse(
-      Object.fromEntries(formData),
-    );
-    if (!parsedForm.success) {
-      return json({
-        error: "Invalid email and/or password",
-      });
-    }
+import { action } from "./server/action";
+import { loader } from "./server/loader";
 
-    const credentials = parsedForm.data;
-    const existingUser = await lookForUser(credentials.email);
-    if (existingUser) {
-      return json({
-        error: "Account with this email already exists.",
-      });
-    }
+export { action, loader };
 
-    const user = await createUser(credentials);
-    if (!user) {
-      return json({
-        error: "Something went wrong while creating account.",
-      });
-    }
-
-    const refreshToken = await createRefreshToken(user);
-    const accessToken = await createAccessToken(user);
-    await prisma.user.update({
-      where: { email: user.email },
-      data: { refreshToken },
-    });
-
-    return await signIn(refreshToken, accessToken, getSafeRedirect(redirectTo));
-  } catch {
-    return json({
-      error: "Something went wrong while signing up.",
-    });
-  }
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
-  if (user) return redirect("/");
-  return null;
-};
+const signUpSchema = credentialsSchema.extend({
+  redirectTo: z.string().optional(),
+});
+type SignUpSchema = z.infer<typeof signUpSchema>;
 
 export default function Register() {
   const fetcher = useFetcher<typeof action>();
-  const form = useForm<CredentialsSchema>({
+  const [searchParams] = useSearchParams();
+  const form = useForm<SignUpSchema>({
     defaultValues: {
       email: "",
       password: "",
+      redirectTo: getSafeRedirect(searchParams.get("redirectTo")),
     },
-    resolver: zodResolver(credentialsSchema),
+    resolver: zodResolver(signUpSchema),
   });
-  const [searchParams] = useSearchParams();
   const backendError = fetcher.data?.error;
-  const redirectTo = getSafeRedirect(searchParams.get("redirectTo"));
 
   const handleSubmitSuccess: SubmitHandler<CredentialsSchema> = (data) => {
     fetcher.submit(data, { method: "post" });
@@ -154,7 +101,7 @@ export default function Register() {
                 )}
               />
 
-              <input name="redirectTo" type="hidden" value={redirectTo} />
+              <input {...form.register("redirectTo")} type="hidden" />
             </fieldset>
 
             <nav className="flex flex-col gap-4">
