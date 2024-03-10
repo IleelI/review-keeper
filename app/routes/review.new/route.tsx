@@ -19,7 +19,7 @@ const NewReviewPage = () => {
     <MainLayout>
       <FormProvider {...form}>
         <form
-          className="flex flex-col gap-12"
+          className="flex flex-col gap-8"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormFields
@@ -30,14 +30,14 @@ const NewReviewPage = () => {
 
           <nav className="flex flex-col gap-4 sm:flex-row sm:gap-8">
             <Button
-              intent="secondary"
+              disabled={!form.formState.isDirty}
+              intent="text"
               onClick={handleFormReset}
-              size="lg"
               type="reset"
             >
               Reset Fields
             </Button>
-            <Button size="lg" type="submit">
+            <Button disabled={!form.formState.isValid} type="submit">
               Create Review
             </Button>
           </nav>

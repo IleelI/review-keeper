@@ -42,7 +42,7 @@ export const buttonStyles = cva(
           "enabled:hover:bg-red-800 enabled:focus-visible:bg-red-800 enabled:active:bg-red-700 dark:enabled:hover:bg-red-500 dark:enabled:focus-visible:bg-red-500 dark:enabled:active:bg-red-400",
         ],
         text: [
-          "text-neutral-950 dark:text-neutral-50 underline underline-offset-2",
+          "text-neutral-950 dark:text-neutral-50",
           "enabled:hover:backdrop-brightness-95 enabled:focus-visible:backdrop-brightness-95 enabled:active:backdrop-brightness-85 dark:enabled:hover:backdrop-brightness-150 dark:enabled:focus-visible:backdrop-brightness-150 dark:enabled:active:backdrop-brightness-200",
         ],
       },

@@ -1,14 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import CharacterCountExtension from "@tiptap/extension-character-count";
-import { useEditor } from "@tiptap/react";
+import { useEditor, type Extensions } from "@tiptap/react";
+import { useEffect, useMemo } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 
+import type { ReviewCategory } from "~/.server/data/review";
 import { extensions } from "~/components/molecules/RichTextEditor";
 import {
   type ReviewSchema,
   defaultReviewValues,
   reviewSchema,
+  uncategorisedOption,
+  getSubmitData,
 } from "~/routes/review/helpers/helpers";
 
 import type { action } from "../server/action";
@@ -16,27 +21,36 @@ import type { loader } from "../server/loader";
 
 export const CHARACTER_LIMIT = 2_000;
 
+const editorExtenstions: Extensions = [
+  ...extensions,
+  CharacterCountExtension.configure({
+    limit: CHARACTER_LIMIT,
+    mode: "textSize",
+  }),
+];
+
 const useNewReviewPage = () => {
   const { categories } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<typeof action>({ key: "new-review" });
+  const fetcher = useFetcher<typeof action>();
+  const navigate = useNavigate();
   const form = useForm<ReviewSchema>({
     defaultValues: defaultReviewValues,
+    mode: "onBlur",
     resolver: zodResolver(reviewSchema),
   });
   const editor = useEditor({
-    content: "",
-    extensions: [
-      ...extensions,
-      CharacterCountExtension.configure({
-        limit: CHARACTER_LIMIT,
-        mode: "textSize",
-      }),
-    ],
+    content: defaultReviewValues.content,
+    extensions: editorExtenstions,
     onUpdate: ({ editor }) =>
       form.setValue("content", editor.isEmpty ? "" : editor.getHTML(), {
-        shouldValidate: form.formState.submitCount > 0,
+        shouldValidate: true,
       }),
   });
+
+  const categoriesWithUncategorised: ReviewCategory[] = useMemo(
+    () => [uncategorisedOption, ...categories],
+    [categories],
+  );
 
   const handleFormReset = () => {
     form.reset();
@@ -44,18 +58,28 @@ const useNewReviewPage = () => {
   };
 
   const onSubmit: SubmitHandler<ReviewSchema> = (data) => {
-    const transformedData = {
-      content: data.content,
-      title: data.title,
-      ...(data.categoryId ? { categoryId: data.categoryId } : {}),
-      ...(data.rating ? { rating: data.rating } : {}),
-      ...(data.ratingScale ? { ratingScale: data.ratingScale } : {}),
-    };
-    fetcher.submit(transformedData, { method: "post", navigate: true });
+    fetcher.submit(getSubmitData(data), { method: "post", navigate: true });
   };
 
+  useEffect(() => {
+    if (!fetcher.data || fetcher.state !== "idle") return;
+    switch (fetcher.data.status) {
+      case "error": {
+        toast.error(fetcher.data.message);
+        break;
+      }
+      case "success": {
+        toast.success(fetcher.data.message);
+        navigate(`/review/${fetcher.data.newReview.id}`);
+        break;
+      }
+      default:
+        return;
+    }
+  }, [fetcher, navigate]);
+
   return {
-    categories,
+    categories: categoriesWithUncategorised,
     editor,
     form,
     handleFormReset,

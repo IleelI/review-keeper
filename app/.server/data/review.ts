@@ -9,7 +9,7 @@ export interface ReviewCategory {
 export const getReviewCategories = async (): Promise<ReviewCategory[]> => {
   try {
     const categories = await prisma.reviewCategory.findMany();
-    return categories.map(({ id, name }) => ({ id: String(id), name }));
+    return categories.map(({ id, name }) => ({ id, name }));
   } catch {
     return [];
   }
@@ -52,6 +52,7 @@ export const getReviewForEdit = async (reviewId: string) => {
       select: {
         categoryId: true,
         content: true,
+        id: true,
         rating: true,
         ratingScale: true,
         title: true,

@@ -3,13 +3,13 @@ import ListItemExtension, { ListItem } from "@tiptap/extension-list-item";
 import TextStyleExtension, {
   TextStyleOptions,
 } from "@tiptap/extension-text-style";
-import { Editor, EditorContent } from "@tiptap/react";
+import { Editor, EditorContent, type Extensions } from "@tiptap/react";
 import StarterKitExtension from "@tiptap/starter-kit";
 import { twMerge } from "tailwind-merge";
 
 import MenuBar from "./MenuBar";
 
-export const extensions = [
+export const extensions: Extensions = [
   ColorExtension.configure({
     types: [TextStyleExtension.name, ListItemExtension.name],
   }),
@@ -30,7 +30,7 @@ const RichTextEditor = ({ editor, hasError }: RichTextEditorProps) => {
   return (
     <div
       className={twMerge(
-        "flex flex-col overflow-hidden rounded-md border border-neutral-300 bg-neutral-50 transition focus-within:border-primary-700 hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:focus-within:border-primary-300 dark:hover:border-primary-300",
+        "flex flex-col overflow-hidden rounded-md border border-neutral-300 bg-white transition  dark:border-neutral-700 dark:bg-neutral-800 ",
         hasError && "border-red-700 dark:border-red-300",
       )}
     >
@@ -46,5 +46,5 @@ const RichTextEditor = ({ editor, hasError }: RichTextEditorProps) => {
 export default RichTextEditor;
 
 export const RichTextEditorSkeleton = () => (
-  <div className="col-span-2 h-[260px] animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-800"></div>
+  <div className="col-span-2 h-[250px] animate-pulse rounded-md border border-neutral-200 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800"></div>
 );

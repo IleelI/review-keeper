@@ -10,7 +10,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = Object.fromEntries(await request.formData());
   const validatedData = reviewServerSchema.safeParse(formData);
   if (!validatedData.success) {
-    return json({ error: "Incorrect data sent, please try again." });
+    return json({
+      message: "Incorrect data sent, please try again.",
+      status: "error" as const,
+    });
   }
 
   try {
@@ -21,13 +24,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       },
     });
     return json({
-      success: true as const,
       message: "Review created successfully!",
+      status: "success" as const,
       newReview,
     });
   } catch {
     return json({
-      error: "Something went wrong, please try again.",
+      message: "Something went wrong, please try again.",
+      status: "error" as const,
     });
   }
 };

@@ -14,7 +14,7 @@ const GlobalError = ({
   statusCode,
 }: GlobalError) => (
   <div className="grid lg:place-content-center">
-    <article className="relative flex flex-col gap-6 pt-8 lg:w-[480px] lg:gap-12 lg:pt-0">
+    <article className="relative flex flex-col gap-6 pt-8 lg:w-[800px] lg:gap-12 lg:pt-0">
       <h1 className="flex flex-col gap-1 text-3xl font-bold text-red-700 lg:text-4xl dark:text-red-300">
         Error! {statusCode ? `(${statusCode})` : null}
       </h1>
@@ -69,7 +69,7 @@ type InfoCardProps = PropsWithChildren<{
   tag?: ElementType<{ className: string }>;
 }>;
 const InfoCard = ({ children, tag: Tag = "p" }: InfoCardProps) => (
-  <Tag className="rounded-lg border border-neutral-200 bg-white px-4 py-2.5 transition hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-300">
+  <Tag className="text-pretty rounded-lg border border-neutral-200 bg-white px-4 py-2.5 transition hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-300">
     {children}
   </Tag>
 );

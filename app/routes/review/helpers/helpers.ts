@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { ReviewCategory } from "~/.server/data/review";
+
 const ratingSchema = z
   .string()
   .optional()
@@ -50,9 +52,6 @@ export const reviewSchema = z
     title: z.string().trim().min(1, "Title is required."),
   })
   .superRefine(({ rating, ratingScale }, context) => {
-    if (!rating && !ratingScale) {
-      return z.NEVER;
-    }
     if (rating && ratingScale && rating > ratingScale) {
       context.addIssue({
         code: "custom",
@@ -64,13 +63,13 @@ export const reviewSchema = z
         message: "Rating scale cannot be less than rating scale.",
         path: ["ratingScale"],
       });
-    } else if (rating && !ratingScale) {
+    } else if (rating && !ratingScale && ratingScale !== 0) {
       context.addIssue({
         code: "custom",
         message: "Rating scale must be set.",
         path: ["ratingScale"],
       });
-    } else if (!rating && ratingScale) {
+    } else if (!rating && ratingScale && rating !== 0) {
       context.addIssue({
         code: "custom",
         message: "Rating must be set.",
@@ -90,4 +89,36 @@ export const defaultReviewValues: ReviewSchema = {
   rating: "",
   ratingScale: "",
   title: "",
+};
+
+export const uncategorisedOption: ReviewCategory = {
+  id: "uncategorised",
+  name: "Uncategorised",
+};
+
+export type ReviewFormData = Partial<
+  Pick<ReviewSchema, "categoryId" | "rating" | "ratingScale">
+> &
+  Pick<ReviewSchema, "content" | "title">;
+
+export const getSubmitData = ({
+  content,
+  title,
+  ...data
+}: ReviewSchema): ReviewFormData => {
+  const categoryId =
+    data.categoryId && data.categoryId !== uncategorisedOption.id
+      ? { categoryId: data.categoryId }
+      : null;
+  const rating =
+    data.rating && data.ratingScale
+      ? { rating: data.rating, ratingScale: data.ratingScale }
+      : null;
+
+  return {
+    content,
+    title,
+    ...categoryId,
+    ...rating,
+  };
 };

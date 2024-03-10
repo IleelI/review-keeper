@@ -18,6 +18,7 @@ import {
   Strikethrough,
   Text,
   Undo,
+  XmarkCircle,
 } from "iconoir-react";
 import { twJoin } from "tailwind-merge";
 
@@ -29,7 +30,7 @@ interface MenuBarProps {
 const MenuBar = ({ editor }: MenuBarProps) => {
   return (
     <IconoirProvider iconProps={{ className: "w-5 h-5" }}>
-      <div className="flex flex-wrap gap-6 border-b border-neutral-300 p-2 dark:border-neutral-700">
+      <div className="flex flex-wrap gap-6 border-b border-neutral-300 bg-neutral-50 p-2 dark:border-neutral-700 dark:bg-neutral-800">
         <section className="flex flex-wrap items-center gap-1.5 overflow-hidden">
           <MenuBarButton
             handleClick={() => editor.chain().focus().toggleBold().run()}
@@ -160,6 +161,17 @@ const MenuBar = ({ editor }: MenuBarProps) => {
             }
             value={editor.getAttributes("textStyle").color ?? "#4f46e5"}
             type="color"
+          />
+          <MenuBarButton
+            handleClick={() =>
+              editor
+                .chain()
+                .focus()
+                .updateAttributes("textStyle", { color: "" })
+                .run()
+            }
+            icon={<XmarkCircle />}
+            isDisabled={!editor.getAttributes("textStyle").color}
           />
         </section>
       </div>
