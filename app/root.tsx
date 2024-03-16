@@ -48,7 +48,7 @@ export function Layout({ children }: PropsWithChildren) {
             strokeWidth: 1.5,
           }}
         >
-          <div className="grid min-h-[100dvh] w-full p-6 lg:p-8">
+          <div className="grid min-h-[100dvh] w-full p-6 pb-16 lg:p-8 lg:pb-20">
             {children}
           </div>
         </IconoirProvider>

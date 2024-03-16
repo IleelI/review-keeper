@@ -8,7 +8,7 @@ import {
   signOut,
 } from "~/.server/service/auth";
 import { prisma } from "~/.server/service/db";
-import { getSafeRedirect } from "~/utils/routing/routing";
+import { getSafeRedirect } from "~/utils/routing";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { searchParams } = new URL(request.url);

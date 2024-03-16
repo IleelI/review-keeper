@@ -9,7 +9,7 @@ import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";
 import { FormField } from "~/components/molecules/FormField";
 import { credentialsSchema } from "~/schema/auth.schema";
-import { getSafeRedirect } from "~/utils/routing/routing";
+import { getSafeRedirect } from "~/utils/routing";
 
 import BackButton from "../auth/components/BackButton";
 import Header from "../auth/components/Header";

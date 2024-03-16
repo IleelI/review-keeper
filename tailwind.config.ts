@@ -13,7 +13,7 @@ export default {
       neutral: colors.zinc,
       orange: colors.amber,
       primary: colors.indigo,
-      red: colors.rose,
+      red: colors.red,
       transparent: colors.transparent,
       white: colors.white,
     }),

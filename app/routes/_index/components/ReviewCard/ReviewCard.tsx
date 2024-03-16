@@ -1,10 +1,9 @@
 import { NavLink } from "@remix-run/react";
 
 import type { ReviewForGrid } from "~/.server/data/reviews";
+import { getFormattedDate, getValidDate } from "~/utils/date";
 
 import ReviewRating from "../ReviewCardRating/ReviewCardRating";
-
-import { getValidDate, getFormattedDate } from "./helpers";
 
 type ReviewCardProps = ReviewForGrid;
 const ReviewCard = ({

@@ -10,7 +10,7 @@ import {
 } from "~/.server/service/auth";
 import { prisma } from "~/.server/service/db";
 import { credentialsSchema } from "~/schema/auth.schema";
-import { getSafeRedirect } from "~/utils/routing/routing";
+import { getSafeRedirect } from "~/utils/routing";
 
 const signInServerSchema = credentialsSchema.extend({
   redirectTo: z.string().optional(),

@@ -5,7 +5,7 @@ import { createCookie, redirect, redirectDocument } from "@remix-run/node";
 import { SignJWT, jwtVerify } from "jose";
 
 import { CredentialsSchema } from "~/schema/auth.schema";
-import { getSafeRedirect } from "~/utils/routing/routing";
+import { getSafeRedirect } from "~/utils/routing";
 
 import { prisma } from "./db";
 import { env } from "../utils/env";
