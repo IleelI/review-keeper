@@ -27,7 +27,7 @@ const ReviewEditPage = () => {
     <MainLayout>
       <FormProvider {...form}>
         <form
-          className="relative flex flex-col gap-8"
+          className="relative flex flex-col gap-10 lg:gap-12"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormFields

@@ -22,7 +22,7 @@
 @layer components {
   .tiptap * {
     text-wrap: pretty;
-    @apply my-4 first-of-type:mt-0 last-of-type:mb-0;
+    @apply my-4 first:mt-0 last:mb-0;
   }
   .tiptap h1 {
     @apply text-3xl font-bold;

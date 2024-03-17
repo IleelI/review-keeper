@@ -1,13 +1,32 @@
-import { mockCategories, mockReviews, mockUsers } from "mocking/prisma";
+import {
+  mockCategories,
+  mockReactionTypes,
+  mockReviews,
+  mockUsers,
+} from "mocking/prisma";
 import { prisma } from "~/.server/service/db";
 
 const seed = async () => {
   const categories = await Promise.all(
-    mockCategories().map(async ({ name }) =>
+    mockCategories().map(({ name }) =>
       prisma.reviewCategory.upsert({
         create: { name },
         update: {},
         where: { name },
+      }),
+    ),
+  );
+
+  await Promise.all(
+    mockReactionTypes().map(({ name }) =>
+      prisma.reactionType.upsert({
+        create: {
+          name,
+        },
+        update: {},
+        where: {
+          name,
+        },
       }),
     ),
   );

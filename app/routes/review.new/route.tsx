@@ -19,7 +19,7 @@ const NewReviewPage = () => {
     <MainLayout>
       <FormProvider {...form}>
         <form
-          className="flex flex-col gap-8"
+          className="flex flex-col gap-10 lg:gap-12"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormFields

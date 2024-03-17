@@ -214,9 +214,9 @@ export const getUser = async (request: Request) => {
 export const getRequiredUser = async (request: Request) => {
   const user = await getUser(request);
   if (!user) {
-    throw new Response("You've to be logged in to access this resource.", {
+    throw new Response("You've to be signed in to access this resource.", {
       status: 401,
-      statusText: "Not Authorized.",
+      statusText: "Not Authenticated.",
     });
   }
   return user;

@@ -5,12 +5,7 @@ declare global {
 }
 
 if (!global.__prisma) {
-  global.__prisma = new PrismaClient({
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
-  });
+  global.__prisma = new PrismaClient({});
 }
 
 global.__prisma.$connect();

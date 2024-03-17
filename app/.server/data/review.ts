@@ -83,3 +83,18 @@ export const getReview = async (reviewId: string) => {
   }
 };
 export type Review = PromiseReturnType<typeof getReview>;
+
+export const isUserReviewAuthor = async (reviewId: string, userId: string) => {
+  try {
+    return Boolean(
+      await prisma.review.findFirst({
+        where: {
+          id: reviewId,
+          authorId: userId,
+        },
+      }),
+    );
+  } catch (error) {
+    return false;
+  }
+};
