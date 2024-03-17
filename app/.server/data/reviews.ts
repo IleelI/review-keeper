@@ -25,6 +25,9 @@ export const getReviewsForGrid = async () => {
         title: true,
         updatedAt: true,
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
     return reviews.map(({ createdAt, updatedAt, ...review }) => ({
       ...review,

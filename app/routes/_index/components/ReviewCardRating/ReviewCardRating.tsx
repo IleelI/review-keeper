@@ -15,7 +15,7 @@ const ReviewRating = ({ rating, ratingScale }: ReviewRatingProps) => {
       Rating:{" "}
       <span
         className={twJoin([
-          "font-semibold transition duration-300",
+          "font-semibold transition ",
           ratingPercentage < 40
             ? "group-hover:text-red-600 dark:group-hover:text-red-400"
             : ratingPercentage < 80

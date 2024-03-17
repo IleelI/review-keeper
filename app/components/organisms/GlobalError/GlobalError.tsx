@@ -54,7 +54,7 @@ const GlobalError = ({
 
       <nav className="mt-auto">
         <Link
-          className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-6 py-1.5 text-lg font-medium text-neutral-100 outline-offset-4 transition duration-300 hover:bg-primary-800 focus-visible:bg-primary-800 dark:bg-primary-300 dark:text-neutral-900 dark:hover:bg-primary-400 dark:focus-visible:bg-primary-400"
+          className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-6 py-1.5 text-lg font-medium text-neutral-100 outline-offset-4 transition  hover:bg-primary-800 focus-visible:bg-primary-800 dark:bg-primary-300 dark:text-neutral-900 dark:hover:bg-primary-400 dark:focus-visible:bg-primary-400"
           reloadDocument
           to="/"
         >
