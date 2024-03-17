@@ -1,5 +1,10 @@
 import { faker } from "@faker-js/faker";
-import type { Review, ReviewCategory, User } from "@prisma/client";
+import type {
+  Review,
+  ReviewCategory,
+  ReactionType,
+  User,
+} from "@prisma/client";
 
 import { hashPassword } from "~/.server/service/auth";
 
@@ -42,6 +47,18 @@ export const mockCategories = (): MockedReviewCategory[] => [
   { name: "Sports Equipment" },
   { name: "Beauty Products" },
   { name: "Educational Courses" },
+];
+
+type MockedReactionType = MockWithout<
+  ReactionType,
+  "id" | "createdAt" | "updatedAt"
+>;
+export const mockReactionTypes = (): MockedReactionType[] => [
+  { name: "Like" },
+  { name: "Love" },
+  { name: "Dislike" },
+  { name: "Angry" },
+  { name: "Sad" },
 ];
 
 type MockedReview = MockWithout<

@@ -1,11 +1,10 @@
 import { invariant } from "@epic-web/invariant";
 import { json, type ActionFunctionArgs } from "@remix-run/node";
 
+import { isUserReviewAuthor } from "~/.server/data/review";
 import { getRequiredUser } from "~/.server/service/auth";
 import { prisma } from "~/.server/service/db";
 import { reviewServerSchema } from "~/routes/review/helpers/helpers.server";
-
-import { verifyReviewAuthor } from "./helpers";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.reviewId, "reviewId is required.");
@@ -13,7 +12,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const { id: userId } = await getRequiredUser(request);
 
-  await verifyReviewAuthor(userId, reviewId);
+  const isAuthor = await isUserReviewAuthor(reviewId, userId);
+  if (!isAuthor) {
+    throw new Response("You're not authorized to access this resource", {
+      status: 403,
+      statusText: "Forbidden.",
+    });
+  }
 
   const parseResult = await reviewServerSchema.safeParseAsync(
     Object.fromEntries(await request.formData()),
