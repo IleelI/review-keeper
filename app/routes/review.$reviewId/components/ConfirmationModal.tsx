@@ -16,7 +16,11 @@ const ConfirmationModal = ({
   return (
     <Dialog modal open={open} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>
-        <Button intent="text" size="sm">
+        <Button
+          className="w-full hover:text-red-700 focus-visible:text-red-700 sm:w-max dark:hover:text-red-300 dark:focus-visible:text-red-300"
+          intent="text"
+          size="sm"
+        >
           Delete
         </Button>
       </Dialog.Trigger>

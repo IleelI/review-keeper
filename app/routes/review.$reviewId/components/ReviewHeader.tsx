@@ -1,7 +1,8 @@
-import { Link, useFetcher } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import { useState } from "react";
 
 import type { Review } from "~/.server/data/review";
+import Link from "~/components/atoms/Link";
 import { getFormattedDate, getValidDate } from "~/utils/date";
 
 import type { action } from "../server/action";
@@ -43,9 +44,9 @@ const ReviewHeader = ({
   return (
     <header className="flex flex-col gap-6">
       {createdAt || isAuthor ? (
-        <section className="flex items-center gap-8">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-center">
           {createdAtDate ? (
-            <p className="flex items-baseline gap-0.5 text-sm font-light text-neutral-600 dark:text-neutral-400">
+            <p className="flex flex-col gap-0.5 text-sm font-light text-neutral-600 dark:text-neutral-400">
               Published {getFormattedDate(createdAtDate)}
               {updatedAtDate && wasEdited ? (
                 <span className="text-xs">
@@ -55,7 +56,7 @@ const ReviewHeader = ({
             </p>
           ) : null}
           {isAuthor ? (
-            <nav className="ml-auto flex gap-2">
+            <nav className="flex gap-2 sm:justify-end">
               <ConfirmationModal
                 handleAbortClick={handleModalClose}
                 handleConfirmClick={handleReviewDelete}
@@ -63,8 +64,10 @@ const ReviewHeader = ({
                 open={open}
               />
               <Link
-                className="block min-w-max rounded bg-primary-700 px-4 py-1 text-sm font-medium text-neutral-100 dark:bg-primary-300 dark:text-neutral-900"
+                className="w-full sm:w-max"
+                size="sm"
                 to={`/review/${reviewId}/edit`}
+                variant="button"
               >
                 Edit
               </Link>
@@ -79,17 +82,16 @@ const ReviewHeader = ({
 
       <p className="text-sm">
         By{" "}
-        <Link
-          className="underline underline-offset-2 transition hover:text-primary-700 dark:hover:text-primary-300"
-          to={`/user/${author.id}`}
-        >
+        <Link size="sm" to={`/user/${author.id}`}>
           {author.username}
         </Link>
       </p>
 
       <Link
-        className="w-max rounded bg-neutral-900 px-5 py-1.5 text-sm leading-none text-neutral-100 transition duration-300 hover:bg-neutral-700 focus-visible:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:bg-neutral-300"
+        className="w-max rounded bg-neutral-900 px-5 py-1.5 text-sm leading-none text-neutral-100 transition  hover:bg-neutral-700 focus-visible:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:bg-neutral-300"
+        size="custom"
         to={`/reviews?category=${category?.name ?? "uncategorized"}`}
+        variant="custom"
       >
         {category?.name ?? "Uncategorized"}
       </Link>

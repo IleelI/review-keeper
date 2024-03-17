@@ -1,5 +1,9 @@
 import { invariant } from "@epic-web/invariant";
-import { type ActionFunctionArgs, redirectDocument } from "@remix-run/node";
+import {
+  json,
+  type ActionFunctionArgs,
+  redirectDocument,
+} from "@remix-run/node";
 
 import { isUserReviewAuthor } from "~/.server/data/review";
 import { getUser } from "~/.server/service/auth";
@@ -32,10 +36,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         return redirectDocument("/");
       } catch (error) {
         console.error(error);
-        return {
+        return json({
           status: "error" as const,
           message: "Something went wrong while deleting the review.",
-        };
+        });
       }
     }
     default: {

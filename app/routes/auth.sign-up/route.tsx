@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useFetcher, useSearchParams } from "@remix-run/react";
+import { useFetcher, useSearchParams } from "@remix-run/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import Button from "~/components/atoms/Button";
 import HelperText from "~/components/atoms/HelperText";
 import Input from "~/components/atoms/Input";
+import Link from "~/components/atoms/Link";
 import { FormField } from "~/components/molecules/FormField";
 import { CredentialsSchema, credentialsSchema } from "~/schema/auth.schema";
 import { getSafeRedirect } from "~/utils/routing";
@@ -87,15 +88,16 @@ export default function Register() {
                     </FormField.Control>
                     <FormField.Description>
                       Generate safe password{" "}
-                      <a
+                      <Link
                         aria-label="Bitwarden password generator"
-                        className="text-primary-700 underline underline-offset-4 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
-                        href="https://bitwarden.com/password-generator/"
+                        className="text-primary-700 hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                        size="sm"
+                        to="https://bitwarden.com/password-generator/"
                         target="_blank"
                         rel="noreferrer"
                       >
                         here.
-                      </a>
+                      </Link>
                     </FormField.Description>
                   </FormField.Item>
                 )}
@@ -108,15 +110,14 @@ export default function Register() {
               <small className="text-center text-sm">
                 {"Already have an account? \t"}
                 <Link
-                  className="font-semibold text-primary-700 underline transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                  className="font-semibold text-primary-700 hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-400"
+                  size="sm"
                   to={`/auth/sign-in?${searchParams}`}
                 >
                   Sign in here.
                 </Link>
               </small>
-              <Button size="lg" type="submit">
-                Sign Up
-              </Button>
+              <Button type="submit">Sign Up</Button>
               {backendError ? (
                 <HelperText isError>{backendError}</HelperText>
               ) : null}
