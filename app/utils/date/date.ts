@@ -1,8 +1,3 @@
-export const getValidDate = (timestamp: string | number) => {
-  const date = new Date(timestamp);
-  return isNaN(date.getTime()) ? null : date;
-};
-
 const LOCALE = "en-US";
 
 export const getFormattedDateWithTime = (date: Date) =>

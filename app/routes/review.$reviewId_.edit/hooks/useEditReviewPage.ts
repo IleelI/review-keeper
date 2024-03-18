@@ -58,6 +58,8 @@ const useEditReviewPage = () => {
     [form.formState.isDirty, form.formState.isValid],
   );
 
+  const isFormResetDisabled = !form.formState.isDirty;
+
   const handleFormReset = () => {
     form.reset();
     editor?.commands.setContent(review.content);
@@ -90,6 +92,8 @@ const useEditReviewPage = () => {
     form,
     handleFormReset,
     isFormDisabled,
+    isFormResetDisabled,
+    reviewId: review.id,
     onSubmit,
   };
 };

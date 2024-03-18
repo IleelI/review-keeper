@@ -18,5 +18,5 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   }
   const isAuthor = !!user && (await isUserReviewAuthor(reviewId, user.id));
 
-  return json({ isAuthor, review, reviewId, user });
+  return json({ isAuthor, review, user });
 };

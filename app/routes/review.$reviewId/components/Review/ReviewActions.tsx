@@ -5,7 +5,7 @@ import Button from "~/components/atoms/Button";
 import Link from "~/components/atoms/Link";
 import Dialog from "~/components/molecules/Dialog";
 
-import type { action } from "../server/action";
+import type { action } from "../../server/action";
 
 interface ReviewActionsProps {
   reviewId: string;
