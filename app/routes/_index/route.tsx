@@ -4,7 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import { getReviewsForGrid } from "~/.server/data/reviews";
 import MainLayout from "~/components/layouts/MainLayout";
 
-import ReviewCard from "./components/ReviewCard/ReviewCard";
+import ReviewCard from "./components/ReviewCard";
 
 export const meta: MetaFunction = () => {
   return [

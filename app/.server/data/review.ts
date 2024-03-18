@@ -55,6 +55,7 @@ export const getReview = async (reviewId: string) => {
         },
         content: true,
         createdAt: true,
+        id: true,
         rating: true,
         ratingScale: true,
         reactions: {
