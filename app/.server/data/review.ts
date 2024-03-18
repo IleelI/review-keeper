@@ -82,7 +82,7 @@ export const getReview = async (reviewId: string) => {
     return null;
   }
 };
-export type Review = PromiseReturnType<typeof getReview>;
+export type Review = Exclude<PromiseReturnType<typeof getReview>, null>;
 
 export const isUserReviewAuthor = async (reviewId: string, userId: string) => {
   try {
