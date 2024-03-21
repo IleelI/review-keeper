@@ -1,6 +1,7 @@
 import { PromiseReturnType } from "@prisma/client/extension";
 
 import { prisma } from "../service/db";
+import { getSchemaTypeNameByName } from "@tiptap/react";
 
 export interface ReviewCategory {
   id: string;
@@ -40,7 +41,7 @@ export const getReview = async (reviewId: string) => {
       where: {
         id: reviewId,
       },
-      select: {
+      include: {
         author: {
           select: {
             id: true,
@@ -53,24 +54,7 @@ export const getReview = async (reviewId: string) => {
             id: true,
           },
         },
-        content: true,
-        createdAt: true,
-        id: true,
-        rating: true,
-        ratingScale: true,
-        reactions: {
-          select: {
-            type: {
-              select: {
-                _count: true,
-                name: true,
-                id: true,
-              },
-            },
-          },
-        },
-        title: true,
-        updatedAt: true,
+        reactions: false,
       },
     });
     return {
@@ -97,5 +81,30 @@ export const isUserReviewAuthor = async (reviewId: string, userId: string) => {
     );
   } catch (error) {
     return false;
+  }
+};
+
+export const getReviewReactionsWithUser = async (
+  reviewId: string,
+  userId: string,
+) => {
+  try {
+    // get all "unique" review reactions and count them
+    // check for user reaction
+    const reactionsCount = await prisma.reviewReaction.groupBy({
+      by: ["typeId"],
+      _count: true,
+      where: { reviewId },
+    });
+    const reactionTypes = await prisma.reactionType.findMany();
+    const reactions = reactionTypes.map(({ id, name }) => ({
+      count: reactionsCount.find(({ typeId }) => typeId === id)?._count ?? 0,
+      id,
+      name,
+    }));
+
+    return reactions;
+  } catch (error) {
+    console.error(error);
   }
 };

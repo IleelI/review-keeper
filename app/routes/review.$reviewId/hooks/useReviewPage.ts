@@ -6,7 +6,7 @@ import type { action } from "../server/action";
 import type { loader } from "../server/loader";
 
 const useReviewPage = () => {
-  const { isAuthor, review } = useLoaderData<typeof loader>();
+  const { isAuthor, review, reactions } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>({ key: `review-${review.id}` });
 
   useEffect(() => {
@@ -21,6 +21,8 @@ const useReviewPage = () => {
         return;
     }
   }, [fetcher.data, fetcher.state]);
+
+  console.log({ reactions });
 
   return { isAuthor, review };
 };

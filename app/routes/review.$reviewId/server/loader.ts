@@ -1,7 +1,11 @@
 import { invariant } from "@epic-web/invariant";
 import { type LoaderFunctionArgs, json } from "@remix-run/node";
 
-import { getReview, isUserReviewAuthor } from "~/.server/data/review";
+import {
+  getReview,
+  getReviewReactionsWithUser,
+  isUserReviewAuthor,
+} from "~/.server/data/review";
 import { getUser } from "~/.server/service/auth";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -18,5 +22,8 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   }
   const isAuthor = !!user && (await isUserReviewAuthor(reviewId, user.id));
 
-  return json({ isAuthor, review, user });
+  const reactions =
+    !!user && (await getReviewReactionsWithUser(reviewId, user.id));
+
+  return json({ isAuthor, review, reactions, user });
 };
