@@ -2,6 +2,7 @@ import { PromiseReturnType } from "@prisma/client/extension";
 
 import { prisma } from "../service/db";
 import { getSchemaTypeNameByName } from "@tiptap/react";
+import { Prisma, type ReactionType } from "@prisma/client";
 
 export interface ReviewCategory {
   id: string;
@@ -84,27 +85,29 @@ export const isUserReviewAuthor = async (reviewId: string, userId: string) => {
   }
 };
 
-export const getReviewReactionsWithUser = async (
-  reviewId: string,
-  userId: string,
-) => {
+type RawReviewReactions = {
+  _count: bigint;
+  hasReacted: number;
+  id: string;
+  name: string;
+}[];
+export const getReviewReactions = async (reviewId: string, userId?: string) => {
   try {
-    // get all "unique" review reactions and count them
-    // check for user reaction
-    const reactionsCount = await prisma.reviewReaction.groupBy({
-      by: ["typeId"],
-      _count: true,
-      where: { reviewId },
-    });
-    const reactionTypes = await prisma.reactionType.findMany();
-    const reactions = reactionTypes.map(({ id, name }) => ({
-      count: reactionsCount.find(({ typeId }) => typeId === id)?._count ?? 0,
-      id,
-      name,
+    const rawReviewReaction =
+      await prisma.$queryRaw<RawReviewReactions>(Prisma.sql`
+    SELECT t.id, t.name, CASE r.userId WHEN ${userId} THEN true ELSE false END AS hasReacted, COUNT(r.id) as _count FROM ReactionType as t 
+      LEFT JOIN ReviewReaction as r
+        ON t.id = r.typeId AND r.reviewId = ${reviewId}
+    GROUP BY t.id
+    `);
+    return rawReviewReaction.map(({ _count, hasReacted, ...rest }) => ({
+      _count: String(_count),
+      hasReacted: Boolean(hasReacted),
+      ...rest,
     }));
-
-    return reactions;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
+export type ReviewReactions = PromiseReturnType<typeof getReviewReactions>;

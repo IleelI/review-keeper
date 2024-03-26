@@ -8,11 +8,11 @@ import { loader } from "./server/loader";
 export { action, loader };
 
 const ReviewPage = () => {
-  const { isAuthor, review } = useReviewPage();
+  const { isAuthor, reactions, review } = useReviewPage();
 
   return (
     <MainLayout>
-      <Review isAuthor={isAuthor} review={review} />
+      <Review isAuthor={isAuthor} reactions={reactions} review={review} />
     </MainLayout>
   );
 };

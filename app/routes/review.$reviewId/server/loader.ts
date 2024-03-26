@@ -3,7 +3,7 @@ import { type LoaderFunctionArgs, json } from "@remix-run/node";
 
 import {
   getReview,
-  getReviewReactionsWithUser,
+  getReviewReactions,
   isUserReviewAuthor,
 } from "~/.server/data/review";
 import { getUser } from "~/.server/service/auth";
@@ -22,8 +22,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   }
   const isAuthor = !!user && (await isUserReviewAuthor(reviewId, user.id));
 
-  const reactions =
-    !!user && (await getReviewReactionsWithUser(reviewId, user.id));
+  const reactions = await getReviewReactions(reviewId, user?.id);
 
   return json({ isAuthor, review, reactions, user });
 };
