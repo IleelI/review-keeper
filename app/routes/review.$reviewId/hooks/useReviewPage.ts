@@ -22,9 +22,7 @@ const useReviewPage = () => {
     }
   }, [fetcher.data, fetcher.state]);
 
-  console.log({ reactions });
-
-  return { isAuthor, review };
+  return { isAuthor, reactions, review };
 };
 
 export default useReviewPage;
