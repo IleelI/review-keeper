@@ -36,7 +36,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
               <Form action="/auth/sign-out" method="post">
                 <Button size="sm" type="submit">
                   Sign out
-                  <LogOut />
+                  <LogOut className="h-4 w-4" />
                 </Button>
               </Form>
             </>
@@ -44,11 +44,11 @@ const MainLayout = ({ children }: PropsWithChildren) => {
             <>
               <Link to="/auth/sign-up" size="sm" variant="buttonGhost">
                 Sign up
-                <UserPlus />
+                <UserPlus className="h-4 w-4" />
               </Link>
               <Link to="/auth/sign-in" size="sm" variant="button">
                 Sign in
-                <LogIn />
+                <LogIn className="h-4 w-4" />
               </Link>
             </>
           )}
