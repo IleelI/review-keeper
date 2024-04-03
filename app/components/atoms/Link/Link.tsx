@@ -57,7 +57,7 @@ const linkStyles = cva(
       },
     },
     compoundVariants: [
-      { size: "sm", variant: "button", className: "px-4 py-1 rounded" },
+      { size: "sm", variant: "button", className: "px-4 py-1 rounded-md" },
       { size: "md", variant: "button", className: "px-4 py-1.5 rounded-md" },
       { size: "lg", variant: "button", className: "px-6 py-1.5 rounded-md" },
 

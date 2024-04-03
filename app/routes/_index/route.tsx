@@ -6,12 +6,7 @@ import MainLayout from "~/components/layouts/MainLayout";
 
 import ReviewCard from "./components/ReviewCard";
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Review Keeper" },
-    { name: "description", content: "Welcome to Review Keeper!" },
-  ];
-};
+export const meta: MetaFunction = () => [{ title: "Homepage | Review Keeper" }];
 
 export const loader = async () => {
   const reviews = await getReviewsForGrid();
