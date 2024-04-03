@@ -68,8 +68,9 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       try {
         const oldReaction = await prisma.reviewReaction.findFirst({
           where: { reviewId, userId },
-          select: { id: true },
+          select: { id: true, typeId: true },
         });
+
         if (oldReaction) {
           await prisma.reviewReaction.delete({
             where: {
@@ -77,13 +78,16 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
             },
           });
         }
-        await prisma.reviewReaction.create({
-          data: {
-            reviewId,
-            typeId,
-            userId,
-          },
-        });
+
+        if (!oldReaction || oldReaction.typeId !== typeId) {
+          await prisma.reviewReaction.create({
+            data: {
+              reviewId,
+              typeId,
+              userId,
+            },
+          });
+        }
         return null;
       } catch (error) {
         console.log(error);

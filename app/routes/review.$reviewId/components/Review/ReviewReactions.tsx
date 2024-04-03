@@ -3,6 +3,7 @@ import {
   EmojiSad,
   EmojiTalkingAngry,
   Heart,
+  IconoirProvider,
   ThumbsDown,
   ThumbsUp,
 } from "iconoir-react";
@@ -44,7 +45,7 @@ const ReviewReactions = ({
                 className={twJoin(
                   "group relative rounded-md disabled:cursor-not-allowed",
                 )}
-                onClick={() => handleReactionClick(name)}
+                onClick={() => (hasReacted ? null : handleReactionClick(name))}
                 type="submit"
               >
                 <span
@@ -114,8 +115,10 @@ interface ReactionToastProps {
   name: string;
 }
 const ReactionToast = ({ name }: ReactionToastProps) => (
-  <div className='[&_svg]:w-4" flex items-center gap-3 text-sm [&_svg]:h-4'>
-    <ReactionIcon name={name} />
+  <div className="flex items-center gap-2 text-sm text-neutral-900 dark:text-neutral-100">
+    <IconoirProvider iconProps={{ className: "stroke-2" }}>
+      <ReactionIcon name={name} />
+    </IconoirProvider>
     {getReactionToastMessage(name, "review")}
   </div>
 );
