@@ -21,7 +21,7 @@ export default Button;
 
 type ButtonStyles = VariantProps<typeof buttonStyles>;
 export const buttonStyles = cva(
-  "w-full h-auto flex gap-1.5 justify-center items-center font-medium transition duration-300 outline-offset-4 disabled:opacity-40 disabled:cursor-not-allowed",
+  "w-full h-auto flex gap-1.5 justify-center items-center font-medium transition  outline-offset-4 disabled:opacity-40 disabled:cursor-not-allowed",
   {
     variants: {
       intent: {
@@ -49,7 +49,7 @@ export const buttonStyles = cva(
       size: {
         sm: ["px-4 py-1 text-sm rounded"],
         md: ["px-4 py-1.5 text-base rounded-md"],
-        lg: ["px-4 py-2 text-lg rounded-md"],
+        lg: ["px-6 py-1.5 text-lg rounded-md"],
         none: [""],
       },
     },

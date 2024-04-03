@@ -44,6 +44,7 @@ const useNewReviewPage = () => {
     onUpdate: ({ editor }) =>
       form.setValue("content", editor.isEmpty ? "" : editor.getHTML(), {
         shouldValidate: true,
+        shouldDirty: true,
       }),
   });
 

@@ -8,23 +8,32 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt @default(now())
-  email        String   @unique
-  hash         String
-  username     String
-  refreshToken String?
-  reviews      Review[]
+  id              String           @id @default(cuid())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now()) @updatedAt
+  email           String           @unique
+  hash            String
+  username        String
+  refreshToken    String?
+  reviews         Review[]
+  reviewReactions ReviewReaction[]
+}
+
+model ReactionType {
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @default(now()) @updatedAt
+  name             String           @unique
+  reviewsReactions ReviewReaction[]
 }
 
 model Review {
   id          String           @id @default(cuid())
   content     String
   createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt @default(now())
-  rating      Int?
-  ratingScale Int?
+  updatedAt   DateTime         @default(now()) @updatedAt
+  rating      Float?
+  ratingScale Float?
   title       String
   author      User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String
@@ -36,25 +45,19 @@ model Review {
 model ReviewCategory {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   name      String   @unique
   usedIn    Review[]
 }
 
-model ReviewReactionType {
-  id        String           @id @default(cuid())
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt @default(now())
-  name      String           @unique
-  usedIn    ReviewReaction[]
-}
-
 model ReviewReaction {
-  id        String             @id @default(cuid())
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt @default(now())
-  type      ReviewReactionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  id        String       @id @default(cuid())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now()) @updatedAt
+  type      ReactionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
   typeId    String
-  review    Review             @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  review    Review       @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   reviewId  String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String       
 }

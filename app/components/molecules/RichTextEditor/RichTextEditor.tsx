@@ -36,7 +36,7 @@ const RichTextEditor = ({ editor, hasError }: RichTextEditorProps) => {
     >
       <MenuBar editor={editor} />
       <EditorContent
-        className="grid max-h-[400px] min-h-[200px] overflow-y-auto px-4 [&_.tiptap]:outline-none"
+        className="grid max-h-[400px] min-h-[200px] overflow-y-auto p-4 [&_.tiptap]:outline-none"
         editor={editor}
       />
     </div>
