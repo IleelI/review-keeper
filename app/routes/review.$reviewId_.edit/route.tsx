@@ -1,3 +1,4 @@
+import type { MetaFunction } from "@remix-run/node";
 import { FormProvider } from "react-hook-form";
 
 import MainLayout from "~/components/layouts/MainLayout";
@@ -11,6 +12,10 @@ import { action } from "./server/action";
 import { loader } from "./server/loader";
 
 export { action, loader };
+
+export const meta: MetaFunction = () => [
+  { title: "Review Page Edit | Review Keeper" },
+];
 
 const ReviewEditPage = () => {
   const {

@@ -1,3 +1,5 @@
+import type { MetaFunction } from "@remix-run/node";
+
 import MainLayout from "~/components/layouts/MainLayout";
 
 import Review from "./components/Review";
@@ -7,12 +9,16 @@ import { loader } from "./server/loader";
 
 export { action, loader };
 
+export const meta: MetaFunction = () => [
+  { title: "Review Page | Review Keeper" },
+];
+
 const ReviewPage = () => {
-  const { isAuthor, review } = useReviewPage();
+  const reviewPageData = useReviewPage();
 
   return (
     <MainLayout>
-      <Review isAuthor={isAuthor} review={review} />
+      <Review {...reviewPageData} />
     </MainLayout>
   );
 };

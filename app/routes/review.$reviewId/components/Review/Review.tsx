@@ -1,4 +1,8 @@
-import type { Review as ReviewType } from "~/.server/data/review";
+import type {
+  ReviewReactions as ReviewReactionsType,
+  Review as ReviewType,
+} from "~/.server/data/review";
+import type { AppUser } from "~/.server/data/user";
 
 import ReviewActions from "./ReviewActions";
 import ReviewAuthor from "./ReviewAuthor";
@@ -10,9 +14,11 @@ import ReviewTitle from "./ReviewTitle";
 
 interface ReviewPros {
   isAuthor: boolean;
+  reactions: ReviewReactionsType;
   review: ReviewType;
+  user: AppUser | null;
 }
-const Review = ({ isAuthor, review }: ReviewPros) => {
+const Review = ({ isAuthor, reactions, review, user }: ReviewPros) => {
   const { author, category, content, rating, ratingScale, title } = review;
   const createdAtDate = new Date(review.createdAt);
   const updatedAtDate = new Date(review.updatedAt);
@@ -41,7 +47,11 @@ const Review = ({ isAuthor, review }: ReviewPros) => {
       <hr className="w-full text-neutral-300 dark:text-neutral-700" />
 
       <footer className="grid grid-cols-1 justify-between gap-4 lg:grid-cols-2">
-        <ReviewReactions />
+        <ReviewReactions
+          reactions={reactions}
+          reviewId={review.id}
+          user={user}
+        />
         <ReviewRating rating={rating} ratingScale={ratingScale} />
       </footer>
     </article>

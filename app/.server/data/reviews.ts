@@ -22,6 +22,7 @@ export const getReviewsForGrid = async () => {
         id: true,
         rating: true,
         ratingScale: true,
+        reactions: true,
         title: true,
         updatedAt: true,
       },
@@ -29,8 +30,9 @@ export const getReviewsForGrid = async () => {
         updatedAt: "desc",
       },
     });
-    return reviews.map(({ createdAt, updatedAt, ...review }) => ({
+    return reviews.map(({ createdAt, reactions, updatedAt, ...review }) => ({
       ...review,
+      reactionCount: reactions.length,
       createdAt: createdAt.toISOString(),
       updatedAt: updatedAt.toISOString(),
     }));
