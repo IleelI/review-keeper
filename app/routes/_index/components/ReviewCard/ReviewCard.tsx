@@ -11,13 +11,13 @@ import ReviewReactionCount from "./ReviewReactionCount";
 
 type ReviewCardProps = ReviewForGrid;
 const ReviewCard = ({
+  _count: { reactions },
   author,
   category,
   createdAt,
   id,
   rating,
   ratingScale,
-  reactionCount,
   title,
   updatedAt,
 }: ReviewCardProps) => {
@@ -28,7 +28,7 @@ const ReviewCard = ({
           <ReviewCardTitle title={title} />
           <ReviewCardDates createdAt={createdAt} updatedAt={updatedAt} />
           <ReviewCardAuthor author={author} />
-          <ReviewReactionCount reactionCount={reactionCount} />
+          <ReviewReactionCount reactionCount={reactions} />
         </header>
 
         <footer className=" flex flex-wrap justify-between gap-4">
