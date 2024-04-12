@@ -22,32 +22,39 @@ const NewReviewPage = () => {
 
   return (
     <MainLayout>
-      <FormProvider {...form}>
-        <form
-          className="flex flex-col gap-10 lg:gap-12"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <FormFields
-            categories={categories}
-            characterLimit={CHARACTER_LIMIT}
-            editor={editor}
-          />
+      <article className="flex flex-col gap-8">
+        <header className="flex flex-col gap-3">
+          <h2 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
+            Review Creator
+          </h2>
+        </header>
+        <FormProvider {...form}>
+          <form
+            className="flex flex-col gap-10 lg:gap-12"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <FormFields
+              categories={categories}
+              characterLimit={CHARACTER_LIMIT}
+              editor={editor}
+            />
 
-          <nav className="flex flex-col gap-4 sm:flex-row sm:gap-8">
-            <Button
-              disabled={!form.formState.isDirty}
-              intent="text"
-              onClick={handleFormReset}
-              type="reset"
-            >
-              Reset Fields
-            </Button>
-            <Button disabled={!form.formState.isValid} type="submit">
-              Create Review
-            </Button>
-          </nav>
-        </form>
-      </FormProvider>
+            <nav className="flex flex-col gap-4 sm:flex-row sm:gap-8">
+              <Button
+                disabled={!form.formState.isDirty}
+                intent="text"
+                onClick={handleFormReset}
+                type="reset"
+              >
+                Reset Fields
+              </Button>
+              <Button disabled={!form.formState.isValid} type="submit">
+                Create Review
+              </Button>
+            </nav>
+          </form>
+        </FormProvider>
+      </article>
     </MainLayout>
   );
 };

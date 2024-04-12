@@ -22,7 +22,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
           <h1>Review Keeper</h1>
         </Link>
 
-        <nav className="flex justify-end gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <nav className="flex flex-col justify-end gap-3 sm:flex-row sm:items-center sm:justify-end">
           <Link to="/" size="sm" variant="navigation">
             Home
           </Link>

@@ -29,7 +29,7 @@ const SelectTrigger = forwardRef<
       "flex min-h-[38px] items-center justify-between gap-4 rounded-md border px-3 py-1.5 outline-none transition",
       "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
       "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
-      "data-[placeholder]:text-neutral-600 dark:data-[placeholder]:text-neutral-400",
+      "data-[placeholder]:text-neutral-400 dark:data-[placeholder]:text-neutral-600",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
       "aria-[invalid=true]:border-red-700 dark:aria-[invalid=true]:border-red-300",
       className,

@@ -5,8 +5,19 @@ export type ReviewForGrid = PromiseReturnType<
   typeof getReviewsForGrid
 >["items"][0];
 
-export const getReviewsForGrid = async (page = 1, pageSize = 10) => {
+export type ReviewFilters = Partial<{
+  category: string;
+  author: string;
+  query: string;
+}>;
+
+export const getReviewsForGrid = async (
+  page = 1,
+  pageSize = 10,
+  filters?: ReviewFilters,
+) => {
   try {
+    console.log({ filters });
     const [reviews, count] = await prisma.$transaction([
       prisma.review.findMany({
         select: {
