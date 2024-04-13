@@ -11,7 +11,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
   const user = useUser();
 
   return (
-    <main className="mx-auto flex w-full flex-col gap-8 md:max-w-screen-lg lg:gap-16">
+    <main className="mx-auto flex w-full flex-col gap-8 md:max-w-screen-xl lg:gap-16 ">
       <header className="grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr]">
         <Link
           className="text-2xl font-bold text-primary-700 dark:text-primary-300"

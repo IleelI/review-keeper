@@ -39,7 +39,7 @@ const SelectTrigger = forwardRef<
   >
     {children}
     <RadixSelect.Icon asChild>
-      <ArrowSeparateVertical className={twMerge("h-4 w-4", className)} />
+      <ArrowSeparateVertical className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
     </RadixSelect.Icon>
   </RadixSelect.Trigger>
 ));
@@ -81,7 +81,7 @@ const SelectContent = forwardRef<
     {
       children,
       className,
-      collisionPadding = 32,
+      collisionPadding = 24,
       position = "popper",
       sideOffset = 8,
       ...props
@@ -106,7 +106,7 @@ const SelectContent = forwardRef<
       >
         <SelectScrollUpButton />
 
-        <RadixSelect.Viewport className={twJoin("flex flex-col gap-1.5 p-1")}>
+        <RadixSelect.Viewport className="flex flex-col gap-1.5 p-1">
           {children}
         </RadixSelect.Viewport>
 
