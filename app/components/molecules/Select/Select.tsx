@@ -26,7 +26,7 @@ const SelectTrigger = forwardRef<
   <RadixSelect.Trigger
     aria-invalid={hasError}
     className={twMerge([
-      "flex min-h-[38px] items-center justify-between gap-4 rounded-md border px-3 py-1.5 outline-none transition",
+      "flex min-h-[38px] items-center justify-between gap-4 rounded-md border px-3 py-1.5 text-left outline-none transition",
       "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
       "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
       "data-[placeholder]:text-neutral-400 dark:data-[placeholder]:text-neutral-600",
@@ -139,7 +139,7 @@ const SelectItem = forwardRef<
       "relative flex cursor-pointer items-center rounded py-1.5 pl-2 pr-8 outline-none",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
       "data-[highlighted]:data-[state=unchecked]:bg-neutral-100 data-[highlighted]:data-[state=unchecked]:text-neutral-900 dark:data-[highlighted]:data-[state=unchecked]:bg-neutral-700 dark:data-[highlighted]:data-[state=unchecked]:text-neutral-100",
-      "data-[state=checked]:bg-primary-700 data-[state=checked]:text-neutral-100 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-900",
+      "data-[state=checked]:bg-neutral-100 data-[state=checked]:text-neutral-900 dark:data-[state=checked]:bg-neutral-700 dark:data-[state=checked]:text-neutral-300",
       className,
     )}
     {...props}

@@ -1,9 +1,7 @@
-import type { PromiseReturnType } from "@prisma/client/extension";
 import { prisma } from "../service/db";
-
-export type ReviewForGrid = PromiseReturnType<
-  typeof getReviewsForGrid
->["items"][0];
+import { Prisma } from "@prisma/client";
+import type { PromiseReturnType } from "@prisma/client/extension";
+import type { ReviewSort } from "~/schema/review.schema";
 
 export type ReviewFilters = Partial<{
   category: string;
@@ -11,45 +9,88 @@ export type ReviewFilters = Partial<{
   query: string;
 }>;
 
+const reviewsForGridSelect = Prisma.validator<Prisma.ReviewSelect>()({
+  _count: true,
+  author: {
+    select: {
+      id: true,
+      username: true,
+    },
+  },
+  category: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+  createdAt: true,
+  id: true,
+  rating: true,
+  ratingScale: true,
+  title: true,
+  updatedAt: true,
+});
+type ReviewsForGrid = Prisma.ReviewGetPayload<{
+  select: typeof reviewsForGridSelect;
+}>;
+
 export const getReviewsForGrid = async (
   page = 1,
   pageSize = 10,
-  filters?: ReviewFilters,
+  sort: ReviewSort,
 ) => {
   try {
-    console.log({ filters });
-    const [reviews, count] = await prisma.$transaction([
-      prisma.review.findMany({
-        select: {
-          _count: true,
-          author: {
-            select: {
-              id: true,
-              username: true,
-            },
-          },
-          category: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          createdAt: true,
-          id: true,
-          rating: true,
-          ratingScale: true,
+    let reviews: ReviewsForGrid[] = [];
 
-          title: true,
-          updatedAt: true,
-        },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        orderBy: {
-          updatedAt: "desc",
-        },
-      }),
-      prisma.review.count(),
-    ]);
+    console.log(sort);
+
+    switch (sort.key) {
+      case "date": {
+        reviews = await prisma.review.findMany({
+          select: reviewsForGridSelect,
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+          orderBy: {
+            updatedAt: sort.order,
+          },
+        });
+        break;
+      }
+      case "rating": {
+        reviews = await prisma.review.findMany({
+          select: reviewsForGridSelect,
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+        });
+        break;
+      }
+      case "reactions": {
+        reviews = await prisma.review.findMany({
+          select: reviewsForGridSelect,
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+          orderBy: {
+            reactions: {
+              _count: sort.order,
+            },
+          },
+        });
+        break;
+      }
+      default: {
+        reviews = await prisma.review.findMany({
+          select: reviewsForGridSelect,
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
+        break;
+      }
+    }
+
+    const totalItems = await prisma.review.count();
 
     return {
       items: reviews.map(({ createdAt, updatedAt, ...review }) => ({
@@ -57,7 +98,7 @@ export const getReviewsForGrid = async (
         createdAt: createdAt.toISOString(),
         updatedAt: updatedAt.toISOString(),
       })),
-      totalItems: count,
+      totalItems,
     };
   } catch (error) {
     console.error(error);
@@ -67,3 +108,7 @@ export const getReviewsForGrid = async (
     };
   }
 };
+
+export type ReviewForGrid = PromiseReturnType<
+  typeof getReviewsForGrid
+>["items"][number];
