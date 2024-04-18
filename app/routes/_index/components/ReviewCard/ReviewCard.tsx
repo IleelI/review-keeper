@@ -33,9 +33,7 @@ const ReviewCard = ({
 
         <footer className=" flex flex-wrap justify-between gap-4">
           <ReviewCardCategory category={category} />
-          {rating && ratingScale ? (
-            <ReviewRating rating={rating} ratingScale={ratingScale} />
-          ) : null}
+          <ReviewRating rating={rating} ratingScale={ratingScale} />
         </footer>
       </li>
     </NavLink>

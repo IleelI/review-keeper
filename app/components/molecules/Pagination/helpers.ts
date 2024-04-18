@@ -11,7 +11,7 @@ export const getVisiblePages = (
 ) => {
   const pageDivider = null;
 
-  if (totalPages < visiblePages * 2) {
+  if (totalPages < visiblePages || totalPages < 2 * visiblePages) {
     return Array(totalPages)
       .fill(null)
       .map((_, index) => index + 1);
@@ -31,6 +31,7 @@ export const getVisiblePages = (
     const centralPages = Array(visiblePages)
       .fill(null)
       .map((_, index) => page + index - offset);
+    console.log(centralPages);
 
     return [1, pageDivider, ...centralPages, pageDivider, totalPages];
   }

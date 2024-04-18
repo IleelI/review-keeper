@@ -3,12 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  *,
-  *::before,
-  *::after {
-    @apply min-w-0;
-  }
-
   *:focus-visible {
     @apply default-outline;
   }

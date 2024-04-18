@@ -10,6 +10,8 @@ import {
 } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
 
+import Input from "~/components/atoms/Input";
+
 import type { usePagination } from "./usePagination";
 
 type PaginationState = ReturnType<typeof usePagination>;
@@ -34,15 +36,6 @@ const usePaginationContext = () => {
   return context;
 };
 
-type ContentProps = ComponentPropsWithoutRef<"nav">;
-const Content = ({ children, className, ...props }: ContentProps) => {
-  return (
-    <nav className={twMerge("mx-auto flex gap-8", className)} {...props}>
-      {children}
-    </nav>
-  );
-};
-
 interface PageProps {
   page: number;
 }
@@ -60,7 +53,8 @@ const Page = ({ page }: PageProps) => {
     <li>
       <button
         className={twJoin(
-          "flex aspect-square w-6 items-center justify-center leading-none transition duration-300 enabled:hover:text-primary-700 dark:enabled:hover:text-primary-300",
+          "flex aspect-square w-8 items-center justify-center rounded leading-none transition duration-300",
+          "enabled:hover:backdrop-brightness-95 enabled:focus-visible:backdrop-brightness-95 enabled:active:backdrop-brightness-85 dark:enabled:hover:backdrop-brightness-150 dark:enabled:focus-visible:backdrop-brightness-150 dark:enabled:active:backdrop-brightness-200",
           isCurrentPage && "font-bold text-primary-700 dark:text-primary-300",
         )}
         onClick={handlePageClick}
@@ -79,64 +73,85 @@ const PageDivider = ({ divider = "..." }: PageDividerProps) => (
   <li className="select-none">{divider}</li>
 );
 
-const PreviousPage = () => {
+interface PreviousPageProps {
+  className?: string;
+}
+const PreviousPage = ({ className }: PreviousPageProps) => {
   const { handleGoToPreviousPage, isPreviousPageAvailable } =
     usePaginationContext();
   return (
     <button
-      className="transition duration-300 enabled:hover:text-primary-700 disabled:opacity-40 dark:enabled:hover:text-primary-300"
+      className={twMerge(
+        "flex aspect-square w-8 items-center justify-center rounded text-sm leading-none transition duration-300",
+        "enabled:hover:backdrop-brightness-95 enabled:focus-visible:backdrop-brightness-95 enabled:active:backdrop-brightness-85 dark:enabled:hover:backdrop-brightness-150 dark:enabled:focus-visible:backdrop-brightness-150 dark:enabled:active:backdrop-brightness-200",
+        "disabled:opacity-40",
+        className,
+      )}
       disabled={!isPreviousPageAvailable}
       type="button"
       onClick={handleGoToPreviousPage}
     >
-      <NavArrowLeft className="h-6 w-6" strokeWidth={2} />
+      <NavArrowLeft />
     </button>
   );
 };
 
-const NextPage = () => {
+interface NextPageProps {
+  className?: string;
+}
+const NextPage = ({ className }: NextPageProps) => {
   const { handleGoToNextPage, isNextPageAvailable } = usePaginationContext();
 
   return (
     <button
-      className="transition duration-300 enabled:hover:text-primary-700 disabled:opacity-40 dark:enabled:hover:text-primary-300"
+      className={twMerge(
+        "flex aspect-square w-8 items-center justify-center rounded text-sm leading-none transition duration-300",
+        "enabled:hover:backdrop-brightness-95 enabled:focus-visible:backdrop-brightness-95 enabled:active:backdrop-brightness-85 dark:enabled:hover:backdrop-brightness-150 dark:enabled:focus-visible:backdrop-brightness-150 dark:enabled:active:backdrop-brightness-200",
+        "disabled:opacity-40",
+        className,
+      )}
       disabled={!isNextPageAvailable}
       type="button"
       onClick={handleGoToNextPage}
     >
-      <NavArrowRight className="h-6 w-6" strokeWidth={2} />
+      <NavArrowRight />
     </button>
   );
 };
 
-type PagesProps = Omit<ComponentPropsWithoutRef<"ul">, "children">;
+type PagesProps = Omit<ComponentPropsWithoutRef<"div">, "children">;
 const Pages = ({ className, ...props }: PagesProps) => {
   const { pages } = usePaginationContext();
 
   return (
-    <ul
+    <div
       className={twMerge(
-        "flex gap-4 rounded-lg bg-white p-4 py-3 shadow dark:bg-neutral-800",
+        "flex items-center justify-between gap-1 sm:gap-2",
         className,
       )}
       {...props}
     >
       <PreviousPage />
 
-      {pages.map((page, index) =>
-        page === null ? (
-          <PageDivider key={`divider-${index}`} />
-        ) : (
-          <Page key={page} page={page} />
-        ),
-      )}
+      <ul className="flex items-center gap-1 sm:gap-2">
+        {pages.map((page, index) =>
+          page === null ? (
+            <PageDivider key={`divider-${index}`} />
+          ) : (
+            <Page key={page} page={page} />
+          ),
+        )}
+      </ul>
 
       <NextPage />
-    </ul>
+    </div>
   );
 };
 
-const PageSizeInput = () => {
+interface PageSizeInputProps {
+  className?: string;
+}
+const PageSizeInput = ({ className }: PageSizeInputProps) => {
   const { handlePageSizeChange, pageSize } = usePaginationContext();
 
   const handlePageSizeInputBlur = useCallback(
@@ -148,19 +163,26 @@ const PageSizeInput = () => {
   );
 
   return (
-    <div className="flex items-center gap-2 rounded-lg bg-white p-4 py-3 font-semibold shadow dark:bg-neutral-800">
-      Page size:
-      <input
-        className="h-6 w-8 rounded border border-neutral-300 bg-transparent text-center text-sm outline-1 dark:border-neutral-700"
+    <label
+      className={twMerge("inline-flex items-center gap-2 text-sm", className)}
+      htmlFor="pageSize"
+    >
+      Items per page:
+      <Input
+        className="aspect-square min-h-0 w-8 p-0 text-center text-sm leading-none"
         defaultValue={pageSize}
+        id="pageSize"
         inputMode="numeric"
         onBlur={handlePageSizeInputBlur}
       />
-    </div>
+    </label>
   );
 };
 
-const PageInput = () => {
+interface PageInputProps {
+  className?: string;
+}
+const PageInput = ({ className }: PageInputProps) => {
   const { handleGoToPage, page, totalPages } = usePaginationContext();
 
   const handlePageInputBlur = useCallback(
@@ -172,20 +194,23 @@ const PageInput = () => {
   );
 
   return (
-    <div className="flex items-center gap-2 rounded-lg bg-white p-4 py-3 font-semibold shadow dark:bg-neutral-800">
+    <label
+      className={twMerge("inline-flex items-center gap-2 text-sm", className)}
+      htmlFor="page"
+    >
       Page
-      <input
-        className="h-6 w-8 rounded border border-neutral-300 bg-transparent text-center text-sm outline-1 dark:border-neutral-700"
+      <Input
+        className="aspect-square min-h-0 w-8 p-0 text-center text-sm leading-none"
         defaultValue={page}
+        id="page"
         inputMode="numeric"
         onBlur={handlePageInputBlur}
       />
       {`of ${totalPages}`}
-    </div>
+    </label>
   );
 };
 
-Pagination.Content = Content;
 Pagination.Page = Page;
 Pagination.Pages = Pages;
 Pagination.PageDivider = PageDivider;

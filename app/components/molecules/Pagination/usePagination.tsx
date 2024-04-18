@@ -9,7 +9,7 @@ import {
   getVisiblePages,
 } from "./helpers";
 
-export function usePagination(totalItems: number) {
+export function usePagination(totalItems: number, visiblePages?: number) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageParam = Number(searchParams.get(PAGE_SEARCH_PARAM));
@@ -59,18 +59,18 @@ export function usePagination(totalItems: number) {
 
   const handlePageSizeChange = useCallback(
     (pageSize: number) => {
-      if (pageSize <= 0 || pageSize > totalItems) return;
+      if (pageSize <= 0) return;
       const params = new URLSearchParams(searchParams);
       params.set(PAGE_SIZE_SEARCH_PARAM, String(pageSize));
       params.delete(PAGE_SEARCH_PARAM);
       setSearchParams(params, { preventScrollReset: true });
     },
-    [searchParams, setSearchParams, totalItems],
+    [searchParams, setSearchParams],
   );
 
   const pages = useMemo(
-    () => getVisiblePages(page, totalPages),
-    [page, totalPages],
+    () => getVisiblePages(page, totalPages, visiblePages),
+    [page, totalPages, visiblePages],
   );
 
   return {
