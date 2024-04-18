@@ -10,7 +10,11 @@ export type ReviewFilters = Partial<{
 }>;
 
 const reviewsForGridSelect = Prisma.validator<Prisma.ReviewSelect>()({
-  _count: true,
+  _count: {
+    select: {
+      reactions: true,
+    },
+  },
   author: {
     select: {
       id: true,
@@ -40,9 +44,7 @@ export const getReviewsForGrid = async (
   sort: ReviewSort,
 ) => {
   try {
-    let reviews: ReviewsForGrid[] = [];
-
-    console.log(sort);
+    let reviews: ReviewsForGrid[];
 
     switch (sort.key) {
       case "date": {
@@ -57,11 +59,33 @@ export const getReviewsForGrid = async (
         break;
       }
       case "rating": {
-        reviews = await prisma.review.findMany({
-          select: reviewsForGridSelect,
-          skip: (page - 1) * pageSize,
-          take: pageSize,
+        const extendedPrisma = prisma.$extends({
+          result: {
+            review: {
+              ratingPercentage: {
+                needs: { rating: true, ratingScale: true },
+                compute: ({ rating, ratingScale }) =>
+                  !rating || !ratingScale
+                    ? 0
+                    : Math.round((rating / ratingScale) * 100),
+              },
+            },
+          },
         });
+
+        const extendedReviews = await extendedPrisma.review.findMany({
+          select: { ...reviewsForGridSelect, ratingPercentage: true },
+        });
+
+        reviews = extendedReviews
+          .sort(({ ratingPercentage: a }, { ratingPercentage: b }) => {
+            if (a === b) return 0;
+            else if (a >= b) return sort.order === "asc" ? 1 : -1;
+            else return sort.order === "asc" ? -1 : 1;
+          })
+          .slice((page - 1) * pageSize, page * pageSize)
+          .map(({ ratingPercentage, ...review }) => review);
+
         break;
       }
       case "reactions": {
@@ -89,7 +113,6 @@ export const getReviewsForGrid = async (
         break;
       }
     }
-
     const totalItems = await prisma.review.count();
 
     return {
