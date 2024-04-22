@@ -42,7 +42,7 @@ const DialogContent = forwardRef<
     <RadixDialog.Content
       ref={ref}
       className={twMerge(
-        "fixed inset-x-0 bottom-0 z-40 flex w-full flex-col gap-4 rounded-b-none rounded-t-lg border border-neutral-200 bg-neutral-50 p-6 data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-top-[48%] md:bottom-1/2 md:left-1/2 md:max-w-lg md:-translate-x-1/2 md:translate-y-1/2 md:rounded-md md:shadow-lg md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=open]:slide-in-from-left-1/2 dark:border-neutral-800 dark:bg-neutral-900",
+        "fixed inset-x-0 bottom-0 z-40 flex w-full flex-col gap-4 rounded-b-none rounded-t-lg border border-neutral-200 bg-neutral-50 p-6 data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-[50%] data-[state=open]:slide-in-from-bottom-[50%] md:bottom-1/2 md:left-1/2 md:max-w-lg md:-translate-x-1/2 md:translate-y-1/2 md:rounded-md md:shadow-lg md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=open]:slide-in-from-left-1/2 dark:border-neutral-800 dark:bg-neutral-900",
         className,
       )}
       {...props}

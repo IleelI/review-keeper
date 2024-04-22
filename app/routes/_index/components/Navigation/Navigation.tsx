@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher } from "@remix-run/react";
 import { Filter, Xmark } from "iconoir-react";
-import { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 
+import type { ReviewCategory } from "~/.server/data/review";
+import type { ReviewAuthor } from "~/.server/data/reviews";
 import Button from "~/components/atoms/Button";
-import Input from "~/components/atoms/Input";
 import Label from "~/components/atoms/Label";
 import Dialog from "~/components/molecules/Dialog";
 import { FormField } from "~/components/molecules/FormField";
@@ -15,37 +15,56 @@ import Select from "~/components/molecules/Select";
 import { sortOptions, useSortOptions } from "../../hooks/useSortOptions";
 
 const filtersSchema = z.object({
-  createdAt: z.string().datetime().optional(),
-  updatedAt: z.string().datetime().optional(),
-  category: z.string().optional(),
-  rating: z.string().optional(),
-  reactions: z.string().optional(),
   author: z.string().optional(),
+  category: z.string().optional(),
+  rating: z
+    .union([
+      z.literal("Any rating"),
+      z.literal("Low"),
+      z.literal("Medicore"),
+      z.literal("High"),
+    ])
+    .optional(),
+  reactions: z
+    .union([
+      z.literal("Any reaction"),
+      z.literal("Popular"),
+      z.literal("Known"),
+      z.literal("Unknown"),
+    ])
+    .optional(),
 });
 type FiltersSchema = z.infer<typeof filtersSchema>;
 
-const Navigation = () => {
+const ratingFilterOpions: Exclude<FiltersSchema["rating"], undefined>[] = [
+  "Any rating",
+  "Low",
+  "Medicore",
+  "High",
+];
+const reactionsFilterOptions: Exclude<FiltersSchema["reactions"], undefined>[] =
+  ["Any reaction", "Popular", "Known", "Unknown"];
+
+interface NavigationProps {
+  reviewAuthors: ReviewAuthor[];
+  reviewCategories: ReviewCategory[];
+}
+const Navigation = ({ reviewAuthors, reviewCategories }: NavigationProps) => {
   const { handleSortOptionChange, sortOption } = useSortOptions();
   const form = useForm<FiltersSchema>({
     defaultValues: {
       author: "",
       category: "",
-      createdAt: "",
-      rating: "",
-      reactions: "",
-      updatedAt: "",
+      rating: "Any rating",
+      reactions: "Any reaction",
     },
     resolver: zodResolver(filtersSchema),
   });
-  const fetcher = useFetcher({ key: "filters" });
+  const fetcher = useFetcher();
 
-  useEffect(() => {
-    if (!fetcher.data || fetcher.state !== "idle") {
-      console.log("running request");
-    }
-    // Based on data return from fetcher do things.
-    console.log("Request resolved and data is available");
-  }, [fetcher.data, fetcher.state]);
+  const onSubmit: SubmitHandler<FiltersSchema> = async (data) => {
+    fetcher.submit(data, { method: "POST" });
+  };
 
   return (
     <nav className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-[1fr_auto]">
@@ -72,131 +91,121 @@ const Navigation = () => {
                   </Dialog.Header>
 
                   <FormProvider {...form}>
-                    <fetcher.Form className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="category"
-                        render={({ field: { ref, onChange, ...field } }) => (
-                          <FormField.Item className="col-span-full">
-                            <FormField.Label>Category</FormField.Label>
-                            <FormField.Message />
-                            <Select onValueChange={onChange} {...field}>
-                              <FormField.Control>
-                                <Select.Trigger ref={ref}>
-                                  <Select.Value placeholder="Category..." />
-                                </Select.Trigger>
-                              </FormField.Control>
-                              <Select.Content className="z-50">
-                                <Select.EmptyList />
-                              </Select.Content>
-                            </Select>
-                          </FormField.Item>
-                        )}
-                      />
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="author"
+                          render={({ field: { ref, onChange, ...field } }) => (
+                            <FormField.Item className="col-span-full">
+                              <FormField.Label>Author</FormField.Label>
+                              <FormField.Message />
+                              <Select onValueChange={onChange} {...field}>
+                                <FormField.Control>
+                                  <Select.Trigger ref={ref}>
+                                    <Select.Value placeholder="Author..." />
+                                  </Select.Trigger>
+                                </FormField.Control>
+                                <Select.Content className="z-50">
+                                  {reviewAuthors.map(({ id, username }) => (
+                                    <Select.Item key={id} value={id}>
+                                      {username}
+                                    </Select.Item>
+                                  ))}
+                                </Select.Content>
+                              </Select>
+                            </FormField.Item>
+                          )}
+                        />
 
-                      <FormField
-                        control={form.control}
-                        name="rating"
-                        render={({ field: { ref, onChange, ...field } }) => (
-                          <FormField.Item className="col-span-full">
-                            <FormField.Label>Rating</FormField.Label>
-                            <FormField.Message />
-                            <Select onValueChange={onChange} {...field}>
-                              <FormField.Control>
-                                <Select.Trigger ref={ref}>
-                                  <Select.Value placeholder="Rating..." />
-                                </Select.Trigger>
-                              </FormField.Control>
-                              <Select.Content className="z-50">
-                                <Select.EmptyList />
-                              </Select.Content>
-                            </Select>
-                          </FormField.Item>
-                        )}
-                      />
+                        <FormField
+                          control={form.control}
+                          name="category"
+                          render={({ field: { ref, onChange, ...field } }) => (
+                            <FormField.Item className="col-span-full">
+                              <FormField.Label>Category</FormField.Label>
+                              <FormField.Message />
+                              <Select onValueChange={onChange} {...field}>
+                                <FormField.Control>
+                                  <Select.Trigger ref={ref}>
+                                    <Select.Value placeholder="Category..." />
+                                  </Select.Trigger>
+                                </FormField.Control>
+                                <Select.Content className="z-50">
+                                  {reviewCategories.map(({ id, name }) => (
+                                    <Select.Item key={id} value={id}>
+                                      {name}
+                                    </Select.Item>
+                                  ))}
+                                </Select.Content>
+                              </Select>
+                            </FormField.Item>
+                          )}
+                        />
 
-                      <FormField
-                        control={form.control}
-                        name="reactions"
-                        render={({ field: { ref, onChange, ...field } }) => (
-                          <FormField.Item className="col-span-full">
-                            <FormField.Label>Reactions</FormField.Label>
-                            <FormField.Message />
-                            <Select onValueChange={onChange} {...field}>
-                              <FormField.Control>
-                                <Select.Trigger ref={ref}>
-                                  <Select.Value placeholder="Reactions..." />
-                                </Select.Trigger>
-                              </FormField.Control>
-                              <Select.Content className="z-50">
-                                <Select.EmptyList />
-                              </Select.Content>
-                            </Select>
-                          </FormField.Item>
-                        )}
-                      />
+                        <FormField
+                          control={form.control}
+                          name="rating"
+                          render={({ field: { ref, onChange, ...field } }) => (
+                            <FormField.Item className="col-span-full">
+                              <FormField.Label>Rating</FormField.Label>
+                              <FormField.Message />
+                              <Select onValueChange={onChange} {...field}>
+                                <FormField.Control>
+                                  <Select.Trigger ref={ref}>
+                                    <Select.Value placeholder="Rating..." />
+                                  </Select.Trigger>
+                                </FormField.Control>
+                                <Select.Content className="z-50">
+                                  {ratingFilterOpions.map((name) => (
+                                    <Select.Item key={name} value={name}>
+                                      {name}
+                                    </Select.Item>
+                                  ))}
+                                </Select.Content>
+                              </Select>
+                            </FormField.Item>
+                          )}
+                        />
 
-                      <FormField
-                        control={form.control}
-                        name="author"
-                        render={({ field: { ref, onChange, ...field } }) => (
-                          <FormField.Item className="col-span-full">
-                            <FormField.Label>Author</FormField.Label>
-                            <FormField.Message />
-                            <Select onValueChange={onChange} {...field}>
-                              <FormField.Control>
-                                <Select.Trigger ref={ref}>
-                                  <Select.Value placeholder="Author..." />
-                                </Select.Trigger>
-                              </FormField.Control>
-                              <Select.Content className="z-50">
-                                <Select.EmptyList />
-                              </Select.Content>
-                            </Select>
-                          </FormField.Item>
-                        )}
-                      />
+                        <FormField
+                          control={form.control}
+                          name="reactions"
+                          render={({ field: { ref, onChange, ...field } }) => (
+                            <FormField.Item className="col-span-full">
+                              <FormField.Label>Reactions</FormField.Label>
+                              <FormField.Message />
+                              <Select onValueChange={onChange} {...field}>
+                                <FormField.Control>
+                                  <Select.Trigger ref={ref}>
+                                    <Select.Value placeholder="Reactions..." />
+                                  </Select.Trigger>
+                                </FormField.Control>
+                                <Select.Content className="z-50">
+                                  {reactionsFilterOptions.map((name) => (
+                                    <Select.Item key={name} value={name}>
+                                      {name}
+                                    </Select.Item>
+                                  ))}
+                                </Select.Content>
+                              </Select>
+                            </FormField.Item>
+                          )}
+                        />
+                      </div>
 
-                      <FormField
-                        control={form.control}
-                        name="createdAt"
-                        render={({ field }) => (
-                          <FormField.Item>
-                            <FormField.Label>Created at</FormField.Label>
-                            <FormField.Message />
-                            <FormField.Control>
-                              <Input type="date" {...field} />
-                            </FormField.Control>
-                          </FormField.Item>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="updatedAt"
-                        render={({ field }) => (
-                          <FormField.Item>
-                            <FormField.Label>Updated at</FormField.Label>
-                            <FormField.Message />
-                            <FormField.Control>
-                              <Input type="date" {...field} />
-                            </FormField.Control>
-                          </FormField.Item>
-                        )}
-                      />
-                    </fetcher.Form>
+                      <Dialog.Footer className="mt-6">
+                        <Dialog.Close asChild>
+                          <Button className="md:w-max" intent="secondary">
+                            Close
+                          </Button>
+                        </Dialog.Close>
+                        <Button className="md:w-max" type="submit">
+                          Apply filters
+                        </Button>
+                      </Dialog.Footer>
+                    </form>
                   </FormProvider>
-
-                  <Dialog.Footer className="mt-6">
-                    <Dialog.Close asChild>
-                      <Button className="md:w-max" intent="secondary">
-                        Close
-                      </Button>
-                    </Dialog.Close>
-                    <Button className="md:w-max" type="submit">
-                      Apply filters
-                    </Button>
-                  </Dialog.Footer>
                 </Dialog.Content>
               </Dialog.Portal>
             </Dialog>
