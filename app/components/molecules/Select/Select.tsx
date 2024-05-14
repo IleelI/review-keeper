@@ -106,7 +106,7 @@ const SelectContent = forwardRef<
       >
         <SelectScrollUpButton />
 
-        <RadixSelect.Viewport className="flex flex-col gap-1.5 p-1">
+        <RadixSelect.Viewport className="flex flex-col gap-1.5">
           {children}
         </RadixSelect.Viewport>
 
@@ -136,7 +136,7 @@ const SelectItem = forwardRef<
   <RadixSelect.Item
     ref={ref}
     className={twMerge(
-      "relative flex cursor-pointer items-center rounded py-1.5 pl-2 pr-8 outline-none",
+      "relative flex cursor-pointer items-center py-1.5 pl-2 pr-8 outline-none",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
       "data-[highlighted]:data-[state=unchecked]:bg-neutral-100 data-[highlighted]:data-[state=unchecked]:text-neutral-900 dark:data-[highlighted]:data-[state=unchecked]:bg-neutral-700 dark:data-[highlighted]:data-[state=unchecked]:text-neutral-100",
       "data-[state=checked]:bg-neutral-100 data-[state=checked]:text-neutral-900 dark:data-[state=checked]:bg-neutral-700 dark:data-[state=checked]:text-neutral-300",
