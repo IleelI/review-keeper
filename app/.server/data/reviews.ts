@@ -1,13 +1,8 @@
 import { prisma } from "../service/db";
-import { Prisma } from "@prisma/client";
+import { Prisma, type User } from "@prisma/client";
 import type { PromiseReturnType } from "@prisma/client/extension";
 import type { ReviewSort } from "~/schema/review.schema";
-
-export type ReviewFilters = Partial<{
-  category: string;
-  author: string;
-  query: string;
-}>;
+import type { ReviewCategory } from "./review";
 
 const reviewsForGridSelect = Prisma.validator<Prisma.ReviewSelect>()({
   _count: {
@@ -135,3 +130,38 @@ export const getReviewsForGrid = async (
 export type ReviewForGrid = PromiseReturnType<
   typeof getReviewsForGrid
 >["items"][number];
+
+export const getReviewCategoriesFilter = async (): Promise<
+  ReviewCategory[]
+> => {
+  try {
+    const categories = await prisma.reviewCategory.findMany();
+    return categories.map(({ id, name }) => ({
+      id,
+      name,
+    }));
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export type ReviewAuthor = Pick<User, "id" | "username">;
+export const getReviewAuthorFilter = async (): Promise<ReviewAuthor[]> => {
+  try {
+    const authors = await prisma.user.findMany({
+      where: { reviews: { some: {} } },
+    });
+
+    return [
+      { id: "all-authors", username: "All authors" },
+      ...authors.map(({ id, username }) => ({
+        id,
+        username,
+      })),
+    ];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
