@@ -16,8 +16,7 @@ export { loader };
 export { action };
 
 export default function Index() {
-  const { items, reviewAuthors, reviewCategories, totalItems } =
-    useLoaderData<typeof loader>();
+  const { items, totalItems } = useLoaderData<typeof loader>();
   const paginationState = usePagination(totalItems);
 
   return (
@@ -25,10 +24,7 @@ export default function Index() {
       <article className="flex flex-col gap-8">
         <header className="flex flex-col gap-4">
           <Header pageSize={paginationState.pageSize} totalItems={totalItems} />
-          <Navigation
-            reviewAuthors={reviewAuthors}
-            reviewCategories={reviewCategories}
-          />
+          <Navigation />
         </header>
 
         <section className="" role="grid">
