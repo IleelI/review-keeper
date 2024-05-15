@@ -27,7 +27,7 @@ export default function Index() {
           <Navigation />
         </header>
 
-        <section className="" role="grid">
+        <section role="grid">
           {items.length ? (
             <ul className="grid auto-rows-[minmax(120px,1fr)] grid-cols-1 gap-4 md:grid-cols-2 lg:auto-rows-[minmax(200px,1fr)] lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]">
               {items.map((review) => (
@@ -36,7 +36,7 @@ export default function Index() {
             </ul>
           ) : (
             <p className="text-2xl font-semibold text-neutral-600 dark:text-neutral-400">
-              {"No reviews available."}
+              No reviews available.
             </p>
           )}
         </section>

@@ -1,9 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { Filter } from "iconoir-react";
-import { useMemo, useState } from "react";
-import { FormProvider, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+import { FormProvider } from "react-hook-form";
 
 import Button from "~/components/atoms/Button";
 import { Combobox } from "~/components/molecules/Combobox";
@@ -11,122 +7,48 @@ import Dialog from "~/components/molecules/Dialog";
 import { FormField } from "~/components/molecules/FormField";
 import Select from "~/components/molecules/Select";
 
-import { loader } from "../../loader";
+import { useAuthorFilter } from "../../hooks/useAuthorFilter";
+import { useCategoryFilter } from "../../hooks/useCategoryFilter";
+import {
+  ratingFilterOpions,
+  reactionsFilterOptions,
+} from "../../schema/filters.schema";
 
-const filtersSchema = z.object({
-  author: z.string().array(),
-  category: z.string().array(),
-  rating: z
-    .union([
-      z.literal("any-rating"),
-      z.literal("low"),
-      z.literal("medicore"),
-      z.literal("high"),
-    ])
-    .optional(),
-  reactions: z
-    .union([
-      z.literal("any-reaction"),
-      z.literal("popular"),
-      z.literal("known"),
-      z.literal("unknown"),
-    ])
-    .optional(),
-});
-type FiltersSchema = z.infer<typeof filtersSchema>;
+import { useFiltersDialog } from "./useFiltersDialog";
 
-const ratingFilterOpions: {
-  label: string;
-  value: Exclude<FiltersSchema["rating"], undefined>;
-}[] = [
-  { label: "Any rating", value: "any-rating" },
-  { label: "Low", value: "low" },
-  { label: "Medicore", value: "medicore" },
-  { label: "High", value: "high" },
-];
-
-const reactionsFilterOptions: {
-  label: string;
-  value: Exclude<FiltersSchema["reactions"], undefined>;
-}[] = [
-  { label: "Any reaction", value: "any-reaction" },
-  { label: "Unknown", value: "unknown" },
-  { label: "Known", value: "known" },
-  { label: "Popular", value: "popular" },
-];
-
-const defaultValues: FiltersSchema = {
-  author: [],
-  category: [],
-};
 const FiltersDialog = () => {
-  const data = useRouteLoaderData<typeof loader>("routes/_index");
-  const { reviewAuthors, reviewCategories } = useMemo(
-    () => ({
-      reviewAuthors: data?.reviewAuthors ?? [],
-      reviewCategories: data?.reviewCategories ?? [],
-    }),
-    [data?.reviewAuthors, data?.reviewCategories],
-  );
-  const form = useForm<FiltersSchema>({
-    defaultValues: defaultValues,
-    resolver: zodResolver(filtersSchema),
-  });
+  const {
+    filters,
+    form,
+    isDialogOpen,
+    onSubmit,
+    reviewAuthors,
+    reviewCategories,
+    setIsDialogOpen,
+  } = useFiltersDialog();
 
-  const [authorQuery, setAuthorQuery] = useState("");
-  const [isAuthorComboboxOpen, setIsAuthorComboboxOpen] = useState(false);
-  const [isCategoryComboboxOpen, setIsCategoryComboboxOpen] = useState(false);
-  const [categoryQuery, setCategoryQuery] = useState("");
-  const fetcher = useFetcher();
+  const {
+    authorQuery,
+    filteredAuthors,
+    handleAuthorChange,
+    handleAuthorComboboxOpen,
+    handleAuthorComboboxSearch,
+    isAuthorComboboxOpen,
+    selectedAuthors,
+  } = useAuthorFilter(filters.author, reviewAuthors);
 
-  const filters = form.getValues();
-
-  const { filteredAuthors, selectedAuthors } = useMemo(() => {
-    const filteredAuthors = reviewAuthors
-      .filter(({ username }) =>
-        username.toLowerCase().includes(authorQuery.toLowerCase()),
-      )
-      .slice(0, 10);
-
-    const selectedAuthors = reviewAuthors
-      .filter(({ id }) => filters.author.includes(id))
-      .map(({ username }) => username)
-      .join(", ");
-
-    return { filteredAuthors, selectedAuthors };
-  }, [authorQuery, filters, reviewAuthors]);
-
-  const handleAuthorChange = (authors: string[], authorId: string) =>
-    authors.includes(authorId)
-      ? authors.filter((id) => id !== authorId)
-      : [...authors, authorId];
-
-  const { filteredCategories, selectedCategories } = useMemo(() => {
-    const filteredCategories = reviewCategories
-      .filter(({ name }) =>
-        name.toLowerCase().includes(categoryQuery.toLowerCase()),
-      )
-      .slice(0, 10);
-
-    const selectedCategories = reviewCategories
-      .filter(({ id }) => filters.category.includes(id))
-      .map(({ name }) => name)
-      .join(", ");
-
-    return { filteredCategories, selectedCategories };
-  }, [categoryQuery, filters, reviewCategories]);
-
-  const handleCategoryChange = (categories: string[], categoryId: string) =>
-    categories.includes(categoryId)
-      ? categories.filter((id) => id !== categoryId)
-      : [...categories, categoryId];
-
-  const onSubmit: SubmitHandler<FiltersSchema> = async (data) => {
-    fetcher.submit(data, { method: "POST" });
-  };
+  const {
+    categoryQuery,
+    filteredCategories,
+    handleCategoryChange,
+    handleCategoryComboboxOpen,
+    handleCategoryComboboxSearch,
+    isCategoryComboboxOpen,
+    selectedCategories,
+  } = useCategoryFilter(filters.category, reviewCategories);
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Dialog.Trigger asChild>
         <Button className="lg:w-max">
           <Filter />
@@ -153,13 +75,9 @@ const FiltersDialog = () => {
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormField.Item className="col-span-full">
                       <FormField.Label>Author</FormField.Label>
-                      <FormField.Message />
                       <Combobox
                         open={isAuthorComboboxOpen}
-                        onOpenChange={(open) => {
-                          setIsAuthorComboboxOpen(open);
-                          open && setAuthorQuery("");
-                        }}
+                        onOpenChange={handleAuthorComboboxOpen}
                       >
                         <FormField.Control>
                           <Combobox.Trigger {...field}>
@@ -173,9 +91,7 @@ const FiltersDialog = () => {
                         <Combobox.Content className="z-50">
                           <Combobox.Search
                             className="sticky top-0 z-10"
-                            onChange={({ target }) =>
-                              setAuthorQuery(target.value)
-                            }
+                            onChange={handleAuthorComboboxSearch}
                             value={authorQuery}
                           />
                           {filteredAuthors.length ? (
@@ -213,13 +129,9 @@ const FiltersDialog = () => {
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormField.Item className="col-span-full">
                       <FormField.Label>Category</FormField.Label>
-                      <FormField.Message />
                       <Combobox
                         open={isCategoryComboboxOpen}
-                        onOpenChange={(open) => {
-                          setIsCategoryComboboxOpen(open);
-                          open && setCategoryQuery("");
-                        }}
+                        onOpenChange={handleCategoryComboboxOpen}
                       >
                         <FormField.Control>
                           <Combobox.Trigger {...field}>
@@ -233,9 +145,7 @@ const FiltersDialog = () => {
                         <Combobox.Content className="z-50">
                           <Combobox.Search
                             className="sticky top-0 z-10"
-                            onChange={({ target }) =>
-                              setCategoryQuery(target.value)
-                            }
+                            onChange={handleCategoryComboboxSearch}
                             value={categoryQuery}
                           />
                           {filteredCategories.length ? (
@@ -273,7 +183,6 @@ const FiltersDialog = () => {
                   render={({ field: { onChange, ref, ...field } }) => (
                     <FormField.Item className="col-span-full">
                       <FormField.Label>Rating</FormField.Label>
-                      <FormField.Message />
                       <Select onValueChange={onChange} {...field}>
                         <FormField.Control>
                           <Select.Trigger ref={ref}>
@@ -299,7 +208,6 @@ const FiltersDialog = () => {
                   render={({ field: { ref, onChange, ...field } }) => (
                     <FormField.Item className="col-span-full">
                       <FormField.Label>Reactions</FormField.Label>
-                      <FormField.Message />
                       <Select onValueChange={onChange} {...field}>
                         <FormField.Control>
                           <Select.Trigger ref={ref}>
