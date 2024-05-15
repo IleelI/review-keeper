@@ -1,7 +1,6 @@
 import {
   Popover,
   PopoverTrigger,
-  PopoverPortal,
   PopoverContent,
   type PopoverTriggerProps,
   type PopoverProps,
@@ -30,27 +29,34 @@ const Combobox = ({ children, ...props }: PopoverProps) => (
 const ComboboxTrigger = forwardRef<
   ElementRef<typeof PopoverTrigger>,
   PopoverTriggerProps
->(({ children, className, role = "combobox", ...props }, ref) => {
-  return (
-    <PopoverTrigger
-      className={twMerge(
-        "flex min-h-[32px] w-96 items-center justify-between gap-4 rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-left leading-none outline-none dark:border-neutral-700 dark:bg-neutral-800",
-        className,
-      )}
-      ref={ref}
-      role={role}
-      {...props}
-    >
-      {children}
-    </PopoverTrigger>
-  );
-});
+>(
+  (
+    { children, className, role = "combobox", type = "button", ...props },
+    ref,
+  ) => {
+    return (
+      <PopoverTrigger
+        className={twMerge(
+          "flex min-h-[38px] items-center justify-between gap-4 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-left outline-none dark:border-neutral-700 dark:bg-neutral-800",
+          "[&>span]:first-of-type:overflow-hidden [&>span]:first-of-type:text-ellipsis [&>span]:first-of-type:whitespace-nowrap",
+          className,
+        )}
+        ref={ref}
+        role={role}
+        type={type}
+        {...props}
+      >
+        {children}
+      </PopoverTrigger>
+    );
+  },
+);
 ComboboxTrigger.displayName = "ComboboxTrigger";
 
 const TriggerIcon = forwardRef<SVGSVGElement, ComponentPropsWithoutRef<"svg">>(
   ({ className, ...props }, ref) => (
     <ArrowSeparateVertical
-      className={twMerge("h-4 w-4", className)}
+      className={twMerge("h-4 w-4 shrink-0", className)}
       ref={ref}
       {...props}
     />
@@ -62,26 +68,28 @@ type ComboboxValueProps = PropsWithChildren<{
   placeholder?: string;
 }>;
 const ComboboxValue = ({ children, placeholder }: ComboboxValueProps) =>
-  children || <p className="text-neutral-500">{placeholder}</p>;
+  children ? (
+    <span>{children}</span>
+  ) : (
+    <p className="text-neutral-500">{placeholder}</p>
+  );
 
 const ComboboxContent = forwardRef<
   ElementRef<typeof PopoverContent>,
   PopoverContentProps
 >(({ children, className, collisionPadding = 24, sideOffset = 8 }, ref) => {
   return (
-    <PopoverPortal>
-      <PopoverContent
-        className={twMerge(
-          "max-h-[var(--radix-popover-content-available-height)] w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-lg border border-neutral-200 bg-white ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4 dark:border-neutral-700 dark:bg-neutral-800",
-          className,
-        )}
-        collisionPadding={collisionPadding}
-        ref={ref}
-        sideOffset={sideOffset}
-      >
-        {children}
-      </PopoverContent>
-    </PopoverPortal>
+    <PopoverContent
+      className={twMerge(
+        "relative max-h-[var(--radix-popover-content-available-height)] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-lg border border-neutral-200 bg-white ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4 dark:border-neutral-700 dark:bg-neutral-800",
+        className,
+      )}
+      collisionPadding={collisionPadding}
+      ref={ref}
+      sideOffset={sideOffset}
+    >
+      {children}
+    </PopoverContent>
   );
 });
 ComboboxContent.displayName = "ComboboxContent";
@@ -91,19 +99,19 @@ const ComboboxSearch = forwardRef<
   ComponentPropsWithoutRef<"input">
 >(({ className, ...props }, ref) => {
   return (
-    <form
+    <section
       className={twMerge(
-        "flex items-center gap-1.5 border-b border-neutral-200 px-2 py-2 dark:border-neutral-700",
+        "flex items-center gap-1.5 border-b border-neutral-200 bg-white px-2 py-2 dark:border-neutral-700 dark:bg-neutral-800",
         className,
       )}
     >
       <Search className="h-4 w-4" />
       <Input
-        className="min-h-8 w-full rounded-none border-none p-0"
+        className="min-h-0 w-full rounded-none border-none p-0"
         ref={ref}
         {...props}
       />
-    </form>
+    </section>
   );
 });
 ComboboxSearch.displayName = "ComboboxSearch";
@@ -111,7 +119,7 @@ ComboboxSearch.displayName = "ComboboxSearch";
 const ComboboxItem = forwardRef<
   HTMLButtonElement,
   ComponentPropsWithoutRef<"button">
->(({ children, className, ...props }, ref) => {
+>(({ children, className, type = "button", ...props }, ref) => {
   return (
     <button
       className={twMerge(
@@ -119,6 +127,7 @@ const ComboboxItem = forwardRef<
         className,
       )}
       ref={ref}
+      type={type}
       {...props}
     >
       {children}
@@ -127,13 +136,17 @@ const ComboboxItem = forwardRef<
 });
 ComboboxItem.displayName = "ComboboxItem";
 
+type ComboboxItemIndicatorProps = ComponentPropsWithoutRef<"svg"> & {
+  isSelected?: boolean;
+};
 const ComboboxItemIndicator = forwardRef<
   SVGSVGElement,
-  ComponentPropsWithoutRef<"svg">
->(({ className, ...props }, ref) => (
+  ComboboxItemIndicatorProps
+>(({ className, isSelected = false, ...props }, ref) => (
   <Check
     className={twMerge(
-      "absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 stroke-2",
+      "absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 stroke-2 transition-opacity duration-300",
+      isSelected ? "opacity-100" : "opacity-0",
       className,
     )}
     ref={ref}
@@ -148,17 +161,15 @@ const ComboboxEmptyContent = forwardRef<
 >(({ className, ...props }, ref) => (
   <section
     className={twMerge(
-      "flex flex-col items-center justify-center gap-1 px-3 py-4",
+      "flex flex-col items-center justify-center gap-1 p-4",
       className,
     )}
     ref={ref}
     {...props}
   >
-    <h2 className="font-semibold text-neutral-800 dark:text-neutral-200">
-      No result found
-    </h2>
+    <h2 className="font-semibold">No options available</h2>
     <h3 className="text-sm text-neutral-600 dark:text-neutral-400">
-      You can try changing your search input
+      Please, try again later...
     </h3>
   </section>
 ));

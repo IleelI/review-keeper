@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { Combobox, type ComboboxItem } from "./Combobox";
+import { Combobox, type ComboboxItem } from "~/components/molecules/Combobox";
 
 const items: ComboboxItem[] = [
   { name: "Item 1", value: "item-1" },
@@ -13,6 +13,7 @@ const items: ComboboxItem[] = [
 const PlaygroundPage = () => {
   const [values, setValues] = useState<string[]>([]);
   const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
 
   const filteredItems = useMemo(
     () =>
@@ -38,24 +39,29 @@ const PlaygroundPage = () => {
     );
   }, []);
 
+  const handleOpenChange = useCallback((open: boolean) => {
+    open && setQuery("");
+    setOpen(open);
+  }, []);
+
   return (
     <main className="flex flex-col gap-16">
       <h1>Playground</h1>
 
       <article>
         <h2>Multiselect</h2>
-        <Combobox>
-          <Combobox.Trigger>
+        <Combobox open={open} onOpenChange={handleOpenChange}>
+          <Combobox.Trigger className="w-80">
             <Combobox.Value placeholder="Select items...">
               {displayedValues.join(", ")}
             </Combobox.Value>
             <Combobox.TriggerIcon />
           </Combobox.Trigger>
+
           <Combobox.Content>
             <Combobox.Search
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search items..."
               value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
             {filteredItems.length ? (
               filteredItems.map(({ name, value }) => (
@@ -64,7 +70,7 @@ const PlaygroundPage = () => {
                   onClick={() => handleValueChange(value)}
                 >
                   {name}
-                  {values.includes(value) ? <Combobox.ItemIndicator /> : null}
+                  <Combobox.ItemIndicator isSelected={values.includes(value)} />
                 </Combobox.Item>
               ))
             ) : (

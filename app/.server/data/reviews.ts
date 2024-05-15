@@ -154,7 +154,6 @@ export const getReviewAuthorFilter = async (): Promise<ReviewAuthor[]> => {
     });
 
     return [
-      { id: "all-authors", username: "All authors" },
       ...authors.map(({ id, username }) => ({
         id,
         username,
