@@ -26,12 +26,13 @@ const SelectTrigger = forwardRef<
   <RadixSelect.Trigger
     aria-invalid={hasError}
     className={twMerge([
-      "flex min-h-[38px] items-center justify-between gap-4 rounded-md border px-3 py-1.5 outline-none transition",
+      "flex min-h-[38px] items-center justify-between gap-4 rounded-md border px-3 py-1.5 text-left outline-none transition",
       "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
       "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
-      "data-[placeholder]:text-neutral-600 dark:data-[placeholder]:text-neutral-400",
+      "data-[placeholder]:text-neutral-400 dark:data-[placeholder]:text-neutral-600",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
       "aria-[invalid=true]:border-red-700 dark:aria-[invalid=true]:border-red-300",
+      "[&>span]:first-of-type:overflow-hidden [&>span]:first-of-type:text-ellipsis [&>span]:first-of-type:whitespace-nowrap",
       className,
     ])}
     ref={ref}
@@ -39,7 +40,7 @@ const SelectTrigger = forwardRef<
   >
     {children}
     <RadixSelect.Icon asChild>
-      <ArrowSeparateVertical className={twMerge("h-4 w-4", className)} />
+      <ArrowSeparateVertical className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
     </RadixSelect.Icon>
   </RadixSelect.Trigger>
 ));
@@ -81,7 +82,7 @@ const SelectContent = forwardRef<
     {
       children,
       className,
-      collisionPadding = 32,
+      collisionPadding = 24,
       position = "popper",
       sideOffset = 8,
       ...props
@@ -93,7 +94,7 @@ const SelectContent = forwardRef<
         className={twMerge(
           "relative overflow-hidden rounded-md border shadow shadow-neutral-200 dark:shadow-none",
           "border-neutral-200 bg-white text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100",
-          "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          "ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4",
           position === "popper" &&
             "max-h-[var(--radix-select-content-available-height)] w-full min-w-[var(--radix-select-trigger-width)]",
           className,
@@ -106,9 +107,7 @@ const SelectContent = forwardRef<
       >
         <SelectScrollUpButton />
 
-        <RadixSelect.Viewport className={twJoin("flex flex-col gap-1.5 p-1")}>
-          {children}
-        </RadixSelect.Viewport>
+        <RadixSelect.Viewport>{children}</RadixSelect.Viewport>
 
         <SelectScrollDownButton />
       </RadixSelect.Content>
@@ -136,10 +135,10 @@ const SelectItem = forwardRef<
   <RadixSelect.Item
     ref={ref}
     className={twMerge(
-      "relative flex cursor-pointer items-center rounded py-1.5 pl-2 pr-8 outline-none",
+      "relative flex cursor-pointer items-center py-1.5 pl-2 pr-8 outline-none",
       "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
       "data-[highlighted]:data-[state=unchecked]:bg-neutral-100 data-[highlighted]:data-[state=unchecked]:text-neutral-900 dark:data-[highlighted]:data-[state=unchecked]:bg-neutral-700 dark:data-[highlighted]:data-[state=unchecked]:text-neutral-100",
-      "data-[state=checked]:bg-primary-700 data-[state=checked]:text-neutral-100 dark:data-[state=checked]:bg-primary-300 dark:data-[state=checked]:text-neutral-900",
+      "data-[state=checked]:bg-neutral-100 data-[state=checked]:text-neutral-900 dark:data-[state=checked]:bg-neutral-700 dark:data-[state=checked]:text-neutral-300",
       className,
     )}
     {...props}
@@ -177,7 +176,7 @@ const SelectEmptyList = ({
   message = "Please, try again later...",
   title = "No options available",
 }: SelectEmptyListProps) => (
-  <div className="flex flex-col items-center justify-center gap-2 p-2">
+  <div className="flex flex-col items-center justify-center gap-1 p-4">
     <p className="font-semibold">{title}</p>
     <p className="text-sm text-neutral-600 dark:text-neutral-400">{message}</p>
   </div>
