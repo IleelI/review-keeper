@@ -1,9 +1,12 @@
-import { prisma } from "../service/db";
 import { Prisma, type User } from "@prisma/client";
 import type { PromiseReturnType } from "@prisma/client/extension";
-import type { ReviewSort } from "~/schema/review.schema";
-import type { ReviewCategory } from "./review";
+
 import type { FiltersSchema } from "~/routes/_index/schema/filters.schema";
+import type { ReviewSort } from "~/schema/review.schema";
+
+import { prisma } from "../service/db";
+
+import type { ReviewCategory } from "./review";
 
 const reviewsForGridSelect = Prisma.validator<Prisma.ReviewSelect>()({
   _count: {
@@ -105,7 +108,7 @@ const getFilteredReviewsForGrid = async ({
             reactionsFilter = reactionsCount >= 20 || reactionsCount < 75;
             break;
           }
-          case "unknown": {
+          case "popular": {
             reactionsFilter = reactionsCount >= 75;
             break;
           }
