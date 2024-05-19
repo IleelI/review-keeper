@@ -96,15 +96,16 @@ const useFormField = () => {
 };
 
 const FormFieldLabel = forwardRef<ElementRef<typeof Label>, LabelProps>(
-  (props, ref) => {
+  ({ className, ...props }, ref) => {
     const { formFieldControlId, formFieldLabelId } = useFormField();
 
     return (
       <Label
+        {...props}
+        className={twMerge("w-max", className)}
         htmlFor={formFieldControlId}
         id={formFieldLabelId}
         ref={ref}
-        {...props}
       />
     );
   },

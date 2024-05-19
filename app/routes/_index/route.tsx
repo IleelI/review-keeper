@@ -4,6 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import MainLayout from "~/components/layouts/MainLayout";
 import Pagination, { usePagination } from "~/components/molecules/Pagination";
 
+import { action } from "./action";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import ReviewCard from "./components/ReviewCard";
@@ -12,6 +13,7 @@ import { loader } from "./loader";
 export const meta: MetaFunction = () => [{ title: "Homepage | Review Keeper" }];
 
 export { loader };
+export { action };
 
 export default function Index() {
   const { items, totalItems } = useLoaderData<typeof loader>();
@@ -25,7 +27,7 @@ export default function Index() {
           <Navigation />
         </header>
 
-        <section className="" role="grid">
+        <section role="grid">
           {items.length ? (
             <ul className="grid auto-rows-[minmax(120px,1fr)] grid-cols-1 gap-4 md:grid-cols-2 lg:auto-rows-[minmax(200px,1fr)] lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]">
               {items.map((review) => (
@@ -34,7 +36,7 @@ export default function Index() {
             </ul>
           ) : (
             <p className="text-2xl font-semibold text-neutral-600 dark:text-neutral-400">
-              {"No reviews available."}
+              No reviews available.
             </p>
           )}
         </section>

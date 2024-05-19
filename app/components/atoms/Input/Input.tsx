@@ -13,6 +13,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         "disabled:cursor-not-allowed disabled:opacity-40",
         "enabled:hover:border-primary-700 enabled:focus-visible:border-primary-700 dark:enabled:hover:border-primary-300 dark:enabled:focus-visible:border-primary-300",
         "aria-[invalid=true]:border-red-700 dark:aria-[invalid=true]:border-red-300",
+        "[&::-webkit-calendar-picker-indicator]:cursor-pointer dark:[&::-webkit-calendar-picker-indicator]:invert [&[type=date]]:cursor-text",
         className,
       ])}
       ref={ref}
