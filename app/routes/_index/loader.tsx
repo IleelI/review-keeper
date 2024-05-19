@@ -7,17 +7,26 @@ import {
   getReviewsForGrid,
 } from "~/.server/data/reviews";
 import {
+  PAGE_SEARCH_PARAM,
+  PAGE_SIZE_SEARCH_PARAM,
+} from "~/components/molecules/Pagination";
+import {
   reviewSortKeySchema,
   reviewSortOrderSchema,
   type ReviewSort,
 } from "~/schema/review.schema";
 
+import {
+  backendFiltersSchema,
+  type FiltersSchema,
+} from "./schema/filters.schema";
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.searchParams);
 
-  const page = Number(searchParams.get("page")) || 1;
-  const pageSize = Number(searchParams.get("page-size")) || 10;
+  const page = Number(searchParams.get(PAGE_SEARCH_PARAM)) || 1;
+  const pageSize = Number(searchParams.get(PAGE_SIZE_SEARCH_PARAM)) || 10;
 
   const sortKey = reviewSortKeySchema.safeParse(searchParams.get("sort-key"));
   const sortOrder = reviewSortOrderSchema.safeParse(
@@ -28,7 +37,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     order: sortOrder.success ? sortOrder.data : "desc",
   };
 
-  const { items, totalItems } = await getReviewsForGrid(page, pageSize, sort);
+  const filtersData = backendFiltersSchema.safeParse(
+    Object.fromEntries(searchParams),
+  );
+  const filters: FiltersSchema = {
+    author: filtersData.data?.author?.length
+      ? filtersData.data.author.split(";")
+      : [],
+    category: filtersData.data?.category?.length
+      ? filtersData.data.category.split(";")
+      : [],
+    rating: filtersData.data?.rating,
+    reactions: filtersData.data?.reactions,
+  };
+
+  const { items, totalItems } = await getReviewsForGrid(
+    page,
+    pageSize,
+    sort,
+    filters,
+  );
   const reviewCategories = await getCategories();
 
   const reviewAuthors = await getReviewAuthorFilter();

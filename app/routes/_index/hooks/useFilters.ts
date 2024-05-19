@@ -1,6 +1,8 @@
 import { useSearchParams } from "@remix-run/react";
 import { useMemo } from "react";
 
+import { PAGE_SEARCH_PARAM } from "~/components/molecules/Pagination";
+
 import { filtersSchema, type FiltersSchema } from "../schema/filters.schema";
 
 const useFiltersParams = () => {
@@ -31,6 +33,7 @@ const useFiltersParams = () => {
 
   const handleFilterDelete = (filterName: string) => {
     const params = new URLSearchParams(serachParams);
+    params.delete(PAGE_SEARCH_PARAM);
     params.delete(filterName);
     setSearchParams(params);
   };

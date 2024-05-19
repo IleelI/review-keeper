@@ -206,7 +206,7 @@ const PageInput = ({ className }: PageInputProps) => {
         inputMode="numeric"
         onBlur={handlePageInputBlur}
       />
-      {`of ${totalPages}`}
+      {`of ${totalPages || 1}`}
     </label>
   );
 };
