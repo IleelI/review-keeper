@@ -1,11 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  useRouteLoaderData,
-  useSearchParams,
-  useFetcher,
-} from "@remix-run/react";
+import { useRouteLoaderData, useSearchParams } from "@remix-run/react";
 import { useMemo, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+
+import { PAGE_SEARCH_PARAM } from "~/components/molecules/Pagination";
 
 import { useFiltersParams } from "../../hooks/useFilters";
 import type { loader } from "../../loader";
@@ -28,7 +26,6 @@ const useFiltersDialog = () => {
 
   const { filters: filtersParams } = useFiltersParams();
   const [serachParams, setSearchParams] = useSearchParams();
-  const fetcher = useFetcher();
   const form = useForm<FiltersSchema>({
     defaultValues: defaultValues,
     resolver: zodResolver(filtersSchema),
@@ -59,14 +56,13 @@ const useFiltersDialog = () => {
       ? params.set("reactions", data.reactions)
       : params.delete("reactions");
 
+    params.delete(PAGE_SEARCH_PARAM);
+
     setSearchParams(params);
     handleDialogClose();
-
-    fetcher.submit(data, { method: "POST" });
   };
 
   return {
-    fetcher,
     filters,
     form,
     isDialogOpen,

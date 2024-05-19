@@ -22,6 +22,16 @@ const filtersSchema = z.object({
 });
 type FiltersSchema = z.infer<typeof filtersSchema>;
 
+export const backendFiltersSchema = filtersSchema
+  .pick({
+    rating: true,
+    reactions: true,
+  })
+  .extend({
+    author: z.string().optional(),
+    category: z.string().optional(),
+  });
+
 const ratingFilterOpions: {
   label: string;
   value: Exclude<FiltersSchema["rating"], undefined>;

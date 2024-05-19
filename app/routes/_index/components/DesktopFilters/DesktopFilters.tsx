@@ -6,6 +6,7 @@ import type { z } from "zod";
 
 import { Combobox } from "~/components/molecules/Combobox";
 import { FormField } from "~/components/molecules/FormField";
+import { PAGE_SEARCH_PARAM } from "~/components/molecules/Pagination";
 import Select from "~/components/molecules/Select";
 
 import { useAuthorFilter } from "../../hooks/useAuthorFilter";
@@ -104,7 +105,11 @@ const DesktopFilters = () => {
                           onClick={() => {
                             const newAuthors = handleAuthorChange(value, id);
                             const params = new URLSearchParams(searchParams);
-                            params.set("author", newAuthors.join(";"));
+
+                            newAuthors.length
+                              ? params.set("author", newAuthors.join(";"))
+                              : params.delete("author");
+                            params.delete(PAGE_SEARCH_PARAM);
                             setSearchParams(params);
                             onChange(newAuthors);
                           }}
@@ -164,7 +169,12 @@ const DesktopFilters = () => {
                               id,
                             );
                             const params = new URLSearchParams(searchParams);
-                            params.set("category", newCategories.join(";"));
+
+                            newCategories.length
+                              ? params.set("category", newCategories.join(";"))
+                              : params.delete("category");
+                            params.delete(PAGE_SEARCH_PARAM);
+
                             setSearchParams(params);
                             onChange(newCategories);
                           }}
@@ -197,7 +207,10 @@ const DesktopFilters = () => {
               <Select
                 onValueChange={(newRating) => {
                   const params = new URLSearchParams(searchParams);
+
                   params.set("rating", newRating);
+                  params.delete(PAGE_SEARCH_PARAM);
+
                   setSearchParams(params);
                   onChange(newRating);
                 }}

@@ -4,7 +4,6 @@ import { useLoaderData } from "@remix-run/react";
 import MainLayout from "~/components/layouts/MainLayout";
 import Pagination, { usePagination } from "~/components/molecules/Pagination";
 
-import { action } from "./action";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import ReviewCard from "./components/ReviewCard";
@@ -13,7 +12,6 @@ import { loader } from "./loader";
 export const meta: MetaFunction = () => [{ title: "Homepage | Review Keeper" }];
 
 export { loader };
-export { action };
 
 export default function Index() {
   const { items, totalItems } = useLoaderData<typeof loader>();
@@ -23,7 +21,7 @@ export default function Index() {
     <MainLayout>
       <article className="flex flex-col gap-8">
         <header className="flex flex-col gap-4">
-          <Header pageSize={paginationState.pageSize} totalItems={totalItems} />
+          <Header itemCount={items.length} totalItems={totalItems} />
           <Navigation />
         </header>
 
