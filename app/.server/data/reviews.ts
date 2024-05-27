@@ -58,14 +58,14 @@ const getFilteredReviewsForGrid = async ({
 }: FiltersSchema) => {
   try {
     const authorAndCategoryFilterOptions: Prisma.ReviewWhereInput = {
-      ...(author.length ? { author: { id: { in: author } } } : {}),
+      ...(author.length ? { author: { username: { in: author } } } : {}),
       ...(category.length
         ? {
             OR: [
               category.find((category) => category === "uncategorised")
                 ? { category: { is: null } }
                 : {},
-              { category: { id: { in: category } } },
+              { category: { name: { in: category } } },
             ],
           }
         : {}),
@@ -168,6 +168,9 @@ const getSortedReviewsForGrid = async (
   }
 };
 
+export type ReviewForGrid = PromiseReturnType<
+  typeof getReviewsForGrid
+>["items"][number];
 export const getReviewsForGrid = async (
   page = 1,
   pageSize = 10,
@@ -198,40 +201,58 @@ export const getReviewsForGrid = async (
   }
 };
 
-export type ReviewForGrid = PromiseReturnType<
-  typeof getReviewsForGrid
->["items"][number];
-
-export const getReviewCategoriesFilter = async (): Promise<
-  ReviewCategory[]
-> => {
+export const getReviewCategoriesFilter = async (categoryQuery?: string) => {
   try {
-    const categories = await prisma.reviewCategory.findMany();
-    return categories.map(({ id, name }) => ({
-      id,
-      name,
-    }));
+    const [categories, categoriesCount] = await prisma.$transaction([
+      prisma.reviewCategory.findMany({
+        take: 9,
+        where: { name: { contains: categoryQuery } },
+      }),
+      prisma.reviewCategory.count(),
+    ]);
+
+    const mappedCategories = [
+      {
+        id: "uncategorised",
+        name: "Uncategorised",
+      },
+      ...categories.map(({ id, name }) => ({
+        id,
+        name,
+      })),
+    ];
+
+    return {
+      categories: mappedCategories,
+      categoriesCount: categoriesCount + 1,
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return {
+      categories: [],
+      categoriesCount: 0,
+    };
   }
 };
 
-export type ReviewAuthor = Pick<User, "id" | "username">;
-export const getReviewAuthorFilter = async (): Promise<ReviewAuthor[]> => {
+export const getReviewAuthorFilter = async (authorQuery?: string) => {
   try {
-    const authors = await prisma.user.findMany({
-      where: { reviews: { some: {} } },
-    });
+    const [authors, authorsCount] = await prisma.$transaction([
+      prisma.user.findMany({
+        take: 10,
+        where: { reviews: { some: {} }, username: { contains: authorQuery } },
+      }),
+      prisma.user.count({ where: { reviews: { some: {} } } }),
+    ]);
 
-    return [
-      ...authors.map(({ id, username }) => ({
-        id,
-        username,
-      })),
-    ];
+    const mappedAuthors = authors.map(({ id, username }) => ({ id, username }));
+
+    return {
+      authors: mappedAuthors,
+      authorsCount,
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return { authors: [], authorsCount: 0 };
   }
 };

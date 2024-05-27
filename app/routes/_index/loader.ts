@@ -1,11 +1,8 @@
+import { faker } from "@faker-js/faker";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 
-import type { ReviewCategory } from "~/.server/data/review";
-import {
-  getReviewAuthorFilter,
-  getReviewCategoriesFilter,
-  getReviewsForGrid,
-} from "~/.server/data/reviews";
+import { getReviewsForGrid } from "~/.server/data/reviews";
+import { env } from "~/.server/utils/env";
 import {
   PAGE_SEARCH_PARAM,
   PAGE_SIZE_SEARCH_PARAM,
@@ -20,6 +17,8 @@ import {
   backendFiltersSchema,
   type FiltersSchema,
 } from "./schema/filters.schema";
+
+const isDevMode = env().NODE_ENV === "development";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -57,25 +56,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     sort,
     filters,
   );
-  const reviewCategories = await getCategories();
 
-  const reviewAuthors = await getReviewAuthorFilter();
+  isDevMode &&
+    (await new Promise((resolve) => {
+      setTimeout(() => resolve({}), faker.number.int({ min: 250, max: 2000 }));
+    }));
 
   return json({
     items,
-    reviewAuthors,
-    reviewCategories,
     totalItems,
   });
-};
-
-const getCategories = async (): Promise<ReviewCategory[]> => {
-  const reviewCategories = await getReviewCategoriesFilter();
-
-  const uncategorisedOption: ReviewCategory = {
-    id: "uncategorised",
-    name: "Uncategorised",
-  };
-
-  return [uncategorisedOption, ...reviewCategories];
 };

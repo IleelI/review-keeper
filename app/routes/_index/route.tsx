@@ -1,11 +1,12 @@
 import { type MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
 
 import MainLayout from "~/components/layouts/MainLayout";
 import Pagination, { usePagination } from "~/components/molecules/Pagination";
 
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
+import { ResultsSkeleton } from "./components/ResultsSkeleton";
 import ReviewCard from "./components/ReviewCard";
 import { loader } from "./loader";
 
@@ -14,8 +15,11 @@ export const meta: MetaFunction = () => [{ title: "Homepage | Review Keeper" }];
 export { loader };
 
 export default function Index() {
+  const navigation = useNavigation();
+
   const { items, totalItems } = useLoaderData<typeof loader>();
   const paginationState = usePagination(totalItems);
+  const isLoading = navigation.state === "loading";
 
   return (
     <MainLayout>
@@ -26,7 +30,9 @@ export default function Index() {
         </header>
 
         <section role="grid">
-          {items.length ? (
+          {isLoading ? (
+            <ResultsSkeleton />
+          ) : items.length ? (
             <ul className="grid auto-rows-[minmax(120px,1fr)] grid-cols-1 gap-4 md:grid-cols-2 lg:auto-rows-[minmax(200px,1fr)] lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]">
               {items.map((review) => (
                 <ReviewCard key={review.id} {...review} />
