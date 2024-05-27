@@ -1,11 +1,6 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 
-import type { ReviewCategory } from "~/.server/data/review";
-import {
-  getReviewAuthorFilter,
-  getReviewCategoriesFilter,
-  getReviewsForGrid,
-} from "~/.server/data/reviews";
+import { getReviewsForGrid } from "~/.server/data/reviews";
 import {
   PAGE_SEARCH_PARAM,
   PAGE_SIZE_SEARCH_PARAM,
@@ -57,25 +52,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     sort,
     filters,
   );
-  const reviewCategories = await getCategories();
-
-  const reviewAuthors = await getReviewAuthorFilter();
 
   return json({
     items,
-    reviewAuthors,
-    reviewCategories,
     totalItems,
   });
 };
 
-const getCategories = async (): Promise<ReviewCategory[]> => {
-  const reviewCategories = await getReviewCategoriesFilter();
+// const getCategories = async (): Promise<ReviewCategory[]> => {
+//   const reviewCategories = await getReviewCategoriesFilter();
 
-  const uncategorisedOption: ReviewCategory = {
-    id: "uncategorised",
-    name: "Uncategorised",
-  };
+//   const uncategorisedOption: ReviewCategory = {
+//     id: "uncategorised",
+//     name: "Uncategorised",
+//   };
 
-  return [uncategorisedOption, ...reviewCategories];
-};
+//   return [uncategorisedOption, ...reviewCategories];
+// };

@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouteLoaderData, useSearchParams } from "@remix-run/react";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "@remix-run/react";
+import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { PAGE_SEARCH_PARAM } from "~/components/molecules/Pagination";
 
 import { useFiltersParams } from "../../hooks/useFilters";
-import type { loader } from "../../loader";
 import { type FiltersSchema, filtersSchema } from "../../schema/filters.schema";
 
 export const defaultValues: FiltersSchema = {
@@ -15,27 +14,16 @@ export const defaultValues: FiltersSchema = {
 };
 
 const useFiltersDialog = () => {
-  const data = useRouteLoaderData<typeof loader>("routes/_index");
-  const { reviewAuthors, reviewCategories } = useMemo(
-    () => ({
-      reviewAuthors: data?.reviewAuthors ?? [],
-      reviewCategories: data?.reviewCategories ?? [],
-    }),
-    [data?.reviewAuthors, data?.reviewCategories],
-  );
-
-  const { filters: filtersParams } = useFiltersParams();
   const [serachParams, setSearchParams] = useSearchParams();
+  const { filters } = useFiltersParams();
   const form = useForm<FiltersSchema>({
     defaultValues: defaultValues,
     resolver: zodResolver(filtersSchema),
-    values: filtersParams,
+    values: filters,
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const handleDialogOpen = () => setIsDialogOpen(true);
   const handleDialogClose = () => setIsDialogOpen(false);
-
-  const filters = form.watch();
 
   const onSubmit: SubmitHandler<FiltersSchema> = async (data) => {
     const params = new URLSearchParams(serachParams);
@@ -63,14 +51,11 @@ const useFiltersDialog = () => {
   };
 
   return {
-    filters,
     form,
     isDialogOpen,
     handleDialogClose,
     handleDialogOpen,
     onSubmit,
-    reviewAuthors,
-    reviewCategories,
     setIsDialogOpen,
   };
 };
