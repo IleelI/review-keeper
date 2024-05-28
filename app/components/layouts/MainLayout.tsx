@@ -1,20 +1,21 @@
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Form } from "@remix-run/react";
-import { LogIn, LogOut, UserPlus } from "iconoir-react";
 import { PropsWithChildren } from "react";
 
 import useUser from "~/hooks/useUser/useUser";
 
-import Button from "../atoms/Button";
 import Link from "../atoms/Link";
+
+import { MobileNavigation } from "./components/MobileNavigation";
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   const user = useUser();
 
   return (
-    <main className="mx-auto flex w-full flex-col gap-8 md:max-w-screen-xl lg:gap-16 ">
-      <header className="grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr]">
+    <main className="mx-auto flex  flex-col gap-8 md:max-w-screen-xl lg:gap-16 ">
+      <header className="flex items-center justify-between gap-4">
         <Link
-          className="text-2xl font-bold text-primary-700 dark:text-primary-300"
+          className="text-3xl font-bold text-primary-700 dark:text-primary-300"
           to="/"
           size="custom"
           variant="custom"
@@ -22,35 +23,48 @@ const MainLayout = ({ children }: PropsWithChildren) => {
           <h1>Review Keeper</h1>
         </Link>
 
-        <nav className="flex flex-col justify-end gap-3 sm:flex-row sm:items-center sm:justify-end">
-          <Link to="/" size="sm" variant="navigation">
-            Home
-          </Link>
-
+        <MobileNavigation user={user} />
+        <nav className="hidden gap-2 lg:flex">
+          <ul className="flex gap-2">
+            <Link to="/" variant="navigation">
+              <li>Home</li>
+            </Link>
+            <Link to="/review/new" variant="navigation">
+              <li>Review Creator</li>
+            </Link>
+          </ul>
           {user ? (
-            <>
-              <Link to="/review/new" size="sm" variant="navigation">
-                Review Creator
-              </Link>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button
+                  className="rounded-lg border border-neutral-200 bg-neutral-100 px-4 py-1 text-neutral-800"
+                  type="button"
+                >
+                  {user?.username}
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content className="min-w-[var(--radix-dropdown-menu-trigger-width)] rounded-lg bg-white px-4 py-2 shadow">
+                  <Link to="/user/123124" size="custom" variant="custom">
+                    User Profile
+                  </Link>
+                  <Form action="/auth/sign-out" method="POST">
+                    <button type="submit">Sign out</button>
+                  </Form>
 
-              <Form action="/auth/sign-out" method="post">
-                <Button size="sm" type="submit">
-                  Sign out
-                  <LogOut className="h-4 w-4" />
-                </Button>
-              </Form>
-            </>
+                  <DropdownMenu.Arrow />
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
           ) : (
-            <>
-              <Link to="/auth/sign-up" size="sm" variant="buttonGhost">
+            <section className="grid grid-cols-2 gap-2">
+              <Link to="/auth/sign-up" size="sm" variant="buttonSecondary">
                 Sign up
-                <UserPlus className="h-4 w-4" />
               </Link>
               <Link to="/auth/sign-in" size="sm" variant="button">
                 Sign in
-                <LogIn className="h-4 w-4" />
               </Link>
-            </>
+            </section>
           )}
         </nav>
       </header>

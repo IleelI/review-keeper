@@ -22,7 +22,7 @@ export default Link;
 
 type LinkStyles = VariantProps<typeof linkStyles>;
 const linkStyles = cva(
-  "min-w-max w-auto h-auto inline-flex gap-1.5 justify-center items-center transition",
+  "min-w-max w-auto h-auto inline-flex gap-1.5 transition",
   {
     variants: {
       size: {
@@ -33,19 +33,19 @@ const linkStyles = cva(
       },
       variant: {
         button: [
-          "font-medium outline-offset-4 bg-primary-700 text-neutral-100 dark:bg-primary-300 dark:text-neutral-900",
+          "justify-center items-center font-medium outline-offset-4 bg-primary-700 text-neutral-100 dark:bg-primary-300 dark:text-neutral-900",
           "hover:bg-primary-600 ring-transparent outline-offset-2 dark:hover:bg-primary-400 focus-visible:bg-primary-600 dark:focus-visible:bg-primary-400",
         ],
         buttonGhost: [
-          "font-medium text-neutral-800 dark:text-neutral-200",
+          "justify-center items-center font-medium text-neutral-800 dark:text-neutral-200",
           "hover:backdrop-brightness-95 focus-visible:backdrop-brightness-95 active:backdrop-brightness-85 dark:hover:backdrop-brightness-150 dark:focus-visible:backdrop-brightness-150 dark:active:backdrop-brightness-200",
         ],
         buttonSecondary: [
-          "font-medium bg-transparent border border-neutral-700 text-neutral-700 dark:border-neutral-300 dark:text-neutral-300",
+          "justify-center items-center font-medium bg-transparent border border-neutral-700 text-neutral-700 dark:border-neutral-300 dark:text-neutral-300",
           "hover:backdrop-brightness-95 focus-visible:backdrop-brightness-95 active:backdrop-brightness-85 dark:hover:backdrop-brightness-150 dark:focus-visible:backdrop-brightness-150 dark:active:backdrop-brightness-200",
         ],
         navigation: [
-          "text-neutral-800 dark:text-neutral-200",
+          "justify-center items-center text-neutral-800 dark:text-neutral-200",
           "hover:text-primary-700 dark:hover:text-primary-300 focus-visible:text-primary-700 dark:focus-visible:text-primary-300 hover:backdrop-brightness-95 focus-visible:backdrop-brightness-95 active:backdrop-brightness-85 dark:hover:backdrop-brightness-150 dark:focus-visible:backdrop-brightness-150 dark:active:backdrop-brightness-200",
           "[&.active]:text-primary-700 dark:[&.active]:text-primary-300",
         ],
@@ -61,7 +61,7 @@ const linkStyles = cva(
       { size: "md", variant: "button", className: "px-4 py-1.5 rounded-md" },
       { size: "lg", variant: "button", className: "px-6 py-1.5 rounded-md" },
 
-      { size: "sm", variant: "buttonGhost", className: "px-4 py-1 rounded" },
+      { size: "sm", variant: "buttonGhost", className: "px-4 py-1 rounded-md" },
       {
         size: "md",
         variant: "buttonGhost",
@@ -76,7 +76,7 @@ const linkStyles = cva(
       {
         size: "sm",
         variant: "buttonSecondary",
-        className: "px-4 py-1 rounded",
+        className: "px-4 py-1 rounded-md",
       },
       {
         size: "md",
@@ -85,7 +85,7 @@ const linkStyles = cva(
       },
       {
         size: "lg",
-        variant: "buttonGhost",
+        variant: "buttonSecondary",
         className: "px-6 py-1.5 rounded-md",
       },
 
