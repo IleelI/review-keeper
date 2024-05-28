@@ -1,8 +1,6 @@
-import { faker } from "@faker-js/faker";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 
 import { getReviewsForGrid } from "~/.server/data/reviews";
-import { env } from "~/.server/utils/env";
 import {
   PAGE_SEARCH_PARAM,
   PAGE_SIZE_SEARCH_PARAM,
@@ -17,8 +15,6 @@ import {
   backendFiltersSchema,
   type FiltersSchema,
 } from "./schema/filters.schema";
-
-const isDevMode = env().NODE_ENV === "development";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -56,11 +52,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     sort,
     filters,
   );
-
-  isDevMode &&
-    (await new Promise((resolve) => {
-      setTimeout(() => resolve({}), faker.number.int({ min: 250, max: 2000 }));
-    }));
 
   return json({
     items,

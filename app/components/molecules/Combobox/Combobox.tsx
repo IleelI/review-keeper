@@ -27,8 +27,10 @@ const Combobox = ({ children, ...props }: PopoverProps) => {
   useEffect(() => {
     if (props.open) {
       document.body.style.overflowY = "hidden";
+      document.documentElement.style.paddingRight = "16px";
     } else {
       document.body.style.overflowY = "auto";
+      document.documentElement.style.paddingRight = "0px";
     }
   }, [props.open]);
 

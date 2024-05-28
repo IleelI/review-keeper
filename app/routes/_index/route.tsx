@@ -19,7 +19,8 @@ export default function Index() {
 
   const { items, totalItems } = useLoaderData<typeof loader>();
   const paginationState = usePagination(totalItems);
-  const isLoading = navigation.state === "loading";
+  const isLoading =
+    navigation.state === "loading" && navigation.location.pathname === "/";
 
   return (
     <MainLayout>
