@@ -20,6 +20,7 @@ const useNavigation = () => {
         .filter((value): value is keyof typeof filters => value !== null),
     [filters],
   );
+
   return {
     activeFiltres,
     handleFilterDelete,

@@ -12,6 +12,7 @@ import {
   type ElementRef,
   type ComponentPropsWithoutRef,
   type PropsWithChildren,
+  useEffect,
 } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -22,9 +23,17 @@ export interface ComboboxItem {
   value: string;
 }
 
-const Combobox = ({ children, ...props }: PopoverProps) => (
-  <Popover {...props}>{children}</Popover>
-);
+const Combobox = ({ children, ...props }: PopoverProps) => {
+  useEffect(() => {
+    if (props.open) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [props.open]);
+
+  return <Popover {...props}>{children}</Popover>;
+};
 
 const ComboboxTrigger = forwardRef<
   ElementRef<typeof PopoverTrigger>,

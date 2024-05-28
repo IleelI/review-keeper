@@ -1,5 +1,12 @@
 {
-  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "app/.server/**/*"],
+  "include": [
+    "env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "app/.server/**/*",
+    "app/routes/_index/server/action.ts",
+    "app/routes/_index/loader.ts"
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",

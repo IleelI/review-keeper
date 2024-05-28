@@ -1,0 +1,1 @@
+export { ResultsSkeleton } from "./ResultsSkeleton";
