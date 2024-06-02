@@ -6,7 +6,7 @@ import {
   type ComponentPropsWithoutRef,
   type HTMLAttributes,
 } from "react";
-import { twJoin, twMerge } from "tailwind-merge";
+import { twMerge } from "tailwind-merge";
 
 const Dialog = ({ children, ...props }: RadixDialog.DialogProps) => (
   <RadixDialog.Root {...props}>{children}</RadixDialog.Root>
@@ -24,7 +24,7 @@ const DialogOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
   <RadixDialog.Overlay
     ref={ref}
-    className={twJoin(
+    className={twMerge(
       "fixed inset-0 z-40 bg-black/30 backdrop-blur-[1px] data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
@@ -42,7 +42,7 @@ const DialogContent = forwardRef<
     <RadixDialog.Content
       ref={ref}
       className={twMerge(
-        "fixed inset-x-0 bottom-0 z-40 flex w-full flex-col gap-4 rounded-b-none rounded-t-lg border border-neutral-200 bg-neutral-50 p-6 data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-[50%] data-[state=open]:slide-in-from-bottom-[50%] md:bottom-1/2 md:left-1/2 md:max-w-lg md:-translate-x-1/2 md:translate-y-1/2 md:rounded-md md:shadow-lg md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=open]:slide-in-from-left-1/2 dark:border-neutral-800 dark:bg-neutral-900",
+        "fixed inset-x-0 bottom-0 z-40 flex w-full flex-col gap-4 rounded-b-none rounded-t-lg border border-neutral-200 bg-neutral-50 p-6 data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-[50%] data-[state=open]:slide-in-from-bottom-[50%] md:rounded-md lg:bottom-1/2 lg:left-1/2 lg:max-w-lg lg:-translate-x-1/2 lg:translate-y-1/2 lg:shadow-lg lg:data-[state=closed]:zoom-out-95 lg:data-[state=open]:zoom-in-95 lg:data-[state=closed]:slide-out-to-left-1/2 lg:data-[state=open]:slide-in-from-left-1/2 dark:border-neutral-800 dark:bg-neutral-900",
         className,
       )}
       {...props}
@@ -62,7 +62,7 @@ const DialogHeader = ({
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
   <header
-    className={twJoin(
+    className={twMerge(
       "flex flex-col gap-1 text-center sm:text-left",
       className,
     )}
@@ -76,7 +76,7 @@ const DialogFooter = ({
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
   <footer
-    className={twJoin(
+    className={twMerge(
       "flex flex-col gap-4 sm:flex-row sm:justify-end",
       className,
     )}
@@ -91,7 +91,7 @@ const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <RadixDialog.Title
     ref={ref}
-    className={twJoin(
+    className={twMerge(
       "text-xl font-medium text-neutral-800 dark:text-neutral-200",
       className,
     )}
