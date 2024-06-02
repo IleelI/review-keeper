@@ -1,17 +1,26 @@
-import { Form } from "@remix-run/react";
 import { Menu } from "iconoir-react";
+import { useState } from "react";
 
 import type { AppUser } from "~/.server/data/user";
 import Button from "~/components/atoms/Button";
 import Link from "~/components/atoms/Link";
 import Dialog from "~/components/molecules/Dialog";
+import useSignOut from "~/hooks/useSignOut/useSignOut";
 
 interface MobileNavigationProps {
   user: AppUser | null;
 }
 export const MobileNavigation = ({ user }: MobileNavigationProps) => {
+  const signOut = useSignOut();
+  const [open, setOpen] = useState(false);
+
+  const handleSignOut = () => {
+    signOut();
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button
           className="h-8 w-8 rounded-md lg:hidden"
@@ -62,9 +71,14 @@ export const MobileNavigation = ({ user }: MobileNavigationProps) => {
 
           {user ? (
             <Dialog.Footer className="grid grid-cols-1">
-              <Form action="/auth/sign-out" method="POST">
-                <Button type="submit">Sign out</Button>
-              </Form>
+              <h2 className="text-lg text-neutral-800 dark:text-neutral-200">
+                Welcome,{" "}
+                <span className="font-semibold text-primary-700 dark:text-primary-300">
+                  {user.username}
+                </span>
+                !
+              </h2>
+              <Button onClick={handleSignOut}>Sign out</Button>
             </Dialog.Footer>
           ) : (
             <Dialog.Footer className="grid grid-cols-2 gap-4">

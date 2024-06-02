@@ -22,7 +22,7 @@ const NewReviewPage = () => {
 
   return (
     <MainLayout>
-      <article className="flex flex-col gap-8">
+      <article className="flex w-full flex-col gap-8">
         <header className="flex flex-col gap-3">
           <h2 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
             Review Creator
