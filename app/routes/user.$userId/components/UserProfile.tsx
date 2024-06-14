@@ -74,12 +74,12 @@ const UserProfile = ({ user }: UserProfileProps) => {
   return (
     <article className="row-span-full flex flex-col gap-4 lg:col-start-1 lg:col-end-2">
       <header>
-        <h2 className="text-xl font-semibold text-neutral-600 dark:text-neutral-400">
+        <h2 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
           Account Information
         </h2>
       </header>
 
-      <section className="min-h-[320px] rounded-lg bg-white px-6 py-4 shadow">
+      <section className="min-h-[320px] rounded-lg bg-white px-6 py-4 shadow dark:bg-neutral-800">
         <header className="mb-8 flex flex-col items-center gap-1">
           <p className="text-xs text-neutral-500">Welcome!</p>
           <h2 className="text-xl font-bold text-primary-700 dark:text-primary-300">
@@ -122,15 +122,12 @@ const UserProfile = ({ user }: UserProfileProps) => {
           <Button
             disabled={isSaveChangesButtonDisabled}
             onClick={handleProfileUpdate}
-            size="sm"
           >
             Save Changes
           </Button>
           <Dialog>
             <Dialog.Trigger asChild>
-              <Button intent="destructive" size="sm">
-                Delete Account
-              </Button>
+              <Button intent="destructive">Delete Account</Button>
             </Dialog.Trigger>
             <Dialog.Content>
               <Dialog.Header>Delete Account</Dialog.Header>

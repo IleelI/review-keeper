@@ -11,12 +11,12 @@ const UserStats = ({
   return (
     <article className="flex flex-col gap-4 lg:col-start-2 lg:col-end-3">
       <header>
-        <h2 className="text-xl font-semibold text-neutral-600 dark:text-neutral-400">
+        <h2 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
           Statistics
         </h2>
       </header>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="group flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow">
+        <div className="group flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow dark:bg-neutral-800">
           <p
             className={twJoin(
               "text-xl font-bold transition ease-in-out",
@@ -27,11 +27,11 @@ const UserStats = ({
           </p>
           <h2 className="text-sm">Average Rating</h2>
         </div>
-        <div className="flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow">
+        <div className="flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow dark:bg-neutral-800">
           <p className="text-xl font-bold">{reactionsAverage}</p>
           <h2 className="text-sm">Average Reactions</h2>
         </div>
-        <div className="flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow">
+        <div className="flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow dark:bg-neutral-800">
           <p className="text-xl font-bold">{reviewTotalCount}</p>
           <h2 className="text-sm">Review Count</h2>
         </div>

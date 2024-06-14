@@ -11,7 +11,7 @@ const RecentReviews = ({ reviews, user }: RecentReviewsProps) => {
   return (
     <article className="flex flex-col gap-4 lg:col-start-2 lg:col-end-3">
       <header className="flex justify-between gap-4">
-        <h2 className="text-xl font-semibold text-neutral-600 dark:text-neutral-400">
+        <h2 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
           Recent reviews
         </h2>
         <Link size="sm" to={`/?author=${user.username}`}>
@@ -25,7 +25,7 @@ const RecentReviews = ({ reviews, user }: RecentReviewsProps) => {
           ))}
         </ul>
       ) : (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-6 shadow">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-6 shadow dark:bg-neutral-800">
           <h2 className="">No reviews yet</h2>
           <p className="">
             Create your first, <Link to="/review/new">here!</Link>
