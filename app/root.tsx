@@ -51,10 +51,10 @@ export function Layout({ children }: PropsWithChildren) {
           <div className="grid min-h-[100dvh] w-full p-6 pb-16 lg:p-8 lg:pb-20">
             {children}
           </div>
+          <ScrollRestoration />
+          <Scripts />
+          <Toaster position="bottom-right" theme="system" />
         </IconoirProvider>
-        <ScrollRestoration />
-        <Scripts />
-        <Toaster position="bottom-right" richColors theme="system" />
       </body>
     </html>
   );

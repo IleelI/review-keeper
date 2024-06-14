@@ -32,7 +32,7 @@ const DesktopNavigation = ({ user }: DesktopNavigationProps) => {
             <Dropdown.Item>
               <Link
                 className="flex items-center gap-1.5"
-                to="/user/123124"
+                to={`/user/${user.id}`}
                 size="custom"
                 variant="custom"
               >

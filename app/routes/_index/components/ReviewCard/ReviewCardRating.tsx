@@ -34,7 +34,7 @@ const getRatingStyles = (rating: number, ratingScale: number) => {
     case ratingPercentage < 40:
       return "group-hover:text-red-600 dark:group-hover:text-red-400";
     case ratingPercentage < 80:
-      return "group-hover:text-blue-600 dark:group-hover:text-blue-400";
+      return "group-hover:text-orange-600 dark:group-hover:text-orange-400";
     case ratingPercentage <= 100:
       return "group-hover:text-green-600 dark:group-hover:text-green-400";
     default:

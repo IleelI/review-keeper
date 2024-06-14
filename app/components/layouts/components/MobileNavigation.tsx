@@ -58,7 +58,7 @@ export const MobileNavigation = ({ user }: MobileNavigationProps) => {
             {user ? (
               <Link
                 className="w-full rounded-md px-4 py-2 text-lg [&.active]:font-semibold"
-                to="/user"
+                to={`/user/${user.id}`}
                 size="custom"
                 variant="navigation"
               >
