@@ -37,7 +37,7 @@ type ReviewsForGrid = Prisma.ReviewGetPayload<{
   select: typeof reviewsForGridSelect;
 }>;
 
-const extendedPrisma = prisma.$extends({
+export const extendedPrismaWithReviewPercentage = prisma.$extends({
   result: {
     review: {
       ratingPercentage: {
@@ -71,10 +71,11 @@ const getFilteredReviewsForGrid = async ({
         : {}),
     };
 
-    const extendedReviews = await extendedPrisma.review.findMany({
-      select: { ...reviewsForGridSelect, ratingPercentage: true },
-      where: authorAndCategoryFilterOptions,
-    });
+    const extendedReviews =
+      await extendedPrismaWithReviewPercentage.review.findMany({
+        select: { ...reviewsForGridSelect, ratingPercentage: true },
+        where: authorAndCategoryFilterOptions,
+      });
 
     return extendedReviews.filter(
       ({ ratingPercentage, _count: { reactions: reactionsCount } }) => {
@@ -254,5 +255,30 @@ export const getReviewAuthorFilter = async (authorQuery?: string) => {
   } catch (error) {
     console.error(error);
     return { authors: [], authorsCount: 0 };
+  }
+};
+
+export const getReviewsForUserProfile = async (
+  userId: string,
+  count = 6,
+): Promise<ReviewForGrid[]> => {
+  try {
+    const reviews = await extendedPrismaWithReviewPercentage.review.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
+      select: { ...reviewsForGridSelect, ratingPercentage: true },
+      take: count,
+      where: { authorId: userId },
+    });
+
+    return reviews.map(({ createdAt, updatedAt, ...review }) => ({
+      createdAt: createdAt.toISOString(),
+      updatedAt: updatedAt.toISOString(),
+      ...review,
+    }));
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 };

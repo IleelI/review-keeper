@@ -12,7 +12,7 @@ const DropdownTrigger = forwardRef<
 >(({ children, className, role = "menu", type = "button", ...props }, ref) => (
   <RadixDropdown.Trigger
     className={twMerge(
-      "flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-1 text-neutral-800 outline-offset-2 transition duration-200 ease-in-out enabled:hover:border-primary-700 dark:enabled:hover:border-primary-300",
+      "flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-1 text-neutral-800 outline-offset-2 transition duration-200 ease-in-out enabled:hover:border-primary-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:enabled:hover:border-primary-300",
       className,
     )}
     ref={ref}
@@ -36,7 +36,7 @@ const DropdownContent = forwardRef<
     <RadixDropdown.Portal>
       <RadixDropdown.Content
         className={twMerge(
-          "flex min-w-[var(--radix-dropdown-menu-trigger-width)] flex-col gap-1 rounded-lg bg-white p-1.5 shadow",
+          "flex min-w-[var(--radix-dropdown-menu-trigger-width)] flex-col gap-1 rounded-lg border border-neutral-100 bg-white p-1.5 shadow dark:border-neutral-700 dark:bg-neutral-800",
           className,
         )}
         collisionPadding={collisionPadding}
