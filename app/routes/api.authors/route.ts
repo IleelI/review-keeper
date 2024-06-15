@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@vercel/remix";
 
 import { getReviewAuthorFilter } from "~/.server/data/reviews";
 

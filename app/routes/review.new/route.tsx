@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@vercel/remix";
 import { FormProvider } from "react-hook-form";
 
 import Button from "~/components/atoms/Button";

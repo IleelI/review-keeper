@@ -1,4 +1,4 @@
-import { type ActionFunctionArgs, json } from "@remix-run/node";
+import { type ActionFunctionArgs, json } from "@vercel/remix";
 import { z } from "zod";
 
 import type { AppUser } from "~/.server/data/user";

@@ -1,9 +1,5 @@
 import { invariant } from "@epic-web/invariant";
-import {
-  json,
-  type ActionFunctionArgs,
-  redirectDocument,
-} from "@remix-run/node";
+import { json, type ActionFunctionArgs, redirectDocument } from "@vercel/remix";
 import { z } from "zod";
 
 import { isUserReviewAuthor } from "~/.server/data/review";

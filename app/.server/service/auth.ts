@@ -1,7 +1,7 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 
 import { faker } from "@faker-js/faker";
-import { createCookie, redirect, redirectDocument } from "@remix-run/node";
+import { createCookie, redirect, redirectDocument } from "@vercel/remix";
 import { SignJWT, jwtVerify } from "jose";
 
 import { CredentialsSchema } from "~/schema/auth.schema";

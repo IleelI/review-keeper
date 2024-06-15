@@ -1,5 +1,5 @@
 import { invariant } from "@epic-web/invariant";
-import { type LoaderFunctionArgs, json } from "@remix-run/node";
+import { type LoaderFunctionArgs, json } from "@vercel/remix";
 
 import { getReviewsForUserProfile } from "~/.server/data/reviews";
 import { getUserById, getUserStatistics } from "~/.server/data/user";

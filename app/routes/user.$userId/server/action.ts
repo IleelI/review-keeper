@@ -1,4 +1,4 @@
-import { json, type ActionFunctionArgs } from "@remix-run/node";
+import { json, type ActionFunctionArgs } from "@vercel/remix";
 
 import { requireUser, getRequiredUser } from "~/.server/service/auth";
 import { prisma } from "~/.server/service/db";

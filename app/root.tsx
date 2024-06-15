@@ -1,4 +1,3 @@
-import { json, type LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
   isRouteErrorResponse,
   Links,
@@ -8,6 +7,7 @@ import {
   ScrollRestoration,
   useRouteError,
 } from "@remix-run/react";
+import { json, type LinksFunction, LoaderFunctionArgs } from "@vercel/remix";
 import { IconoirProvider } from "iconoir-react";
 import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
