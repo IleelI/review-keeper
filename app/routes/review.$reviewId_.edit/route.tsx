@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@vercel/remix";
+import type { MetaFunction } from "@remix-run/node";
 import { FormProvider } from "react-hook-form";
 
 import MainLayout from "~/components/layouts/MainLayout";

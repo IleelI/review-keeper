@@ -1,4 +1,4 @@
-import { redirect } from "@vercel/remix";
+import { redirect } from "@remix-run/node";
 
 import { signOut } from "~/.server/service/auth";
 

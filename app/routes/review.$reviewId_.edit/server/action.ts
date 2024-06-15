@@ -1,5 +1,5 @@
 import { invariant } from "@epic-web/invariant";
-import { json, type ActionFunctionArgs } from "@vercel/remix";
+import { json, type ActionFunctionArgs } from "@remix-run/node";
 
 import { isUserReviewAuthor } from "~/.server/data/review";
 import { getRequiredUser } from "~/.server/service/auth";

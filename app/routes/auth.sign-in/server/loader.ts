@@ -1,4 +1,4 @@
-import { redirect, type LoaderFunctionArgs } from "@vercel/remix";
+import { redirect, type LoaderFunctionArgs } from "@remix-run/node";
 
 import { getUser } from "~/.server/service/auth";
 

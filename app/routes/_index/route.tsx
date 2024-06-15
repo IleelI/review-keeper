@@ -1,5 +1,5 @@
+import { type MetaFunction } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
-import { type MetaFunction } from "@vercel/remix";
 
 import MainLayout from "~/components/layouts/MainLayout";
 import Pagination, { usePagination } from "~/components/molecules/Pagination";
