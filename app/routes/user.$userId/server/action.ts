@@ -1,13 +1,11 @@
-import { invariant } from "@epic-web/invariant";
 import { json, type ActionFunctionArgs } from "@remix-run/node";
 
 import { requireUser, getRequiredUser } from "~/.server/service/auth";
 import { prisma } from "~/.server/service/db";
 
-import { userProfileSchema } from "../components/UserProfile";
+import { userProfileSchema } from "../components/UserProfileActions";
 
-export const action = async ({ params, request }: ActionFunctionArgs) => {
-  invariant(params.userId, "userId is required.");
+export const action = async ({ request }: ActionFunctionArgs) => {
   await requireUser(request);
   switch (request.method) {
     case "POST": {
@@ -22,7 +20,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         if (parsedUserProfile.error) {
           return {
             status: "error" as const,
-            message: "Invalide email/username.",
+            message: "Invalid email/username.",
           };
         }
 

@@ -1,6 +1,7 @@
 import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
 
+import type { AppUser } from "~/.server/data/user";
 import {
   lookForUser,
   createUser,
@@ -40,9 +41,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         error: "Something went wrong while creating account.",
       });
     }
-
-    const refreshToken = await createRefreshToken(user);
-    const accessToken = await createAccessToken(user);
+    const { createdAt, email, id, username } = user;
+    const tokenUser: AppUser = {
+      createdAt: createdAt.toISOString(),
+      email,
+      id,
+      username,
+    };
+    const refreshToken = await createRefreshToken(tokenUser);
+    const accessToken = await createAccessToken(tokenUser);
     await prisma.user.update({
       where: { email: user.email },
       data: { refreshToken },

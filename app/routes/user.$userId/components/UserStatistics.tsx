@@ -20,15 +20,17 @@ const UserStats = ({
           <p
             className={twJoin(
               "text-xl font-bold transition ease-in-out",
-              getRatingStyles(ratingAverage),
+              ratingAverage && getRatingStyles(ratingAverage),
             )}
           >
-            {ratingAverage}%
+            {ratingAverage ? `${ratingAverage}%` : "N/A"}
           </p>
           <h2 className="text-sm">Average Rating</h2>
         </div>
         <div className="flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow dark:bg-neutral-800">
-          <p className="text-xl font-bold">{reactionsAverage}</p>
+          <p className="text-xl font-bold">
+            {reactionsAverage ? `${reactionsAverage}` : "N/A"}
+          </p>
           <h2 className="text-sm">Average Reactions</h2>
         </div>
         <div className="flex flex-col gap-2 rounded-lg bg-white px-6 py-4 shadow dark:bg-neutral-800">
@@ -51,6 +53,6 @@ const getRatingStyles = (ratingPercentage: number) => {
     case ratingPercentage <= 100:
       return "group-hover:text-green-600 dark:group-hover:text-green-400";
     default:
-      return "group-hover:text-neutral-600 dark:group-hover:text-neutral-400";
+      return "";
   }
 };

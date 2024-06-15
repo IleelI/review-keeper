@@ -3,28 +3,23 @@ import { User } from "@prisma/client";
 import { prisma } from "../service/db";
 import { extendedPrismaWithReviewPercentage } from "./reviews";
 
-export type AppUser = Pick<User, "email" | "id" | "username">;
+export type AppUser = Pick<User, "email" | "id" | "username"> & {
+  createdAt: string;
+};
 
 export const getUserById = async (userId: string): Promise<AppUser | null> => {
   try {
-    return prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: { id: userId },
-      select: { email: true, id: true, username: true },
+      select: { email: true, id: true, username: true, createdAt: true },
     });
+    if (!user) return null;
+    return {
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+    };
   } catch {
     return null;
-  }
-};
-
-export const getUserReviews = async (userId: string) => {
-  try {
-    return await prisma.review.findMany({
-      where: {
-        authorId: userId,
-      },
-    });
-  } catch {
-    return [];
   }
 };
 
@@ -49,14 +44,14 @@ export const getUserStatistics = async (userId: string) => {
             reviews.reduce((prev, curr) => prev + curr.ratingPercentage, 0) /
               reviewTotalCount,
           )
-        : 0;
+        : null;
     const reactionsAverage =
       reviewTotalCount > 0
         ? Math.round(
             reviews.reduce((prev, curr) => prev + curr._count.reactions, 0) /
               reviewTotalCount,
           )
-        : 0;
+        : null;
 
     return {
       ratingAverage,

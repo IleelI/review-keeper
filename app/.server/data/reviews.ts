@@ -62,7 +62,9 @@ const getFilteredReviewsForGrid = async ({
       ...(category.length
         ? {
             OR: [
-              category.find((category) => category === "uncategorised")
+              category.find(
+                (category) => category.toLowerCase() === "uncategorised",
+              )
                 ? { category: { is: null } }
                 : {},
               { category: { name: { in: category } } },

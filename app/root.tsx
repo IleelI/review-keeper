@@ -1,19 +1,22 @@
-import { LoaderFunctionArgs, type LinksFunction, json } from "@remix-run/node";
+import { json, type LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
 import { IconoirProvider } from "iconoir-react";
 import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
 
-import { getUser } from "./.server/service/auth.js";
+import { TooltipProvider } from "~/components/molecules/Tooltip";
+
 import "./styles.css";
+
+import { getUser } from "./.server/service/auth";
 import GlobalError from "./components/organisms/GlobalError";
 
 export const links: LinksFunction = () => [
@@ -48,13 +51,15 @@ export function Layout({ children }: PropsWithChildren) {
             strokeWidth: 1.5,
           }}
         >
-          <div className="grid min-h-[100dvh] w-full p-6 pb-16 lg:p-8 lg:pb-20">
-            {children}
-          </div>
-          <ScrollRestoration />
-          <Scripts />
-          <Toaster position="bottom-right" theme="system" />
+          <TooltipProvider>
+            <div className="grid min-h-[100dvh] w-full p-6 pb-16 lg:p-8 lg:pb-20">
+              {children}
+            </div>
+            <Toaster position="bottom-right" theme="system" />
+          </TooltipProvider>
         </IconoirProvider>
+        <ScrollRestoration />
+        <Scripts />
       </body>
     </html>
   );

@@ -48,6 +48,7 @@ const Review = ({ isAuthor, reactions, review, user }: ReviewPros) => {
 
       <footer className="grid grid-cols-1 justify-between gap-4 lg:grid-cols-2">
         <ReviewReactions
+          isAuthor={isAuthor}
           reactions={reactions}
           reviewId={review.id}
           user={user}

@@ -8,6 +8,7 @@ describe("useUser helpers", () => {
       email: "some@email.com",
       id: "user-id",
       username: "SomeUsername123",
+      createdAt: new Date().toISOString(),
     };
 
     const result = isUser(argument);
@@ -27,6 +28,7 @@ describe("useUser helpers", () => {
     const argument: Omit<AppUser, "email"> = {
       id: "user-id",
       username: "Username",
+      createdAt: new Date().toISOString(),
     };
 
     const result = isUser(argument);

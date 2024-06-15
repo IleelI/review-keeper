@@ -1,6 +1,7 @@
 import { type ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 
+import type { AppUser } from "~/.server/data/user";
 import {
   lookForUser,
   comparePasswords,
@@ -37,9 +38,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (!arePasswordsSame) {
       return json({ error: "Incorrect password." });
     }
-
-    const refreshToken = await createRefreshToken(user, rememberMe === "true");
-    const accessToken = await createAccessToken(user);
+    const { createdAt, id, username } = user;
+    const tokenUser: AppUser = {
+      createdAt: createdAt.toISOString(),
+      email,
+      id,
+      username,
+    };
+    const refreshToken = await createRefreshToken(
+      tokenUser,
+      rememberMe === "true",
+    );
+    const accessToken = await createAccessToken(tokenUser);
     await prisma.user.update({
       where: { email: user.email },
       data: { refreshToken },

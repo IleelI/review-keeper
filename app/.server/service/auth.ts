@@ -117,27 +117,14 @@ export const createUser = async (credentials: CredentialsSchema) => {
   }
 };
 
-export const createRefreshToken = async (
-  { email, id, username }: AppUser,
-  rememberUser = true,
-) => {
-  return await createJWT(
+export const createRefreshToken = async (user: AppUser, rememberUser = true) =>
+  createJWT(
     rememberUser ? refreshTokenDuration : shortRefreshTokenDuration,
-    {
-      email,
-      id,
-      username,
-    } as AppUser,
+    user,
   );
-};
 
-export const createAccessToken = async ({ email, id, username }: AppUser) => {
-  return await createJWT(accessTokenDuration, {
-    email,
-    id,
-    username,
-  } as AppUser);
-};
+export const createAccessToken = async (user: AppUser) =>
+  createJWT(accessTokenDuration, user);
 
 export const signIn = async (
   refreshToken: string,
