@@ -1,6 +1,6 @@
-import { Filter } from "iconoir-react";
 import { FormProvider } from "react-hook-form";
 
+import { FilterIcon } from "~/assets/icons/Filter.icon";
 import Button from "~/components/atoms/Button";
 import Dialog from "~/components/molecules/Dialog";
 import { FormField } from "~/components/molecules/FormField";
@@ -22,7 +22,7 @@ const FiltersDialog = () => {
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Dialog.Trigger asChild>
         <Button className="lg:w-max">
-          <Filter />
+          <FilterIcon />
           <span>Filters</span>
         </Button>
       </Dialog.Trigger>

@@ -1,6 +1,6 @@
-import { Restart } from "iconoir-react";
 import type { Control } from "react-hook-form";
 
+import { RestartIcon } from "~/assets/icons/Restart.icon";
 import { Combobox } from "~/components/molecules/Combobox";
 import { FormField } from "~/components/molecules/FormField";
 
@@ -60,7 +60,7 @@ export const CategoryFilter = ({
               />
               {isLoadingCategories ? (
                 <div className="grid place-content-center p-12">
-                  <Restart className="animate-spin" />
+                  <RestartIcon className="animate-spin" />
                 </div>
               ) : categories.length ? (
                 <>

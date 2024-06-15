@@ -8,7 +8,6 @@ import {
   useRouteError,
 } from "@remix-run/react";
 import { json, type LinksFunction, LoaderFunctionArgs } from "@vercel/remix";
-import { IconoirProvider } from "iconoir-react";
 import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
 
@@ -45,19 +44,12 @@ export function Layout({ children }: PropsWithChildren) {
         <Links />
       </head>
       <body>
-        <IconoirProvider
-          iconProps={{
-            className: "w-5 h-5",
-            strokeWidth: 1.5,
-          }}
-        >
-          <TooltipProvider>
-            <div className="grid min-h-[100dvh] w-full p-6 pb-16 lg:p-8 lg:pb-20">
-              {children}
-            </div>
-            <Toaster position="bottom-right" theme="system" />
-          </TooltipProvider>
-        </IconoirProvider>
+        <TooltipProvider>
+          <div className="grid min-h-[100dvh] w-full p-6 pb-16 lg:p-8 lg:pb-20">
+            {children}
+          </div>
+          <Toaster position="bottom-right" theme="system" />
+        </TooltipProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -1,7 +1,7 @@
-import { Menu } from "iconoir-react";
 import { useState } from "react";
 
 import type { AppUser } from "~/.server/data/user";
+import { MenuIcon } from "~/assets/icons/Menu.icon";
 import Button from "~/components/atoms/Button";
 import Link from "~/components/atoms/Link";
 import Dialog from "~/components/molecules/Dialog";
@@ -27,7 +27,7 @@ export const MobileNavigation = ({ user }: MobileNavigationProps) => {
           intent="text"
           size="none"
         >
-          <Menu />
+          <MenuIcon />
         </Button>
       </Dialog.Trigger>
 

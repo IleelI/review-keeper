@@ -6,7 +6,6 @@ import {
   type PopoverProps,
   type PopoverContentProps,
 } from "@radix-ui/react-popover";
-import { ArrowSeparateVertical, Search, Check } from "iconoir-react";
 import {
   forwardRef,
   type ElementRef,
@@ -16,6 +15,9 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { ArrowSeparateVerticalIcon } from "~/assets/icons/ArrowSeparateVertical.icon";
+import { CheckIcon } from "~/assets/icons/Check.icon";
+import { SearchIcon } from "~/assets/icons/Search.icon";
 import Input from "~/components/atoms/Input";
 
 export interface ComboboxItem {
@@ -71,7 +73,7 @@ ComboboxTrigger.displayName = "ComboboxTrigger";
 
 const TriggerIcon = forwardRef<SVGSVGElement, ComponentPropsWithoutRef<"svg">>(
   ({ className, ...props }, ref) => (
-    <ArrowSeparateVertical
+    <ArrowSeparateVerticalIcon
       className={twMerge("h-4 w-4 shrink-0", className)}
       ref={ref}
       {...props}
@@ -121,7 +123,7 @@ const ComboboxSearch = forwardRef<
         className,
       )}
     >
-      <Search className="h-4 w-4" />
+      <SearchIcon className="h-4 w-4" />
       <Input
         className="min-h-0 w-full rounded-none border-none p-0"
         ref={ref}
@@ -159,7 +161,7 @@ const ComboboxItemIndicator = forwardRef<
   SVGSVGElement,
   ComboboxItemIndicatorProps
 >(({ className, isSelected = false, ...props }, ref) => (
-  <Check
+  <CheckIcon
     className={twMerge(
       "absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 stroke-2 transition-opacity duration-300",
       isSelected ? "opacity-100" : "opacity-0",

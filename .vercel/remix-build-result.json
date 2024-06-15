@@ -1,0 +1,243 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs-eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/review.$reviewId_.edit": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.review-categories": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/review.$reviewId": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.sign-out": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.refresh": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.sign-in": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.sign-up": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/user.$userId": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.authors": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/playground": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/review.new": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "app/root.tsx",
+        "config": {}
+      },
+      "routes/review.$reviewId_.edit": {
+        "file": "app/routes/review.$reviewId_.edit/route.tsx",
+        "id": "routes/review.$reviewId_.edit",
+        "path": "review/:reviewId/edit",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.review-categories": {
+        "file": "app/routes/api.review-categories/route.ts",
+        "id": "routes/api.review-categories",
+        "path": "api/review-categories",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/review.$reviewId": {
+        "file": "app/routes/review.$reviewId/route.tsx",
+        "id": "routes/review.$reviewId",
+        "path": "review/:reviewId",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.sign-out": {
+        "file": "app/routes/auth.sign-out/route.ts",
+        "id": "routes/auth.sign-out",
+        "path": "auth/sign-out",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.refresh": {
+        "file": "app/routes/auth.refresh/route.ts",
+        "id": "routes/auth.refresh",
+        "path": "auth/refresh",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.sign-in": {
+        "file": "app/routes/auth.sign-in/route.tsx",
+        "id": "routes/auth.sign-in",
+        "path": "auth/sign-in",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.sign-up": {
+        "file": "app/routes/auth.sign-up/route.tsx",
+        "id": "routes/auth.sign-up",
+        "path": "auth/sign-up",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/user.$userId": {
+        "file": "app/routes/user.$userId/route.tsx",
+        "id": "routes/user.$userId",
+        "path": "user/:userId",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.authors": {
+        "file": "app/routes/api.authors/route.ts",
+        "id": "routes/api.authors",
+        "path": "api/authors",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/playground": {
+        "file": "app/routes/playground/route.tsx",
+        "id": "routes/playground",
+        "path": "playground",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/review.new": {
+        "file": "app/routes/review.new/route.tsx",
+        "id": "routes/review.new",
+        "path": "review/new",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/_index": {
+        "file": "app/routes/_index/route.tsx",
+        "id": "routes/_index",
+        "index": true,
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "remixConfig": {
+    "appDirectory": "/Users/bartoszelert/Documents/Projects/review-keeper/app",
+    "basename": "/",
+    "buildDirectory": "/Users/bartoszelert/Documents/Projects/review-keeper/build",
+    "future": {
+      "v3_fetcherPersist": false,
+      "v3_relativeSplatPath": false,
+      "v3_throwAbortReason": false,
+      "unstable_singleFetch": false
+    },
+    "manifest": false,
+    "publicPath": "/",
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "root.tsx"
+      },
+      "routes/review.$reviewId_.edit": {
+        "file": "routes/review.$reviewId_.edit/route.tsx",
+        "id": "routes/review.$reviewId_.edit",
+        "path": "review/:reviewId/edit",
+        "parentId": "root"
+      },
+      "routes/api.review-categories": {
+        "file": "routes/api.review-categories/route.ts",
+        "id": "routes/api.review-categories",
+        "path": "api/review-categories",
+        "parentId": "root"
+      },
+      "routes/review.$reviewId": {
+        "file": "routes/review.$reviewId/route.tsx",
+        "id": "routes/review.$reviewId",
+        "path": "review/:reviewId",
+        "parentId": "root"
+      },
+      "routes/auth.sign-out": {
+        "file": "routes/auth.sign-out/route.ts",
+        "id": "routes/auth.sign-out",
+        "path": "auth/sign-out",
+        "parentId": "root"
+      },
+      "routes/auth.refresh": {
+        "file": "routes/auth.refresh/route.ts",
+        "id": "routes/auth.refresh",
+        "path": "auth/refresh",
+        "parentId": "root"
+      },
+      "routes/auth.sign-in": {
+        "file": "routes/auth.sign-in/route.tsx",
+        "id": "routes/auth.sign-in",
+        "path": "auth/sign-in",
+        "parentId": "root"
+      },
+      "routes/auth.sign-up": {
+        "file": "routes/auth.sign-up/route.tsx",
+        "id": "routes/auth.sign-up",
+        "path": "auth/sign-up",
+        "parentId": "root"
+      },
+      "routes/user.$userId": {
+        "file": "routes/user.$userId/route.tsx",
+        "id": "routes/user.$userId",
+        "path": "user/:userId",
+        "parentId": "root"
+      },
+      "routes/api.authors": {
+        "file": "routes/api.authors/route.ts",
+        "id": "routes/api.authors",
+        "path": "api/authors",
+        "parentId": "root"
+      },
+      "routes/playground": {
+        "file": "routes/playground/route.tsx",
+        "id": "routes/playground",
+        "path": "playground",
+        "parentId": "root"
+      },
+      "routes/review.new": {
+        "file": "routes/review.new/route.tsx",
+        "id": "routes/review.new",
+        "path": "review/new",
+        "parentId": "root"
+      },
+      "routes/_index": {
+        "file": "routes/_index/route.tsx",
+        "id": "routes/_index",
+        "index": true,
+        "parentId": "root"
+      }
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}

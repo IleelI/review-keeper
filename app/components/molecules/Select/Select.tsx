@@ -1,12 +1,11 @@
 import * as RadixSelect from "@radix-ui/react-select";
-import {
-  ArrowSeparateVertical,
-  Check,
-  NavArrowDown,
-  NavArrowUp,
-} from "iconoir-react";
 import { ElementRef, forwardRef } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
+
+import { ArrowSeparateVerticalIcon } from "~/assets/icons/ArrowSeparateVertical.icon";
+import { CheckIcon } from "~/assets/icons/Check.icon";
+import { DownArrowIcon } from "~/assets/icons/DownArrow.icon";
+import { UpArrowIcon } from "~/assets/icons/UpArrow.icon";
 
 const Select = (props: RadixSelect.SelectProps) => (
   <RadixSelect.Root {...props} />
@@ -40,7 +39,7 @@ const SelectTrigger = forwardRef<
   >
     {children}
     <RadixSelect.Icon asChild>
-      <ArrowSeparateVertical className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
+      <ArrowSeparateVerticalIcon className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
     </RadixSelect.Icon>
   </RadixSelect.Trigger>
 ));
@@ -55,7 +54,7 @@ const SelectScrollUpButton = forwardRef<
     className={twJoin("flex items-center justify-center p-2", className)}
     {...props}
   >
-    <NavArrowUp className={twMerge("h-4 w-4", className)} />
+    <UpArrowIcon className={twMerge("h-4 w-4", className)} />
   </RadixSelect.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = RadixSelect.ScrollUpButton.displayName;
@@ -69,7 +68,7 @@ const SelectScrollDownButton = forwardRef<
     className={twJoin("flex items-center justify-center p-2", className)}
     {...props}
   >
-    <NavArrowDown className={twMerge("h-4 w-4", className)} />
+    <DownArrowIcon className={twMerge("h-4 w-4", className)} />
   </RadixSelect.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = RadixSelect.ScrollDownButton.displayName;
@@ -145,7 +144,7 @@ const SelectItem = forwardRef<
   >
     <span className="absolute right-2 flex items-center justify-center">
       <RadixSelect.ItemIndicator>
-        <Check className={twMerge("h-5 w-5", className)} strokeWidth={2} />
+        <CheckIcon className={twMerge("h-5 w-5", className)} strokeWidth={2} />
       </RadixSelect.ItemIndicator>
     </span>
     <RadixSelect.ItemText>{children}</RadixSelect.ItemText>

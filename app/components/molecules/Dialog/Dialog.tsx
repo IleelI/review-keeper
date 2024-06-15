@@ -1,5 +1,4 @@
 import * as RadixDialog from "@radix-ui/react-dialog";
-import { Xmark } from "iconoir-react";
 import {
   forwardRef,
   type ElementRef,
@@ -7,6 +6,8 @@ import {
   type HTMLAttributes,
 } from "react";
 import { twMerge } from "tailwind-merge";
+
+import { XMarkIcon } from "~/assets/icons/X Mark.icon";
 
 const Dialog = ({ children, ...props }: RadixDialog.DialogProps) => (
   <RadixDialog.Root {...props}>{children}</RadixDialog.Root>
@@ -49,7 +50,7 @@ const DialogContent = forwardRef<
     >
       {children}
       <RadixDialog.Close className="focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute right-2 top-2 rounded-sm opacity-70 ring-offset-neutral-50 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none dark:ring-offset-neutral-900">
-        <Xmark className="h-6 w-6" />
+        <XMarkIcon className="h-6 w-6" />
         <span className="sr-only">Close</span>
       </RadixDialog.Close>
     </RadixDialog.Content>

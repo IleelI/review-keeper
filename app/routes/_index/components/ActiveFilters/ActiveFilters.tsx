@@ -1,4 +1,4 @@
-import { Xmark } from "iconoir-react";
+import { XMarkIcon } from "~/assets/icons/X Mark.icon";
 
 interface ActiveFiltersProps {
   activeFilters: string[];
@@ -20,7 +20,7 @@ const ActiveFilters = ({
             >
               {filter}
               <button type="button" onClick={() => handleFilterDelete(filter)}>
-                <Xmark className="h-4 w-4" strokeWidth={2} />
+                <XMarkIcon className="h-4 w-4" strokeWidth={2} />
               </button>
             </li>
           ))}

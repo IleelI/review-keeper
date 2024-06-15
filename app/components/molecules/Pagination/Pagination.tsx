@@ -1,4 +1,3 @@
-import { NavArrowLeft, NavArrowRight } from "iconoir-react";
 import {
   createContext,
   useCallback,
@@ -10,6 +9,8 @@ import {
 } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
 
+import { LeftArrowIcon } from "~/assets/icons/LeftArrow.icon";
+import { RightArrowIcon } from "~/assets/icons/RightArrow.icon";
 import Input from "~/components/atoms/Input";
 
 import type { usePagination } from "./usePagination";
@@ -91,7 +92,7 @@ const PreviousPage = ({ className }: PreviousPageProps) => {
       type="button"
       onClick={handleGoToPreviousPage}
     >
-      <NavArrowLeft />
+      <LeftArrowIcon />
     </button>
   );
 };
@@ -114,7 +115,7 @@ const NextPage = ({ className }: NextPageProps) => {
       type="button"
       onClick={handleGoToNextPage}
     >
-      <NavArrowRight />
+      <RightArrowIcon />
     </button>
   );
 };

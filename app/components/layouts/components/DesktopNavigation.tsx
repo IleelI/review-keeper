@@ -1,6 +1,9 @@
-import { LogIn, LogOut, User, UserPlus, UserSquare } from "iconoir-react";
-
 import type { AppUser } from "~/.server/data/user";
+import { LogInIcon } from "~/assets/icons/LogIn.icon";
+import { LogOutIcon } from "~/assets/icons/LogOut.icon";
+import { UserIcon } from "~/assets/icons/User.icon";
+import { UserPlusIcon } from "~/assets/icons/UserPlus.icon";
+import { UserSquareIcon } from "~/assets/icons/UserSquare.icon";
 import Link from "~/components/atoms/Link";
 import { Dropdown } from "~/components/molecules/Dropdown";
 import useSignOut from "~/hooks/useSignOut/useSignOut";
@@ -19,14 +22,16 @@ const DesktopNavigation = ({ user }: DesktopNavigationProps) => {
         <Link to="/" variant="navigation">
           <li>Home</li>
         </Link>
-        <Link to="/review/new" variant="navigation">
-          <li>Review Creator</li>
-        </Link>
+        {user ? (
+          <Link to="/review/new" variant="navigation">
+            <li>Review Creator</li>
+          </Link>
+        ) : null}
       </ul>
       {user ? (
         <Dropdown>
           <Dropdown.Trigger>
-            <User /> {user.username}
+            <UserIcon /> {user.username}
           </Dropdown.Trigger>
           <Dropdown.Content>
             <Dropdown.Item>
@@ -36,7 +41,7 @@ const DesktopNavigation = ({ user }: DesktopNavigationProps) => {
                 size="custom"
                 variant="custom"
               >
-                <UserSquare />
+                <UserSquareIcon />
                 User Profile
               </Link>
             </Dropdown.Item>
@@ -46,7 +51,7 @@ const DesktopNavigation = ({ user }: DesktopNavigationProps) => {
                 onClick={handleSignOut}
                 type="button"
               >
-                <LogOut />
+                <LogOutIcon />
                 Sign out
               </button>
             </Dropdown.Item>
@@ -56,11 +61,11 @@ const DesktopNavigation = ({ user }: DesktopNavigationProps) => {
         <section className="grid grid-cols-2 gap-2">
           <Link to="/auth/sign-up" size="sm" variant="buttonSecondary">
             Sign up
-            <UserPlus />
+            <UserPlusIcon />
           </Link>
           <Link to="/auth/sign-in" size="sm" variant="button">
             Sign in
-            <LogIn />
+            <LogInIcon />
           </Link>
         </section>
       )}
