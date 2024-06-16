@@ -9,7 +9,7 @@
     "start": "remix-serve ./build/server/index.js",
     "format": "prettier --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "postinstall": "pnpm pnpm prisma generate",
+    "postinstall": "pnpm prisma generate",
     "prisma.deploy": "pnpm prisma generate && pnpm prisma migrate deploy",
     "prisma.generate": "pnpm prisma generate",
     "prisma.seed": "pnpm prisma db seed",
@@ -112,8 +112,9 @@
     "vitest": "^0.34.6"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
+  "packageManager": "pnpm@9.3.0",
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   }
