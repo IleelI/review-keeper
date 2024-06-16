@@ -20,7 +20,7 @@ RUN pnpm run build
 FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/build /app/build
-RUN pnpm run prisma.seed
+RUN pnpm run prisma.setup
 
 EXPOSE 3000
 CMD [ "pnpm", "start" ]
