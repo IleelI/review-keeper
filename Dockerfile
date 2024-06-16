@@ -9,10 +9,10 @@ COPY . /app
 WORKDIR /app
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=eea25b3e-04ae-48f7-b8dc-24eb7aaa6ded-pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=eea25b3e-04ae-48f7-b8dc-24eb7aaa6ded-cache-pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM base AS build
-RUN --mount=type=cache,id=eea25b3e-04ae-48f7-b8dc-24eb7aaa6ded-pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=eea25b3e-04ae-48f7-b8dc-24eb7aaa6ded-cache-pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM base
