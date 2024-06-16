@@ -9,6 +9,6 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1),
 });
 
-const env = () => envSchema.parse(process.env);
+const env = envSchema.parse(process.env);
 
 export { env };

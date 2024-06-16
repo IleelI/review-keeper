@@ -16,7 +16,7 @@ export const createJWT = async (
   payload?: Record<string, unknown>,
 ) => {
   const alg = "HS512";
-  const secret = new TextEncoder().encode(env().JWT_SECRET);
+  const secret = new TextEncoder().encode(env.JWT_SECRET);
 
   const timestamp = Math.floor(Date.now() / 1000);
   const expiration = timestamp + duration;
@@ -39,9 +39,9 @@ export const shortRefreshTokenDuration = 60 * 60;
 export const refreshTokenCookie = createCookie("refreshToken", {
   sameSite: "lax",
   httpOnly: true,
-  secrets: [env().APP_SECRET],
+  secrets: [env.APP_SECRET],
   maxAge: refreshTokenDuration,
-  secure: env().NODE_ENV === "production",
+  secure: env.NODE_ENV === "production",
 });
 
 // Five minutes
@@ -50,9 +50,9 @@ export const accessTokenDuration = 60 * 5;
 export const accessTokenCookie = createCookie("accessToken", {
   sameSite: "lax",
   httpOnly: true,
-  secrets: [env().APP_SECRET],
+  secrets: [env.APP_SECRET],
   maxAge: accessTokenDuration,
-  secure: env().NODE_ENV === "production",
+  secure: env.NODE_ENV === "production",
 });
 
 export const lookForUser = async (email: string) => {
@@ -161,7 +161,7 @@ export const signOut = async () => {
 
 export const parseStringifiedToken = async (token: string) => {
   try {
-    const secret = new TextEncoder().encode(env().JWT_SECRET);
+    const secret = new TextEncoder().encode(env.JWT_SECRET);
     const verifiedToken = await jwtVerify(token, secret);
     if (!verifiedToken) return null;
     return verifiedToken.payload as AppUser;
