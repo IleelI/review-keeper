@@ -8,6 +8,8 @@ RUN corepack enable
 COPY . /app
 WORKDIR /app
 
+RUN apt-get update -y && apt-get install -y openssl
+
 FROM base AS prod-deps
 RUN --mount=type=cache,id=s/eea25b3e-04ae-48f7-b8dc-24eb7aaa6ded-cache-pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
