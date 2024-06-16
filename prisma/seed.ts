@@ -34,14 +34,14 @@ const seed = async () => {
   const reactionTypes = await prisma.reactionType.findMany();
 
   await Promise.all(
-    mockUsers().map(async ({ email, hash, username }) =>
+    mockUsers(20).map(async ({ email, hash, username }) =>
       prisma.user.upsert({
         create: {
           email,
           hash,
           username,
           reviews: {
-            create: mockReviews(categories),
+            create: mockReviews(categories, 10),
           },
         },
         update: {},
