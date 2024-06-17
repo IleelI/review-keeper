@@ -88,6 +88,14 @@ pnpm dev
   pnpm prisma.seed
   ```
 
+- You can also build a docker image and run it, simply type in your terminal:
+
+  ```bash
+  docker build .
+  ```
+
+  and run it inside a container with Port 3000 exposed.
+
 ## Testing
 
 - To run tests in console, type in your terminal:
