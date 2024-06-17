@@ -6,6 +6,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 COPY . /app
+COPY .env /app
+
 WORKDIR /app
 
 RUN apt-get update -y && apt-get install -y openssl
@@ -20,10 +22,8 @@ RUN pnpm run build
 FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/build /app/build
-COPY ./.env /app/
 
 RUN pnpm run prisma.setup
 
 EXPOSE 3000
 CMD [ "pnpm", "start" ]
-
