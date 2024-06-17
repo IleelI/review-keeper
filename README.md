@@ -7,15 +7,19 @@
 
 **Well, hello there! 👋**
 
-Welcome to Remix Standard! This repository contains starter template to help you start journey with Remix.
+Review keeper is user friendly app that helps you create and share reviews with other users!
 
-Template contains:
+Tech stack:
 
 - [Remix](https://remix.run/)
 - [Prisma ORM](https://www.prisma.io/docs/getting-started)
 - [TailwindCSS](https://tailwindcss.com/)
 - [Vitest](https://vitest.dev/)
 - [RTL (React Testing Library)](https://testing-library.com/)
+- [Radix UI](https://radix-ui.com/primitives)
+- [TipTap](https://tiptap.dev/)
+- [React Hook Form](https://react-hook-form.com/)
+- [Zod](https://zod.dev/)
 
 ## Table of Contents
 
@@ -26,7 +30,7 @@ Template contains:
 
 ## Installation
 
-To use Remix Standard, you need to have Node.js (version 18 or higher) and PNPM installed on your machine. Follow the steps below to get started:
+To use Review Keeper, you need to have Node.js (version 20 or higher) and PNPM installed on your machine. Follow the steps below to get started:
 
 1. **Install Node.js:**
 
@@ -42,8 +46,8 @@ To use Remix Standard, you need to have Node.js (version 18 or higher) and PNPM 
 3. Clone the Repository
 
 ```bash
-  git clone https://github.com/IleelI/remix-standard.git
-  cd remix-standard
+  git clone https://github.com/IleelI/review-keeper.git
+  cd review-keeper
 ```
 
 4. Install Dependencies
