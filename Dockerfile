@@ -2,11 +2,11 @@ FROM node:20-slim AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ARG DATABASE_URL
 
 RUN corepack enable
 
 COPY . /app
-COPY .env /app
 
 WORKDIR /app
 
